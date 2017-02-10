@@ -12,6 +12,9 @@
       (push (clone e) acc))
     (funcall hook (reverse acc))))
 
+(defmethod clone ((c cons) &key parent newname (hook #'identity))
+  (funcall hook (cons (clone (car c))(clone (cdr c)))))
+
 (defmethod ->list ((obj list)) obj)
 
 (defmethod ->list ((obj vector))
