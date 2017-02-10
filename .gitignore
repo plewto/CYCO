@@ -1,0 +1,7 @@
+*.class
+
+# Ignore temp emacs files
+*backup*
+*~
+[#]*[#]
+.\#*

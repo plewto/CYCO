@@ -1,0 +1,26 @@
+Cyco is two projects in one:  Cyco proper and Argos.
+
+Cyco proper is a LISP based music composition package. At the highest level
+is a Cyco Project which corresponds to a single composition.  A project
+contains an orchestra and a number of sequential sections.  Each section
+contains several parallel parts.  The parts combine one or more instruments
+together with instructions on what to play.
+
+Project
+  Orchestra
+  Sections
+    Parts
+
+Rendering a project generates a standard MIDI file as output.
+
+---------------------------------------------------------------------------
+
+Argos is a MIDI routing utility. At its most basic Argos provides
+connections between MIDI input and output ports, a MIDI file player, and an
+on screen keyboard.
+
+Cyco and Argos may be used independently or together.
+
+
+    
+ 
