@@ -8,7 +8,7 @@
 (setf *cyco-config-directory*  (join-path (home-dir) ".config" "cyco"))
 (setf *cyco-config-file* "local-settings.lisp")
 
-(defun load-local (fname &key (verbose nil)(print nil))
+(defun load-local (fname &key (verbose t)(print nil))
   "Load local cyco configuration file.
    fname    - Local filename relative to *CYCO-CONFIG-DIRECTORY*.
    :verbose - Flag, if true display message that file is being loaded.
@@ -27,7 +27,7 @@
   (if (file-exists (join-path *cyco-config-directory* *cyco-config-file*))
       (progn
 	(format t "Local setting '~A' ~%" *cyco-config-file*)
-	(format t "Loading local config...~%" *cyco-config-file*)
+	(format t "Loading local config '~A'...~%" *cyco-config-file*)
 	(load-local *cyco-config-file*))
     (let ((msg "Config file '~A' does not exists!"))
       (cyco-warning (format nil msg *cyco-config-file*)) )))

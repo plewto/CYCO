@@ -73,18 +73,19 @@
    name - instrument name
    lower - MIDI key number
    upper - MIDI key number."
-  `(let ((count (- ,upper ,lower)))
+  `(progn 
      (param ,name nil)
      (setf (symbol-function ',name)
-	   #(lambda (kn)
-	      (if (eq kn :?)
-		  (prog
-		   (format t "~A reduced-range keymap [~A ~A]~%"
-			   ,name ,lower ,upper)
-		   ,lower)
-		(let ((k (keynumber kn)))
-		  (while (< k ,lower)
-		    (setf k (+ 12 k)))
-		  (while (> k ,upper)
-		    (setf k (- k 12)))
-		  k))))))
+  	   #'(lambda (kn)
+  	       (if (eq kn :?)
+  		   (progn
+  		    (format t "~A reduced-range keymap [~A ~A]~%"
+  			    ,name ,lower ,upper)
+  		    ,lower)
+  		 (let ((kn (keynumber kn)))
+  		   (while (< kn ,lower)
+  		     (setf kn (+ 12 kn)))
+  		   (while (> kn ,upper)
+  		     (setf kn (- kn 12)))
+  		   kn))))))
+
