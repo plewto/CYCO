@@ -10,6 +10,7 @@
 		 :channel :OBX
 		 :program-change-hook
 		 #'(lambda (time cindex progn bank)
+		     (dismiss bank)
 		     (cond ((eq progn :?)
 			    (format t "Oberheim Matrix 1000~%")
 			    (format t "    programs (0...99)~%")
@@ -18,7 +19,7 @@
 			    (format t "does not alter generated events~%")
 			    nil)
 			   (t (cons time
-				    (midi-program-change cindex prognum)))))))
+				    (midi-program-change cindex progn)))))))
 
 (defmacro obx-1000 (name program &key
 			 (bank nil)
@@ -33,6 +34,7 @@
 				   :keynumber-map ,keynumber-map
 				   :duration-map ,duration-map
 				   :amplitude-map ,amplitude-map
+				   :program-bank ,bank
 				   :program-number ,program)))
      
 

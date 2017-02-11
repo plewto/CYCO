@@ -57,11 +57,11 @@
 
 (param churchyard nil)
 (param churchyard-pipe nil)
-(param churchtard-klang nil)
-(param churchtard-carillon nil)
-(param churchtard-pang nil)
-(param churchtard-ride nil)
-(param churchtard-kick nil)
+(param churchyard-klang nil)
+(param churchyard-carillon nil)
+(param churchyard-pang nil)
+(param churchyard-ride nil)
+(param churchyard-kick nil)
 
 (defun churchyard (&key (parent pro3))
   (let ((program-number (car (cdr (assoc 'churchyard +PROCUSSION-PROGRAMS+)))))
@@ -76,23 +76,23 @@
 			   :parent churchyard
 			   :keynumber-map #'--churchyard-pipe-map))
     (setf churchyard-klang (create-instrument
-			    'churchyard-klang
-			    :parent churchyard
-			    :keynumber-map #'--churchyard-klang-map))
+    			    'churchyard-klang
+    			    :parent churchyard
+    			    :keynumber-map #'--churchyard-klang-map))
     (setf churchyard-carillon (create-instrument
-			       'churchyard-carillon
-			       :parent churchyard
-			       :keynumber-map #'--churchyard-carillon-map))
+    			       'churchyard-carillon
+    			       :parent churchyard
+    			       :keynumber-map #'--churchyard-carillon-map))
     (setf churchyard-pang (create-instrument
-			   'churchyard-pang
-			   :parent churchyard
-			   :keynumber-map #'--churchyard-pang-map))
+    			   'churchyard-pang
+    			   :parent churchyard
+    			   :keynumber-map #'--churchyard-pang-map))
     (setf churchyard-ride (create-instrument
-			   'churchyard-ride
-			   :parent churchyard
-			   :keynumber-map #'--churchyard-ride-map))
+    			   'churchyard-ride
+    			   :parent churchyard
+    			   :keynumber-map #'--churchyard-ride-map))
     (setf churchyard-kick (create-instrument
-			   'churchyard-kick
-			   :parent churchyard
-			   :keynumber-map #'--churchyard-kick-map))
+    			   'churchyard-kick
+    			   :parent churchyard
+    			   :keynumber-map #'--churchyard-kick-map))
     churchyard))

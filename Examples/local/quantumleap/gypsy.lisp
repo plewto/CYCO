@@ -3,6 +3,13 @@
 
 (in-package :cyco)
 
+(param gypsy1 (create-instrument 'gypsy1
+				 :parent ql3
+				 :transient nil))
+				 
+	       
+
+
 ;;; ---------------------------------------------------------------------- 
 ;;;				 Cimbalon
 
@@ -29,17 +36,17 @@
 
 (defun gypsy-castanets (&key (parent gypsy1))
   (free-orchestra! :node parent)
-  (setf gypsy-castenets (create-instrument
+  (setf gypsy-castanets (create-instrument
 			 'castanets
 			 :parent parent
 			 :transient t)))
 
 (defun gypsy-dancer (&key (parent gypsy1))
   (free-orchestra! :node parent)
-  (setf gypsy-castenets (create-instrument
-			 'dancer
-			 :parent parent
-			 :transient t)))
+  (setf gypsy-dancer (create-instrument
+		      'dancer
+		      :parent parent
+		      :transient t)))
 
 ;;; ---------------------------------------------------------------------- 
 ;;;				Percussion
@@ -48,7 +55,7 @@
 
 (defun gypsy-percussion (&key (parent gypsy1))
   (free-orchestra! :node parent)
-  (setf gypsy-castenets (create-instrument
+  (setf gypsy-castanets (create-instrument
 			 'percussion
 			 :parent parent
 			 :transient t)))

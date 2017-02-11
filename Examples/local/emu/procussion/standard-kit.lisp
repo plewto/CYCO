@@ -158,13 +158,13 @@
 			      (OPEN2   . 70)
 			      (OPEN3   . 71)))
 
-(defkeymap --pro-sk-cymbal-map '((RIDE  . 50)
-				 (A     . 49)
-				 (B     . 51)
-				 (CHOKE . 48)))
+(defkeymap --pro-sk-cym-map '((RIDE  . 50)
+			      (A     . 49)
+			      (B     . 51)
+			      (CHOKE . 48)))
 
 (defun --pro-sk-tuned-map (kn)
-  (if (eq k :?)
+  (if (eq kn :?)
       (progn 
 	(format t "Standard Procussion kit tuned instrument (72..98)~%")
 	72)
@@ -173,480 +173,74 @@
       (+ 72 k))))
 
 
-(defmacro standard-procussion-kit (kit-name &key 
-					    (parent pro1)
-					    (kick-name 'pkick)
-					    (snare-name 'psnare)
-					    (tom-name 'ptom)
-					    (hat-name 'phat)
-					    (cymbal-name 'pcym)
-					    (tuned-name 'ptuned))
-  
-  `(let* ((program-number (car (cdr (assoc ,kit-name +PROCUSSION-PROGRAMS+))))
-	 (trap-kit (create-instrument 
-		    ',kit-name
-		    :parent ,parent
-		    :transient t
-		    :program-change-hook
-		    #'(lambda (time cindex _ __)
-			(list (cons time (midi-program-change cindex program-number))))))
-	 (kd (create-instrument ,kick-name
-				:parent trap-kit
-				:transient t
-				:keynumber-map #'--pro-sk-kick-map))
-	 (sd (create-instrument ,snare-name
-				:parent trap-kit
-				:transient t
-				:keynumber-map #'--pro-sk-snare-map))
-	 (td (create-instrument ,tom-name
-				:parent trap-kit
-				:transient t
-				:keynumber-map #'--pro-sk-tom-map))
-	 (hhat (create-instrument ,hat-name
-				  :parent trap-kit
-				  :transient t
-				  :keynumber-map #'--pro-sk-hat-map))
-	 (cym (create-instrument ,cymbal-name
-				 :parent trap-kit
-				 :transient t
-				 :keynumber-map #'--pro-sk-cymbal-map))
-	 (tuned (create-instrument ,tuned-name
-				   :parent trap-kit
-				   :transient t
-				   :keynumber-map #'--pro-sk-tuned-map)))
+(param standard-procussion-kit
+       (create-instrument 'standard-procussion-kit
+			:parent pro1
+			:transient nil
+			:program-number 0))
 
-     ;; ISSUE: Dangerous. Directly calling private ABCL system function
-     ;; to assign local instruments to symbols.
-     ;;
-     (system::%defparameter ,kick-name kd nil)
-     (system::%defparameter ,snare-name sd nil)
-     (system::%defparameter ,tom-name td nil)
-     (system::%defparameter ,hat-name hhat nil)
-     (system::%defparameter ,cymbal-name cym nil)
-     (system::%defparameter ,tuned-name tuned nil)
-     trap-kit))
+(param pkick (create-instrument 'pkick
+			      :parent standard-procussion-kit
+			      :transient nil
+			      :keynumber-map --pro-sk-kick-map))
 
+(param psnare (create-instrument 'psnare
+			      :parent standard-procussion-kit
+			      :transient nil
+			      :keynumber-map --pro-sk-snare-map))
 
-(defun ampitheater (&key (parent pro1)
-			 (kick-name 'pkick)
-			 (snare-name 'psnare)
-			 (tom-name 'ptom)
-			 (hat-name 'phat)
-			 (cymbal-name 'pcym)
-			 (tuned-name 'ptuned))
-  (standard-procussion-kit 'ampitheater
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cynbal-name
-			   :tuned-name tuned-name))
+(param ptom (create-instrument 'ptom
+			      :parent standard-procussion-kit
+			      :transient nil
+			      :keynumber-map --pro-sk-tom-map))
 
-(defun mega-drums (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'mega-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
+(param phat (create-instrument 'phat
+			      :parent standard-procussion-kit
+			      :transient nil
+			      :keynumber-map --pro-sk-hat-map))
 
-(defun rock-n-roll (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'rock-n-roll 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
+(param pcym (create-instrument 'pcym
+			      :parent standard-procussion-kit
+			      :transient nil
+			      :keynumber-map --pro-sk-cym-map))
 
-(defun palladium (&key 
-		  (parent pro1)
-		  (kick-name 'pkick)
-		  (snare-name 'psnare)
-		  (tom-name 'ptom)
-		  (hat-name 'phat)
-		  (cymbal-name 'pcym)
-		  (tuned-name 'ptuned))
-  (standard-procussion-kit 'palladium 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
+(param ptuned (create-instrument 'ptuned
+			       :parent standard-procussion-kit
+			       :transient nil
+			       :keynumber-map #'--pro-sk-tuned-map))
 
-(defun jazz-drums (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'jazz-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
+(defun standard-procussion-kit (kit-name)
+  (let ((spec (cdr (assoc kit-name +PROCUSSION-PROGRAMS+))))
+    (if (not (eq (second spec) 'standard))
+	(let ((msg "~A is not a standard Procussion kit (using program 0)"))
+	  (cyco-warning (format nil msg kit-name))
+	  (setf spec '(0 NON-STANDARD))))
+    (property! standard-procussion-kit :program-number (car spec))
+    (format t "Using Standard Procussion kit '~A', program ~A~%"
+	    kit-name (car spec))))
 
-(defun metal-drums (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'metal-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun rap-session (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'rap-session 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun ambient-rock (&key 
-		     (parent pro1)
-		     (kick-name 'pkick)
-		     (snare-name 'psnare)
-		     (tom-name 'ptom)
-		     (hat-name 'phat)
-		     (cymbal-name 'pcym)
-		     (tuned-name 'ptuned))
-  (standard-procussion-kit 'ambient-rock 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun acoustic-kit (&key 
-		     (parent pro1)
-		     (kick-name 'pkick)
-		     (snare-name 'psnare)
-		     (tom-name 'ptom)
-		     (hat-name 'phat)
-		     (cymbal-name 'pcym)
-		     (tuned-name 'ptuned))
-  (standard-procussion-kit 'acoustic-kit 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun rock-drums (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'rock-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun house-machine (&key 
-		      (parent pro1)
-		      (kick-name 'pkick)
-		      (snare-name 'psnare)
-		      (tom-name 'ptom)
-		      (hat-name 'phat)
-		      (cymbal-name 'pcym)
-		      (tuned-name 'ptuned))
-  (standard-procussion-kit 'house-machine 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun fusion-stix (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'fusion-stix 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun space-drums (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'space-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun hard-rock (&key 
-		  (parent pro1)
-		  (kick-name 'pkick)
-		  (snare-name 'psnare)
-		  (tom-name 'ptom)
-		  (hat-name 'phat)
-		  (cymbal-name 'pcym)
-		  (tuned-name 'ptuned))
-  (standard-procussion-kit 'hard-rock 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun stadium-rox (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'stadium-rox 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun dance-2000 (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'dance-2000 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun heavy-metal (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'heavy-metal 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun hip-hop (&key 
-		(parent pro1)
-		(kick-name 'pkick)
-		(snare-name 'psnare)
-		(tom-name 'ptom)
-		(hat-name 'phat)
-		(cymbal-name 'pcym)
-		(tuned-name 'ptuned))
-  (standard-procussion-kit 'hip-hop 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun sluggo-drums (&key 
-		     (parent pro1)
-		     (kick-name 'pkick)
-		     (snare-name 'psnare)
-		     (tom-name 'ptom)
-		     (hat-name 'phat)
-		     (cymbal-name 'pcym)
-		     (tuned-name 'ptuned))
-  (standard-procussion-kit 'sluggo-drums 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun huge-room (&key 
-		  (parent pro1)
-		  (kick-name 'pkick)
-		  (snare-name 'psnare)
-		  (tom-name 'ptom)
-		  (hat-name 'phat)
-		  (cymbal-name 'pcym)
-		  (tuned-name 'ptuned))
-  (standard-procussion-kit 'huge-room 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun drum-dance (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'drum-dance 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun heavyosity (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'heavyosity 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun dance-club (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'dance-club 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun country-kit (&key 
-		    (parent pro1)
-		    (kick-name 'pkick)
-		    (snare-name 'psnare)
-		    (tom-name 'ptom)
-		    (hat-name 'phat)
-		    (cymbal-name 'pcym)
-		    (tuned-name 'ptuned))
-  (standard-procussion-kit 'country-kit 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
-
-(defun rockabilly (&key 
-		   (parent pro1)
-		   (kick-name 'pkick)
-		   (snare-name 'psnare)
-		   (tom-name 'ptom)
-		   (hat-name 'phat)
-		   (cymbal-name 'pcym)
-		   (tuned-name 'ptuned))
-  (standard-procussion-kit 'rockabilly 
-			   :parent parent
-			   :kick-name kick-name
-			   :snare-name snare-name
-			   :tom-name tom-name
-			   :hat-name hat-name
-			   :cymbal-name cymbal-name
-			   :tuned-name tuned-name))
+(defun ampitheater ()(standard-procussion-kit 'ampitheater))
+(defun mega-drums ()(standard-procussion-kit 'mega-drums))
+(defun rock-n-roll ()(standard-procussion-kit 'rock-n-roll))
+(defun palladium ()(standard-procussion-kit 'palladium))
+(defun jazz-drums ()(standard-procussion-kit 'jazz-drums))
+(defun metal-drums ()(standard-procussion-kit 'metal-drums))
+(defun rap-session ()(standard-procussion-kit 'rap-session))
+(defun ambient-rock ()(standard-procussion-kit 'ambient-rock))
+(defun acoustic-kit ()(standard-procussion-kit 'acoustic-kit))
+(defun rock-drums ()(standard-procussion-kit 'rock-drums))
+(defun house-machine ()(standard-procussion-kit 'house-machine))
+(defun fusion-stix ()(standard-procussion-kit 'fusion-stix))
+(defun space-drums ()(standard-procussion-kit 'space-drums))
+(defun hard-rock ()(standard-procussion-kit 'hard-rock))
+(defun stadium-rox ()(standard-procussion-kit 'stadium-rox))
+(defun dance-2000 ()(standard-procussion-kit 'dance-2000))
+(defun heavy-metal ()(standard-procussion-kit 'heavy-metal))
+(defun hip-hop ()(standard-procussion-kit 'hip-hop))
+(defun sluggo-drums ()(standard-procussion-kit 'sluggo-drums))
+(defun huge-room ()(standard-procussion-kit 'huge-room))
+(defun drum-dance ()(standard-procussion-kit 'drum-dance))
+(defun heavyosity ()(standard-procussion-kit 'heavyosity))
+(defun dance-club ()(standard-procussion-kit 'dance-club))
+(defun country-kit ()(standard-procussion-kit 'country-kit))
+(defun rockabilly ()(standard-procussion-kit 'rockabilly))

@@ -6,6 +6,7 @@
 
 (defun --tx-program-hook (program)
   #'(lambda (time cindex _1 _2)
+      (dismiss _1 _2)
       (list (cons time
 		  (midi-program-change cindex (1- program))))))
 
@@ -15,6 +16,7 @@
 	      :transient nil
 	      :program-change-hook
 	      #'(lambda (time cindex program bank)
+		  (dismiss bank)
 		  (cond ((eq program :?)
 			 (progn
 			   (format t "TX816 program change hook")

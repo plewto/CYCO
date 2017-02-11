@@ -6,6 +6,7 @@
 
 (defun --sy35-program-hook (bank prog)
   #'(lambda (time cindex _1 _2)
+      (dismiss _1 _2)
       (let ((offset (* 8 (1- bank))))
 	(list (cons time
 		    (midi-program-change cindex (+ offset (1- prog))))))))

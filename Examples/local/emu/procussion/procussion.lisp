@@ -77,12 +77,13 @@
             (metronome       . (127))    
             ))
 
-(defun procussion-program-hook (time cindex program _)
+(defun procussion-program-hook (time cindex program bank)
+  (dismiss bank)
   (let* ((a (assoc program +PROCUSSION-PROGRAMS+))
 	 (pnum (cond ((eq program :?)
 		      (progn
-			(format "Emu Procussion program map~%")
-			(dolist (a +PROCUSSON-PROGRAMS+)
+			(format t "Emu Procussion program map~%")
+			(dolist (a +PROCUSSION-PROGRAMS+)
 			  (format t "    ~14A -> ~3D~%" (car a)(cdr a)))
 			nil))
 		     ((and (integerp program)(>= program 0)(< program 128))
@@ -91,12 +92,11 @@
 		     (t :ERROR))))
     (cond ((eq pnum :ERROR)
 	   (let ((frmt "~A is an invalid Procussion program"))
-	     (warning (format nil frmt program))
+	     (cyco-warning (format nil frmt program))
 	     nil))
 	  (pnum
 	   (list (cons time (midi-program-change cindex pnum))))
 	  (t nil))))
-		      
 					     
 (param procussion (create-instrument
 		   'PROCUSSION
