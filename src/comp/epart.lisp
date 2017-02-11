@@ -192,9 +192,7 @@
 	 	  (let ((bcc '())
 	 		(i 0))
 	 	    (if (not (evenp (length lst)))
-	 		(progn
-	 		  (warning msg)
-	 		  (error (format nil "epart ~A" (name prt)))))
+			(error msg1))
 	 	    (while (< i (length lst))
 	 	      (push (cons (nth i lst)(nth (1+ i) lst)) bcc)
 	 	      (setf i (+ i 2)))
@@ -300,6 +298,7 @@
 	 
     (flet ((chord-handler (prt evn offset)
 	   		  (setf evn (->alist evn))
+			  (parse-chord-strum evn)
 	   		  (let* ((time (+ offset (parse-time prt evn)))
 	   			 (root (parse-keynumber evn))
 	   			 (inv (parse-chord-inversion evn))
@@ -309,7 +308,7 @@
 					     :inversion (first inv)
 					     :octave (second inv)
 					     :copies (third inv)))
-	   			 (--strum (parse-chord-strum evn))
+	   			 ;(--strum (parse-chord-strum evn)) 
 	   			 (strum-rate default-strum-rate)
 	   			 (strum-pattern default-strum-pattern)
 	   			 (strum-direction (next strum-pattern))
@@ -471,7 +470,7 @@
 					      (pnum (or prgnum (property inst :program-number)))
 					      (bnk (or bank (property inst :program-bank))))
 					 (if pnum
-					     (setf acc (append acc (funcall hook time cindex prgnum bank))))))
+					     (setf acc (append acc (funcall hook time cindex prgnum bnk))))))
 	   			     acc)) )
       
       (defmethod render-once ((prt epart) &key (offset 0))

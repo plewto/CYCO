@@ -64,17 +64,18 @@
     (mute other t))
   (mute prt nil)
   (maphash #'(lambda (key val)
+	       (dismiss key)
 	       (setf (group-state val) nil))
 	   (groups (parent prt))))
 
 (defmethod solo ((pname symbol))
   "Solo PART using part name."
   (let* ((sec (current-section *project*))
-	 (prt (get-child sec)))
+	 (prt (get-child sec pname)))
     (if prt
 	(solo prt)
       (let ((frmt "Can not solo PART ~A in Section ~A"))
-	(warning (format nil frmt pname (name sec)))))))
+	(cyco-warning (format nil frmt pname (name sec)))))))
 
 (defmethod dump ((prt part) &key (depth 0)(max-depth 10))
   (if (< depth max-depth)
@@ -104,8 +105,8 @@
   (or (and (project-p project)
 	   (section-p (or section (current-section project))))
       (let ((frmt "Either project or section is not defined"))
-	(warning (format nil "project ~A" project))
-	(warning (format nil "section ~A" section))
+	(cyco-warning (format nil "project ~A" project))
+	(cyco-warning (format nil "section ~A" section))
 	(error frmt))))
 
 (defun ->instrument-list (instruments project)

@@ -79,21 +79,22 @@
 
 (defmethod channel-event-p ((obj channel-event)) obj)
 
+(defun --validate-midi-channel-index (n)
+  (logand n #xF))
+
+(defun --validate-midi-data (n)
+  (limit n 0 127))
+
 (defmethod data-count ((evn channel-event)) 2)
 
 (defmethod data! ((evn channel-event)(index fixnum)(value fixnum))
   (cond ((eq index 1)
-	 (setf (data1 evn)(validate-data value)))
+	 (setf (data1 evn)(--validate-midi-data value)))
 	((eq index 2)
-	 (setf (data2 evn)(validate-data value)))
+	 (setf (data2 evn)(--validate-midi-data value)))
 	(t (let ((msg (format nil "Invalid index to data!, expected 1 or 2, encountered ~A" index)))
 	     (error msg)))))
 	
-(defun validate-channel-index (n)
-  (logand n #xF))
-
-(defun validate-data (n)
-  (limit n 0 127))
 
 (defmethod ->string ((evn channel-event))
   (let* ((dcount (data-count evn))
@@ -112,6 +113,7 @@
       (list status (data1 evn)))))
 
 (defmethod clone ((ev channel-event) &key newname parent (hook #'identity))
+  (dismiss newname parent)
   (let ((other (make-instance (type-of ev)
 			      :channel-index (channel-index ev)
 			      :data1 (data1 ev)
@@ -172,23 +174,23 @@
 
 (defun midi-note-off (channel-index keynumber velocity)
   (make-instance 'note-off
-		 :channel-index (validate-channel-index channel-index)
+		 :channel-index (--validate-midi-channel-index channel-index)
 		 :data1 (validate-keynumber keynumber)
-		 :data2 (validate-data velocity)))
+		 :data2 (--validate-midi-data velocity)))
 
 (defun midi-note-on (channel-index keynumber velocity)
   (if (zerop velocity)
       (midi-note-off channel-index keynumber 0)
     (make-instance 'note-on
-		   :channel-index (validate-channel-index channel-index)
+		   :channel-index (--validate-midi-channel-index channel-index)
 		   :data1 (validate-keynumber keynumber)
-		   :data2 (validate-data velocity))))
+		   :data2 (--validate-midi-data velocity))))
 
 (defun midi-poly-pressure (channel-index keynumber pressure)
   (make-instance 'poly-pressure
-		 :channel-index (validate-channel-index channel-index)
+		 :channel-index (--validate-midi-channel-index channel-index)
 		 :data1 (validate-keynumber keynumber)
-		 :data2 (validate-data pressure))) 
+		 :data2 (--validate-midi-data pressure))) 
 
 (defmethod transpose ((obj key-event)(x t) &key (range '(0 127)))
   (clone obj :hook #'(lambda (n)
@@ -225,9 +227,9 @@
 
 (defun midi-control-change (channel-index controller-number value)
   (make-instance 'control-change
-		 :channel-index (validate-channel-index channel-index)
-		 :data1 (validate-data controller-number)
-		 :data2 (validate-data value)))
+		 :channel-index (--validate-midi-channel-index channel-index)
+		 :data1 (--validate-midi-data controller-number)
+		 :data2 (--validate-midi-data value)))
 
 ;;; ---------------------------------------------------------------------- 
 ;;;			     PITCH-BEND class
@@ -247,9 +249,9 @@
 
 (defun midi-pitch-bend (channel-index lsb msb)
   (make-instance 'pitch-bend
-		 :channel-index (validate-channel-index channel-index)
-		 :data1 (validate-data lsb)
-		 :data2 (validate-data msb)))
+		 :channel-index (--validate-midi-channel-index channel-index)
+		 :data1 (--validate-midi-data lsb)
+		 :data2 (--validate-midi-data msb)))
 
 ;;; ---------------------------------------------------------------------- 
 ;;;			  CHANNEL-PRESSURE class
@@ -265,8 +267,8 @@
 
 (defun midi-channel-pressure (channel-index pressure)
   (make-instance 'channel-pressure
-		 :channel-index (validate-channel-index channel-index)
-		 :data1 (validate-data pressure)
+		 :channel-index (--validate-midi-channel-index channel-index)
+		 :data1 (--validate-midi-data pressure)
 		 :data2 0))
 
 (defmethod data-count ((evn channel-pressure)) 1)
@@ -285,8 +287,8 @@
 
 (defun midi-program-change (channel-index program-number)
   (make-instance 'program-change
-		 :channel-index (validate-channel-index channel-index)
-		 :data1 (validate-data program-number)
+		 :channel-index (--validate-midi-channel-index channel-index)
+		 :data1 (--validate-midi-data program-number)
 		 :data2 0))
 
 (defmethod data-count ((evn program-change)) 1)

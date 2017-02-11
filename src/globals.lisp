@@ -35,6 +35,8 @@
 	"Maximum depth of symbolic MIDI channel assignments.
          See cyco/orch/channel.lisp")
 
+(global *metronome-instrument* nil)
+
 (global *os-extension-separator* "."
 	"Character (as string) used to separate filename from extension.
          See cyco/util/os.lisp")

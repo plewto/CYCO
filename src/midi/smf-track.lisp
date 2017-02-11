@@ -108,6 +108,7 @@
     rs))
 
 (defmethod dump-smf-track ((trk smf-track) &key (offset :ignore)(verbose t))
+  (dismiss offset)
   (let ((pad (tab 1)))
     (--sort-smf-track! trk) 
     (format t "SMF-TRACK~%")

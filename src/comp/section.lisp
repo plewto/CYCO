@@ -77,10 +77,10 @@
 	    (dump c :depth (1+ depth) :max-depth max-depth)))))
   nil)
 
-(defmethod add-child! ((s section)(n node) &key
-		       (test #'(lambda (nd ch)(not (has-child? nd ch)))))
+(defmethod add-child! ((s section)(n node) &key (test :ignore))
   "Adds a child node to the section, but only if it is a PART.
    The test predicate does not allow duplicate parts to be added."
+  (dismiss test)
   (if (part-p n)
       (progn
 	(call-next-method)

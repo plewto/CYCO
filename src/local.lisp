@@ -30,6 +30,6 @@
 	(format t "Loading local config...~%" *cyco-config-file*)
 	(load-local *cyco-config-file*))
     (let ((msg "Config file '~A' does not exists!"))
-      (warning (format nil msg *cyco-config-file*)) )))
+      (cyco-warning (format nil msg *cyco-config-file*)) )))
 
 (reload-local)

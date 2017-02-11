@@ -49,15 +49,9 @@
   (str+ (call-next-method)
 	(format nil "count: ~A" (data-count syx))))
 
-(defmethod render-event ((sys system-exclusive-event))
+(defmethod render-event ((syx system-exclusive-event))
   (cons (command syx)
 	(->list (slot-value syx 'data))))
-
-(defmethod clone ((syx system-exclusive-event) &key 
-		  newname parent (hook #'identity))
-  (let ((other (midi-system-exclusive-event 
-		:data (clone (slot-value syx 'data)))))
-    (funcall hook other)))
 
 (defun midi-system-exclusive-event (&key data count)
   (if (and data count)
@@ -73,6 +67,13 @@
 	  (dotimes (i count)
 	    (setf (aref d i) 0))))
     (make-instance 'system-exclusive-event :data d)))
+
+(defmethod clone ((syx system-exclusive-event) &key 
+		  newname parent (hook #'identity))
+  (dismiss newname parent)
+  (let ((other (midi-system-exclusive-event 
+		:data (clone (slot-value syx 'data)))))
+    (funcall hook other)))
 
 ;;; ---------------------------------------------------------------------- 
 ;;;			END-SYSTEM-EXCLUSIVE-EVENT
@@ -93,5 +94,6 @@
 
 (defmethod clone ((eox end-system-exclusive-event) &key 
 		  newname parent (hook #'identity))
+  (dismiss eox newname parent)
   (funcall hook (midi-end-system-exclusive)))
 

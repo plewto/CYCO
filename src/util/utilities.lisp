@@ -20,10 +20,12 @@
 
 (defun true (&rest ignore)
   "(true)  Ignore all arguments and return t"
+  (dismiss ignore)
   t)
 
 (defun false (&rest ignore)
   "(false)  Ignore all arguments and return nil"
+  (dismiss ignore)
   nil)
 
 (defun limit (n mn mx)

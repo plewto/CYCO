@@ -90,6 +90,7 @@
 
 (defmethod clone ((obj meta-text-event) &key 
 		  newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (make-instance 'meta-text-event
 			       :meta-type (meta-type obj)
 			       :text (->string (text obj)))))
@@ -131,6 +132,7 @@
 
 (defmethod clone ((eot end-of-track-event) &key 
 		  newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (end-of-track-event)))
 
 (defmethod ->string ((eot end-of-track-event))
@@ -163,6 +165,7 @@
 
 (defmethod clone ((evn tempo-change-event) &key 
 		  newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (tempo-change-event (tempo evn))))
 
 (defmethod ->string ((evn tempo-change-event))
@@ -173,6 +176,7 @@
   (bpm->microseconds (tempo evn)))
 
 (defmethod tick-duration ((evn tempo-change-event) &optional (unit :ignore))
+  (dismiss unit)
   (tick-duration (tempo evn)))
 
 (defmethod render-event ((evn tempo-change-event))
@@ -231,6 +235,7 @@
 
 (defmethod clone ((evn timesig-event) &key 
 		  newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (timesig-event (timesig-numerator evn)
 			       (timesig-unit evn))))
 

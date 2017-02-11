@@ -36,7 +36,8 @@
 (defmethod project-p ((p project)) p)
 
 (defmethod add-child! ((p project)(s node) &key
-		       (test #'(lambda (a b) t)))
+		       (test #'(lambda (a b) (dismiss a b) t)))
+  (dismiss test)
   (if (section-p s)
       (progn
 	(push-end s (children p))
@@ -85,7 +86,9 @@
     :timesig - defaults to inheriting from ROOT-TIMESIG*"
   (let* ((proj (make-instance 'project
 			     :name name
-			     :timesig timesig)))
+			     :timesig timesig))
+	 ;(orch-root nil)
+	 )
     (property! proj :title (->string (or title name)))
     (property! proj :catalog-number (->string catalog-number))
     (property! proj :directory (or directory
@@ -98,11 +101,11 @@
     (property! proj :channel-assignments channel-assignments)
     (property! proj :controller-assignments controller-assignments)
     (property! proj :current-project-filename (property proj :boot-file))
-    (setf orch-root (create-instrument
-		     'root
-		     :channel-assignments channel-assignments
-		     :controller-assignments controller-assignments
-		     :channel 1))
+    ;; (setf orch-root (create-instrument
+    ;; 		     'root
+    ;; 		     :channel-assignments channel-assignments
+    ;; 		     :controller-assignments controller-assignments
+    ;; 		     :channel 1))
     (property! proj :chord-dictionary (chord-dictionary))
     (property! proj :orchestra (or orchestra *root-instrument*))
     (setf *project* proj)
@@ -127,9 +130,9 @@
       (children project)
     nil))
 
-(defun load-project (&optional project-name &key
-			       (dir *cyco-projects-directory*)
-			       (boot-file *default-project-boot-file*))
+(defun load-project (project-name &key
+				  (dir *cyco-projects-directory*)
+				  (boot-file *default-project-boot-file*))
   "Load the main project boot file.
    project-name - If not specified reload the current project.
    As convenience LP is an alias for LOAD-PROJECT"
@@ -170,7 +173,7 @@
   "Return project's orchestra."
   (if (project-p project)
       (let ((root (property project :orchestra)))
-	(if print (print-tree root))
+	(if print (dump root))
 	root)
     nil))
 
@@ -198,7 +201,7 @@
 	(if sec
 	    (push sec acc)
 	  (let ((frmt "Project ~A does not have Section ~A"))
-	    (warning (format nil frmt (name project) sname))))))
+	    (cyco-warning (format nil frmt (name project) sname))))))
     (setf (sequence-order project) (reverse acc))
     project))
 
@@ -237,6 +240,7 @@
 
 (defmethod ->midi ((proj project) &key filename (offset 0)(repeat :ignore)(pad-end 2))
   "Render and save project to MIDI file."
+  (dismiss repeat)
   (render-project :project proj
 		  :offset offset
 		  :write-midi-file t
@@ -245,6 +249,7 @@
 
 (defmethod ->midi ((obj null) &key filename (offset 0)(repeat :ignore)(pad-end 2))
   "Render and save *PROJECT* to MIDI file."
+  (dismiss repeat)
   (assert-current-project)
   (->midi *project*
 	  :filename filename

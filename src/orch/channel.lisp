@@ -40,6 +40,7 @@
 (defmethod channel-assignment ((n fixnum) &key
 			       (cmap :ignore)
 			       (resolve :ignore))
+  (dismiss cmap resolve)
   (1+ (logand (1- n) #xF)))
 
 (defmethod --channel-assignment-once ((cmap channel-assignment-map)(alias symbol))
@@ -54,7 +55,7 @@
 	    n
 	  (--resolve-channel-assignment cmap n (1- depth))))
     (progn
-      (warning (format nil "MIDI channel assignment depth exceeded   '~A'" alias))
+      (cyco-warning (format nil "MIDI channel assignment depth exceeded   '~A'" alias))
       :error)))
 
 (defmethod channel-assignment ((alias symbol) &key

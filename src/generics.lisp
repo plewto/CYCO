@@ -3,6 +3,7 @@
 
 (in-package :cyco)
 
+
 ;;; ---------------------------------------------------------------------- 
 ;;;				predicates
 
@@ -44,6 +45,8 @@
 (defpredicate timesig-event-p)
 (defpredicate transposable-p)
 
+
+
 (defgeneric ->midi (obj &key filename offset repeat pad-end)
   (:documentation
    "Render events in object and write to MIDI file.
@@ -55,7 +58,7 @@
     :offset  - Time in seconds added to each MIDI event, default 0
     :repeat  - Number of times to repeat MIDI data.  Some implementations
                may not support repeat. Default 1.
-    :pad-end - Number of seconds to extend MIDI track past final event.
+    :pad-end - Number of seconds to extend MIDI track past final even.t
                pad-end is used to prevent cutting off final release tails.
                Default 2.0 seconds."))
 
@@ -89,6 +92,19 @@
     If obj is a list, convert to vector.
     Otherwise return a new vector holding obj."))
 
+(defgeneric name (obj)
+  (:documentation
+   "Return objects name.  If name is not defined for an object the
+    default is to return the string representation of the object.
+    See ->string."))
+   
+(defgeneric name! (obj new-name)
+  (:documentation
+   "sets an objects name."))
+
+(defmethod name ((obj t)) (->string obj))
+
+
 ;; Add child node to parent.
 ;;
 (defgeneric add-child! (parent child &key test)
@@ -103,6 +119,7 @@
 (defmethod add-child! ((parent null)(child t) &key (test nil))
   "Specialized method, (does not) add child to nil.
    child and test arguments are ignored.  Returns nil"
+  (dismiss parent child test)
   nil)
 
 (defgeneric amplitude (opj &key range)
@@ -200,6 +217,7 @@
                copy.  Default #'identity"))
 
 (defmethod clone ((obj t) &key newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook obj))
 
 (defgeneric dump (obj &key depth max-depth)
@@ -250,17 +268,7 @@
   (:documentation
    "Returns metric values of object, or list of objects"))
 
-(defgeneric name (obj)
-  (:documentation
-   "Return objects name.  If name is not defined for an object the
-    default is to return the string representation of the object.
-    See ->string."))
-   
-(defgeneric name! (obj new-name)
-  (:documentation
-   "sets an objects name."))
-
-(defmethod name ((obj t)) (->string obj))
+(defgeneric mute (obj flag))
 
 (defgeneric next-1 (obj)
   (:documentation
@@ -296,6 +304,8 @@
     (octave 60) -> 5
     (octave 'C5) -> 5
     (octave '(C4 C5 C6)) -> (4 5 6)."))
+
+(defgeneric period (obj))
 
 (defgeneric pick (obj &key n random-state)
   (:documentation
@@ -374,6 +384,8 @@
  
 (defgeneric reset (obj))
 (defmethod reset ((obj t)) nil)
+
+(defgeneric retrograde (onj))
 
 ;;(defgeneric subbeats (obj))
 (defgeneric subbeat-duration (obj)

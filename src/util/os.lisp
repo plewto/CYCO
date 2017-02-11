@@ -56,9 +56,9 @@
 (defun cwd ()
   (namestring *default-pathname-defaults*))
 
-;; ISSUE: Portability
+;; ISSUE: Portability?
 (defun is-absolute-path (name)
-  (and (char= (char (namestring name) 0) *os-root*) path))
+  (and (char= (char (namestring name) 0) *os-root*) name))
 
 (let ((previous-dir (cwd)))
   (flet ((swap-previous ()
@@ -96,7 +96,7 @@
 			 (parse-namestring new-path))))
 	 (test-cwd ()
 		   (if (not (file-exists (cwd)))
-		       (warning (format nil "CWD '~A' does not exists!" (cwd))))))
+		       (cyco-warning (format nil "CWD '~A' does not exists!" (cwd))))))
 
     ;; cd special characters
     ;;   ~ -> home

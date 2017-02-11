@@ -13,6 +13,8 @@
 
 (in-package :cyco)
 
+(defun dismiss (&rest args) args)
+
 (defmacro constant (name value &optional docstring)
   "An alias for defconstant."
   `(if (not (boundp ',name))
@@ -32,11 +34,11 @@
   `(setf (symbol-function ',a)
 	 (symbol-function ',b)))
 
-(let* ((cyco-boot "src/cyco/cyco")
+(let* ((cyco-boot "src/cyco")
        (current-file cyco-boot)
        (enable-rl t))
 
-  (defun ld (filename &key (verbose nil)(print nil))
+  (defun ld (filename &key (verbose t)(print nil))
     "Loads CYCO source file.  If verbose is true display message.
      Pass the value of print to the CL load function."
     (let ((temp *load-print*))
@@ -63,33 +65,41 @@
 
 (format t "Loading cyco...~%")
 (ld "src/constants")
+(ld "src/dummies")
 (ld "src/globals")
 (ld "src/generics")
+
 (ld "src/util/utilities")
 (ld "src/util/string-utilities")
 (ld "src/util/list-utilities")
 (ld "src/util/debug")
 (ld "src/notification")
+
 (ld "src/util/os")
 (ld "src/midi/midi-util" )
 (ld "src/midi/event")
 (ld "src/midi/syscommon")
+
 (ld "src/midi/meta")
 (ld "src/midi/smf-header")
 (ld "src/midi/smf-track")
 (ld "src/midi/smf")
+
 (ld "src/node")
 (ld "src/patterns/pattern")
 (ld "src/comp/amplitude" )
 (ld "src/comp/chords")
+
 (ld "src/comp/keynum")
 (ld "src/comp/metric")
 (ld "src/orch/channel")
 (ld "src/orch/controller")
+
 (ld "src/orch/keymaps")
 (ld "src/orch/progmap")
 (ld "src/orch/instrument")
 (ld "src/orch/metronome")
+
 (ld "src/comp/timesig" )
 (ld "src/comp/project")
 (ld "src/comp/section")
@@ -99,8 +109,8 @@
 (ld "src/comp/epart")
 (ld "src/comp/qball")
 (ld "src/comp/controlball")
-(format t "~%")
-(ld "src/local")
+;; (format t "~%")
+;; (ld "src/local")
 
 (format t "~A~%" +BANNER+)
 (format t "CYCO version ~A~%~%" +CYCO-VERSION+)
@@ -109,48 +119,48 @@
 ;;; Convenience functions
 ;;;
 
-(defun ?o (&optional (node *root-instrument*))
-  "Display orchestra tree for current project."
-  (dump node))
+;; (defun ?o (&optional (node *root-instrument*))
+;;   "Display orchestra tree for current project."
+;;   (dump node))
 
-(defun ?p(&optional (depth 1))
-  "Display project tree (for *PROJECT*)
-   depth - controls verbosity
-           1 -> project, sections.
-           2 -> project, sections, parts.
-           3 -> project, sections, parts, events."
-  (dump *project* :max-depth (+ 2 depth)))
+;; (defun ?p(&optional (depth 1))
+;;   "Display project tree (for *PROJECT*)
+;;    depth - controls verbosity
+;;            1 -> project, sections.
+;;            2 -> project, sections, parts.
+;;            3 -> project, sections, parts, events."
+;;   (dump *project* :max-depth (+ 2 depth)))
 
-(defun ?km (inst)
-  "Display information about an instruments keynumber map."
-  (let ((kmap (property inst :keynumber-map)))
-    (if kmap
-	(funcall kmap :?)
-      (format t "No keymap defined for ~A.~%" (name inst)))))
+;; (defun ?km (inst)
+;;   "Display information about an instruments keynumber map."
+;;   (let ((kmap (property inst :keynumber-map)))
+;;     (if kmap
+;; 	(funcall kmap :?)
+;;       (format t "No keymap defined for ~A.~%" (name inst)))))
 
-(defun ?i (inst-spec)
-  "Display information about an instrument."
-  (let* ((orc *root-instrument*)
-	 (inst (or (and (root-p inst-spec) inst-spec)
-		   (find-node orc inst-spec))))
-    (format t "Instrument ~A   channel ~A(~A)~%"
-	    (name inst)(channel inst)(channel inst :resolve t))
-    (format t "    parent        ~A~%" (name (parent inst)))
-    (format t "    remarks       ~A~%" (remarks inst))
-    (format t "    transient     ~A~%" (is-transient inst))
-    (format t "    keynumber-map ~A~%" (property inst :keynumber-map))
-    (format t "    duration-map  ~A~%" (property inst :duration-map))
-    (format t "    amplitude-map ~A~%" (property inst :amplitude-map))
-    (format t "    program-hook  ~A~%" (property inst :program-change-hook))
-    (format t "    program       ~A~%" (property inst :program-number))
-    (format t "    bank          ~A~%" (property inst :program-bank))
-    (funcall (property inst :keynumber-map) :?)
-    (funcall (property inst :duration-map) :?)
-    (funcall (property inst :amplitude-map) :?)
-    (funcall (property inst :program-change-hook) 0 0 :? nil)))
+;; (defun ?i (inst-spec)
+;;   "Display information about an instrument."
+;;   (let* ((orc *root-instrument*)
+;; 	 (inst (or (and (root-p inst-spec) inst-spec)
+;; 		   (find-node orc inst-spec))))
+;;     (format t "Instrument ~A   channel ~A(~A)~%"
+;; 	    (name inst)(channel inst)(channel inst :resolve t))
+;;     (format t "    parent        ~A~%" (name (parent inst)))
+;;     (format t "    remarks       ~A~%" (remarks inst))
+;;     (format t "    transient     ~A~%" (is-transient inst))
+;;     (format t "    keynumber-map ~A~%" (property inst :keynumber-map))
+;;     (format t "    duration-map  ~A~%" (property inst :duration-map))
+;;     (format t "    amplitude-map ~A~%" (property inst :amplitude-map))
+;;     (format t "    program-hook  ~A~%" (property inst :program-change-hook))
+;;     (format t "    program       ~A~%" (property inst :program-number))
+;;     (format t "    bank          ~A~%" (property inst :program-bank))
+;;     (funcall (property inst :keynumber-map) :?)
+;;     (funcall (property inst :duration-map) :?)
+;;     (funcall (property inst :amplitude-map) :?)
+;;     (funcall (property inst :program-change-hook) 0 0 :? nil)))
 
-(setfn lp load-project)
-(setfn lpf load-project-file)
+;; (setfn lp load-project)
+;; (setfn lpf load-project-file)
 
 
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST

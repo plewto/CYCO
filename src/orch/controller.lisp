@@ -24,6 +24,7 @@
   (property! cmap alias value))
 
 (defmethod controller-assignment ((n fixnum) &key (cmap :ignore))
+  (dismiss cmap)
   (logand n #x7F))
 
 (defmethod controller-assignment ((alias symbol) &key (cmap *global-controller-assignments*))

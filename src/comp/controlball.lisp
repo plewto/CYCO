@@ -101,7 +101,7 @@
 	    (cuepat (cue-pattern prt))
 	    (valpat (value-pattern prt)))
 	(dotimes (i (cardinality cuepat))
-	  (let ((time (apply qfn (next-1 cuepat)))
+	  (let ((time (+ offset (apply qfn (next-1 cuepat))))
 		(val (truncate (* 127 (next-1 valpat)))))
 	    (dolist (inst (instruments prt))
 	      (let ((cindex (1- (channel inst :resolve t))))
@@ -134,9 +134,11 @@
 (defmethod transposable-p ((cb controlball)) nil)
 
 (defmethod transpose! ((cb controlball)(n t) &key (range :ignore))
+  (dismiss range)
   cb)
 
 (defmethod invert! ((cb controlball)(n t) &key (range :ignore))
+  (dismiss range)
   cb)
 
 
@@ -193,7 +195,7 @@
 	    (cuepat (cue-pattern prt))
 	    (valpat (value-pattern prt)))
 	(dotimes (i (cardinality cuepat))
-	  (let ((time (apply qfn (next-1 cuepat)))
+	  (let ((time (+ offset (apply qfn (next-1 cuepat))))
 		(val (truncate (* 127 (next-1 valpat)))))
 	    (dolist (inst (instruments prt))
 	      (let ((cindex (1- (channel inst :resolve t))))
@@ -253,7 +255,7 @@
 	    (cuepat (cue-pattern prt))
 	    (valpat (value-pattern prt)))
 	(dotimes (i (cardinality cuepat))
-	  (let* ((time (apply qfn (next-1 cuepat)))
+	  (let* ((time (+ offset (apply qfn (next-1 cuepat))))
 		 (v (bend->midi-data (next-1 valpat)))
 		 (lsb (aref v 0))
 		 (msb (aref v 1)))

@@ -12,6 +12,7 @@
   obj)
 
 (defmethod clone ((obj string) &key newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (format nil "~A" obj)))
 
 (defun str+ (&rest args)

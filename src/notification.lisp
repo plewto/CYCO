@@ -3,7 +3,7 @@
 
 (in-package :cyco)
 
-(defun warning (&rest args)
+(defun cyco-warning (&rest args)
   "Display warning message."
   (dolist (a args)
     (format t "WARNING: ~A~%" a)))

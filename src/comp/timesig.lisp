@@ -87,9 +87,7 @@
 
 (defmethod tempo! ((ts timesig)(bpm number))
   "Update TIMESIG tempo."
-  (let* ((u (unit ts))
-	 (udiv (float (metric u)))
-	 (ticks (* +TICKS-PER-QUARTER-NOTE+ udiv)))
+  (let* ((u (unit ts)))
     (let* ((dur-beat (/ (* 60.0 (metric u)) bpm))
 	   (dur-bar (* (beat-count ts) dur-beat))
 	   (dur-phrase (* (bar-count ts) dur-bar))
@@ -143,6 +141,7 @@
   (property ts :dur-tsubbeat))
 
 (defmethod tick-duration ((ts timesig) &optional (unit :ignore))
+  (dismiss unit)
   (property ts :dur-tick))
 
 (defmethod rep-timesig ((ts timesig))

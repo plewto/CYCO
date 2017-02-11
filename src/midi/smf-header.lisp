@@ -33,6 +33,7 @@
 	  (lsb (smf-division header)))))
 
 (defmethod dump-smf-header ((head smf-header) &optional (offset :ignore))
+  (dismiss offset)
   (let ((pad (tab 1)))
     (format t "SMF-HEADER~%")
     (format t "~AId          : 'MThd' ~%" pad)

@@ -31,6 +31,7 @@
 (defmethod pattern-p ((obj pattern)) obj)
 
 (defmethod clone ((p pattern) &key newname parent (hook #'identity))
+  (dismiss newname parent)
   (funcall hook (make-instance (type-of p)
 			       :of (clone (elements p)))))
     

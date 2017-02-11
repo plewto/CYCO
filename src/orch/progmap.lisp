@@ -34,6 +34,7 @@
    bank - ignored.
    Returns single program change event.
    ((time . event))"
+  (dismiss bank)
   (cond ((eq program :?)
 	 (progn
 	   (format t "default-program-change-map~%")
@@ -56,6 +57,7 @@
   "Creates program-change-hook with constant result.
    program and bank arguments are ignored."
   #'(lambda (time cindex _1 _2)
+      (dismiss _1 _2)
       (if (eq program-number :?)
 	  (progn
 	    (format t "~A constant-program-hook ~A~%" iname program-number)
@@ -90,6 +92,7 @@
 		  (setf n (1+ n))))
 	      nil))
     #'(lambda (time cindex prognum &optional _)
+	(dismiss _)
 	(let ((asc (assoc prognum alist)))
 	  (cond ((eq prognum :?)(doc))
 		(asc
@@ -100,5 +103,5 @@
 		 (gen-events time cindex prognum))
 		(t
 		 (let ((frmt "~A is invalid keyswitch for ~A"))
-		   (warning (format nil frmt prognum iname))
+		   (cyco-warning (format nil frmt prognum iname))
 		   nil)))))))

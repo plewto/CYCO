@@ -60,9 +60,10 @@
 		     :program-change-hook program-change-hook
 		     :program-number program-number
 		     :program-bank program-bank
+		     :program-change-offset (or program-change-offset 0)
 		     :keynumber-map (--metronome-keymap beep accent phrase)
 		     :amplitude-map (--metronome-amplitude-map beep accent phrase)
-		     :duration-map #'(lambda (d) beep-duration)
+		     :duration-map #'(lambda (d) (dismiss d) beep-duration)
 		     :program-change-hook program-change-hook
 		     :program-number program-number
 		     :program-bank program-bank))

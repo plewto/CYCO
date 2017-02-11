@@ -82,7 +82,7 @@
 	(children n)))
 
 (defmethod collect-children ((n node) &key
-			     (test #'(lambda (obj) t)))
+			     (test #'(lambda (obj)(dismiss obj) t)))
   "Returns list of child nodes for which test is true."
   (let ((acc '()))
     (dolist (c (children n))
@@ -102,6 +102,8 @@
   "If child is a child of n, return it. Otherwise return nil."
   (if (has-child? n child)
       child))
+
+(defgeneric find-node (root name &key default))
 
 ;; Walk tree from root and return first node encountered with matching name
 ;; If no matching node found, return default
@@ -160,6 +162,8 @@
   (prune-leaf! n (get-child n name) :force force))
 
 
+(defgeneric prune-tree! (n &key force))
+
 ;; Tear tree apart.
 ;; Remove all transient nodes from tree.
 ;; If force is true remove all nodes.
@@ -192,11 +196,13 @@
   (setf (gethash key (properties n)) value))
 
 (defmethod property-keys ((n null) &optional (local-only :ignore))
+  (dismiss local-only)
   nil)
   
 (defmethod property-keys ((n node) &optional (local-only nil))
   (let ((acc '()))
     (maphash #'(lambda (a b)
+		 (dismiss b)
 		 (push a acc))
 	     (properties n))
     (if local-only

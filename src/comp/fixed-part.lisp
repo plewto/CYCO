@@ -18,7 +18,7 @@
 	(default-channel-index 0)
 	(default-duration (metric 'q))
 	(default-amplitude (amplitude 'mf))
-	(default-ctrl 1)
+	;(default-ctrl 1)
 	(default-cc-value 0.0)
 	(msg1 "Expected even number of elements in fixed-pattern event list")
 	(acc '()))
@@ -27,7 +27,7 @@
 			  (i 0))
 		      (if (not (evenp (length lst)))
 			  (progn
-			    (warning msg1)
+			    (cyco-warning msg1)
 			    (error (format nil "fixed-part ~A" (name prt)))))
 		      (while (< i (length lst))
 			(push (cons (nth i lst)(nth (1+ i) lst)) bcc)

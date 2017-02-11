@@ -10,7 +10,7 @@
 
 (in-package :cyco)
 
-(defclass chord-dictionary (node) )
+(defclass chord-dictionary (node) nil)
 
 (setf *global-chord-dictionary*
       (let ((cd (make-instance 'chord-dictionary
@@ -35,36 +35,36 @@
 		 :parent parent
 		 :name 'local-chord-dictionary))
 
-;; (defun parse-chord (root cname &key
-;; 			 (project *project*)
-;; 			 (inversion 0)
-;; 			 (octave nil)
-;; 			 (copies nil))
-;;   "Construct chord as list of keynumbers from root and chord name cname.
-;;    root - keynumber, the root key.
-;;    cname - symbol, the chord name.
-;;    :project - The project suppling the CHORD-DICTIONARY, defaults to *PROJECT*.
-;;    :inversion - fixnum, apply inversion to note list by rotation. default 0.
-;;    :octave - boolean, if true add octave transposed copy of first chord note
-;;              to end of list.  Octave is applied after inversion. Default nil.
-;;    :copies - fixnum or list.  Treat each number in the copies list as a 
-;;              transposition of the original values.   For instance if the 
-;;              original chord is [maj] (0 4 7) and copies is 12, the result 
-;;              is (0 4 7 12 16 19).   If copies is (12 13) the result is
-;;              (0 4 7 12 16 19 13 17 20).
-;;    Returns list."
-;;   (let* ((cd (property project :chord-dictionary))
-;; 	 (template (or (property cd cname :default nil)
-;; 		       (if (listp cname)
-;; 			   (keynumber cname)
-;; 			 (error
-;; 			  (format nil "~A is not a recognized chord!" cname))))))
-;;     (setf template (rotate template inversion))
-;;     (if octave (push-end (+ 12 (car template)) template))
-;;     (let ((acc (clone template)))
-;;       (dolist (x (->list copies))
-;; 	(setf acc (append acc (transpose template x))))
-;;       (transpose acc (keynumber root)))))
+(defun parse-chord (root cname &key
+			 (project *project*)
+			 (inversion 0)
+			 (octave nil)
+			 (copies nil))
+  "Construct chord as list of keynumbers from root and chord name cname.
+   root - keynumber, the root key.
+   cname - symbol, the chord name.
+   :project - The project suppling the CHORD-DICTIONARY, defaults to *PROJECT*.
+   :inversion - fixnum, apply inversion to note list by rotation. default 0.
+   :octave - boolean, if true add octave transposed copy of first chord note
+             to end of list.  Octave is applied after inversion. Default nil.
+   :copies - fixnum or list.  Treat each number in the copies list as a 
+             transposition of the original values.   For instance if the 
+             original chord is [maj] (0 4 7) and copies is 12, the result 
+             is (0 4 7 12 16 19).   If copies is (12 13) the result is
+             (0 4 7 12 16 19 13 17 20).
+   Returns list."
+  (let* ((cd (property project :chord-dictionary))
+	 (template (or (property cd cname :default nil)
+		       (if (listp cname)
+			   (keynumber cname)
+			 (error
+			  (format nil "~A is not a recognized chord!" cname))))))
+    (setf template (rotate template inversion))
+    (if octave (push-end (+ 12 (car template)) template))
+    (let ((acc (clone template)))
+      (dolist (x (->list copies))
+	(setf acc (append acc (transpose template x))))
+      (transpose acc (keynumber root)))))
 
 (defun chord! (name template &key (project nil))
   "Define new chord in current project.  By convention chords names are

@@ -15,7 +15,7 @@
 	   (format t "default keymap [0 : 127]~%")
 	   60))
 	((keynumber-p n)(keynumber n))
-	(t ;(warning (format nil "~A is an Illegal keynumber" n))
+	(t 
 	   60)))
 
 (defmacro defkeymap (name alist)
@@ -45,7 +45,7 @@
 		  ((keynumber-p kn)
 		   (car (cdr (cnth (keynumber kn) acc))))
 		  (t (let ((frmt "~A is invalid ~A keynumber"))
-		       (warning (format nil frmt kn (->string ',name)))
+		       (cyco-warning (format nil frmt kn (->string ',name)))
 		       (car (cdr (car acc)))))))))))
 			  
 (defmacro circular-keymap (name keys)

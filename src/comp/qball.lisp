@@ -15,7 +15,7 @@
    (cue-pattern
     :type cycle
     :accessor cue-pattern
-    :initform (cycle of nil)
+    :initform (cycle :of nil)
     :initarg :cue)
    (key-pattern
     :type pattern

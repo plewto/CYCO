@@ -4,10 +4,11 @@
 (in-package :cyco)
 
 
-(defun debug (frmt &rest args)
-  "Print the word 'DEBUG' and then apply format to frmt and remaining arguments."
-  (let ((str (apply #'format (append (list nil frmt) args))))
-    (format t "DEBUG ~A~%" str)))
+;; SBCL complains about debug, ABCL is OK.
+;; (defun debug (frmt &rest args)
+;;   "Print the word 'DEBUG' and then apply format to frmt and remaining arguments."
+;;   (let ((str (apply #'format (append (list nil frmt) args))))
+;;     (format t "DEBUG ~A~%" str)))
 
 
 (let ((depth 0)

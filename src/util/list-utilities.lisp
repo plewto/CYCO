@@ -3,16 +3,15 @@
 
 (in-package :cyco)
 
-;; (defmethod clone ((c cons) &key parent newname (hook #'identity))
-;;   (funcall hook (cons (clone (car c))(clone (cdr c)))))
-
 (defmethod clone ((lst list) &key parent newname (hook #'identity))
+  (dismiss parent newname)
   (let ((acc '()))
     (dolist (e lst)
       (push (clone e) acc))
     (funcall hook (reverse acc))))
 
 (defmethod clone ((c cons) &key parent newname (hook #'identity))
+  (dismiss parent newname)
   (funcall hook (cons (clone (car c))(clone (cdr c)))))
 
 (defmethod ->list ((obj list)) obj)
@@ -266,6 +265,7 @@
 ;;;				  Vectors
 
 (defmethod clone ((vec vector) &key newname parent (hook #'identity))
+  (dismiss parent newname)
   (let* ((len (length vec))
 	 (dst (make-array len)))
     (dotimes (i len)

@@ -20,7 +20,7 @@
 
 (constant +KEY-NUMBERS+
 	  (flet ((make-sym (a b)
-			   (intern (make-symbol (format nil "~A~A" a b)))))
+			   (intern (format nil "~A~A" a b))))
 	    (let* ((symlist #((C BF)(CS DF)(D D)(DS EF)
 			      (E FF)(F ES)(FS GF)(G G)
 			      (GS AF)(A A)(AS BF)(B CF)))

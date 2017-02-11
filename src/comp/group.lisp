@@ -47,7 +47,7 @@
 		 ((and (symbolp i)(has-child? sec i))
 		  (push (get-child sec i) acc))
 		 (t (let ((frmt "Can not add ~A to group ~A of section ~A"))
-		      (warning (format nil frmt i ,name (name sec)))))))
+		      (cyco-warning (format nil frmt i ,name (name sec)))))))
 	 (setf (members grp) acc))
        (param ,name grp)
        grp)))
@@ -66,6 +66,7 @@
   "Returns list of all sibling GROUPs to grp within it's parent section."
   (let ((acc '()))
     (maphash #'(lambda (key val)
+		 (dismiss key)
 		 (if (not (eq val grp))
 		     (push val acc)))
 	     (groups (parent grp)))
