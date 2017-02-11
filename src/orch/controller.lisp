@@ -8,6 +8,9 @@
 
 (in-package :cyco)
 
+(defgeneric assign-controller! (alias value &key cmap))
+(defgeneric controller-assignment (alias &key cmap))
+
 (defclass controller-assignment-map (node) nil)
 
 (defun controller-assignment-map (&key

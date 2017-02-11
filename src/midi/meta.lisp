@@ -21,6 +21,9 @@
 
 (in-package :cyco)
 
+(defgeneric micro-seconds-per-beat (obj))
+(defgeneric timesig-scale-factor (obj))
+
 (defclass meta-event (midi-event)
   ((command				;; Always +META+
     :type fixnum

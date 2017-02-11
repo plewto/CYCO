@@ -16,6 +16,12 @@
 
 (in-package :cyco)
 
+(defgeneric assign-channel! (alias value &key cmap))
+(defgeneric --channel-assignment-once (cmap alias))
+(defgeneric --resolve-channel-assignment (cmap alias depth))
+(defgeneric channel-assignment (n &key cmap resolve))
+
+
 (defclass channel-assignment-map (node) nil)
 
 (setf *global-channel-assignments*
@@ -68,7 +74,7 @@
 	(error (format nil "Unknown MIDI channel '~A'" alias))
       rs)))
 
-(defmethod channel-assignments (&optional (cmap *global-channel-assignments*))
+(defun channel-assignments (&optional (cmap *global-channel-assignments*))
   (let* ((keys (property-keys cmap))
 	 (acc '()))
     (dotimes (i 16)

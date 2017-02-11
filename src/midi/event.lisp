@@ -33,6 +33,11 @@
 
 (in-package :cyco)
 
+(defgeneric mnemonic (obj))
+(defgeneric data-count (obj))
+(defgeneric data! (obj index value))
+(defgeneric bend-event (obj))
+
 ;;; ---------------------------------------------------------------------- 
 ;;;			     MIDI-EVENT class
 

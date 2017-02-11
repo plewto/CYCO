@@ -36,6 +36,12 @@
 
 (in-package :cyco)
 
+(defgeneric cohorts (obj))
+(defgeneric has-child? (a b))
+(defgeneric collect-children (n &key test))
+(defgeneric get-child (a b))
+(defgeneric prune-leaf! (a b &key force))
+
 (defclass node nil
   ((parent
     :type node

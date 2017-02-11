@@ -5,6 +5,9 @@
 
 (in-package :cyco)
 
+(defgeneric render-smf-header (header track-count))
+(defgeneric dump-smf-header (header &optional offset))
+
 (defclass smf-header nil
   ((format
     :type fixnum

@@ -169,7 +169,7 @@
       (setf acc (+ acc (duration s))))
     acc))
 
-(defun orchestra (&key (project *project*)(print t))
+(defmethod orchestra (&key (project *project*)(print t))
   "Return project's orchestra."
   (if (project-p project)
       (let ((root (property project :orchestra)))

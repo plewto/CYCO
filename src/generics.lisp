@@ -35,7 +35,7 @@
 (defpredicate program-event-p)
 (defpredicate pressure-event-p)
 (defpredicate project-p)
-(defpredicate rest-p)
+;(defpredicate rest-p)
 (defpredicate root-p)
 (defpredicate section-p)
 (defpredicate system-common-event-p)
@@ -297,13 +297,14 @@
 ;; (defgeneric note-off (obj time key-number amplitude))
 ;; (defgeneric note-on (obj time key-number amplitude))
 
-
 (defgeneric octave (obj)
   (:documentation
    "Return octave number of object, or list of octave numbers.
     (octave 60) -> 5
     (octave 'C5) -> 5
     (octave '(C4 C5 C6)) -> (4 5 6)."))
+
+(defgeneric orchestra (&key project))
 
 (defgeneric period (obj))
 
@@ -348,6 +349,8 @@
                   by obj and all ancestors of obj.  If local-only is true,
                   do not included ancestor properties."))
 
+(defgeneric push-event (time evn obj))
+
 (defgeneric remaining (obj)
   (:documentation
    "Returns all remaining values of pattern.
@@ -360,6 +363,8 @@
 (defgeneric remarks! (obj txt)
   (:documentation
    "Sets object remarks text."))
+
+(defgeneric retrograde! (obj))
 
 (defgeneric render-once (obj &key offset)
   (:documentation
@@ -381,11 +386,15 @@
     The list is not guaranteed to be time sorted."))
   
 (defgeneric render-event (obj))
- 
+
+(defgeneric rest-p (obj))
+
 (defgeneric reset (obj))
 (defmethod reset ((obj t)) nil)
 
 (defgeneric retrograde (onj))
+
+(defgeneric solo (obj))
 
 ;;(defgeneric subbeats (obj))
 (defgeneric subbeat-duration (obj)

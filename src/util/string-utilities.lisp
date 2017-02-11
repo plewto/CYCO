@@ -3,10 +3,10 @@
 
 (in-package :cyco)
 
-(defun tab (&optional (n 1))
-  "Return string of nx4 spaces."
-  (let ((frmt (format nil "~~~DA" (* 4 n))))
-    (format nil frmt "")))
+;; (defun tab (&optional (n 1))
+;;   "Return string of nx4 spaces."
+;;   (let ((frmt (format nil "~~~DA" (* 4 n))))
+;;     (format nil frmt "")))
 
 (defmethod ->string ((obj string))
   obj)

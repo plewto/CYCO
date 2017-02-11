@@ -5,6 +5,13 @@
 
 (in-package :cyco)
 
+(defgeneric --sort-smf-track! (trk))
+(defgeneric --init-smf-track-events (trk))
+(defgeneric --render-smf-track (trk &optional pad-end))
+(defgeneric render-smf-track (trj &optional pad-end))
+(defgeneric dump-smf-track (trk &key offset verbose))
+
+
 (defclass smf-track nil
   ((track-name
     :type string
@@ -61,8 +68,6 @@
 
 (defmethod --sort-smf-track! ((trk smf-track))
   (setf (track-events trk)(sort (track-events trk) #'sort-midi-events-test)))
-
-
 
 (defmethod --init-smf-track-events ((trk smf-track))
   (let ((nevn (track-name-event (name trk)))

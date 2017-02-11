@@ -16,6 +16,14 @@
 
 (in-package :cyco)
 
+(defgeneric unit (ts))
+(defgeneric bar-count (ts))
+(defgeneric beat-count (ts))
+(defgeneric subbeat-count (ts))
+(defgeneric tsubbeat-count (ts))
+(defgeneric tick-count (ts))
+(defgeneric rep-timesig (ts))
+
 (defclass timesig (node) nil)
 
 (let ((instance-counter 0))

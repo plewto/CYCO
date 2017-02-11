@@ -7,6 +7,8 @@
 
 (in-package :cyco)
 
+(defgeneric --parse-fixed-part-events (prt qfn events))
+
 (defclass fixed-part (part) nil)
   
 (defmethod --parse-fixed-part-events ((prt fixed-part)

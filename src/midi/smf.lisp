@@ -6,6 +6,10 @@
 
 (in-package :cyco)
 
+(defgeneric track-count (obj))
+(defgeneric render-smf (obj &key pad-end))
+(defgeneric save-smf (obj filename &key pad-end no-overwrite))
+
 (defclass smf nil
   ((header
     :type smf-header

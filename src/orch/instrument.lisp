@@ -23,8 +23,12 @@
 ;;;; on which it builds it's specific orchestra.
 ;;;;
 
-
 (in-package :cyco)
+
+(defgeneric instrument-keynumber (inst keynum))
+(defgeneric instrument-duration (inst n))
+(defgeneric instrument-amplitude (inst a))
+(defgeneric instrument-velocity (inst a))
 
 (defclass instrument (node) nil)
 
@@ -106,7 +110,7 @@
    force - Boolean, if true remove ALL instruments from orchestra
            tree. Default nil"
   (let ((n (cond ((instrument-p node) node)
-		 ((project-p node)(orchestra :project node :print nil))
+		 ((project-p node)(orchestra :project node))
 		 (t nil))))
     (and n (prune-tree! n :force force))))
 

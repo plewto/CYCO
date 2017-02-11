@@ -14,6 +14,8 @@
 
 (in-package :cyco)
 
+(defgeneric data (obj index))
+
 (defclass system-common-event (midi-event) nil)
   
 (defmethod system-common-event-p ((obj system-common-event)) obj)
