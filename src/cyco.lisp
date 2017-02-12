@@ -44,7 +44,7 @@
        (current-file cyco-boot)
        (enable-rl t))
 
-  (defun ld (filename &key (verbose t)(print nil))
+  (defun ld (filename &key (verbose nil)(print nil))
     "Loads CYCO source file.  If verbose is true display message.
      Pass the value of print to the CL load function."
     (let ((temp *load-print*))
