@@ -61,6 +61,9 @@
 (defmethod metric ((s symbol))
   (or (gethash s +METRIC-UNITS+) s))
 
+(defmethod metric ((s string))
+  (metric (intern (string-upcase s) :cyco)))
+
 (defmethod metric ((lst list))
   (let ((acc '()))
     (dolist (e lst)
@@ -73,4 +76,40 @@
 (defmethod tie- ((lst list))
   (apply #'- (metric lst)))
 
-	
+
+(defgeneric parse-metric-symbol (s)
+  (:documentation
+   "Convert metric expression to time.
+  Expression must have form:  [n*]a+b+c...
+  Where n is a number
+  and   a, b, c are valid metric values.
+
+  There may be zero or one multiplicative term,
+  and any number of additive terms.  The value n
+  is multiplied by the sum of the additive terms:
+
+  n*(a+b+c)  
+
+  If n defaults to 1.
+
+  Some examples:
+  4 whole notes   4*w
+  5 dotted qurter notes  5*q+e  or 5*q.
+  A double dotted quarter note  q+e+s"))
+
+(defmethod parse-metric-expression ((s string))
+  (let* ((foo (split-string s #\*))
+	 (mult 1)
+	 (acc 0))
+    (if (> (length foo) 1)
+    	(progn
+    	  (setf mult (read-from-string (car foo)))
+    	  (setf foo (cdr foo))))
+    (dolist (term1 foo)
+      (dolist (term2 (split-string term1 #\+))
+	(setf acc (+ acc (metric term2)))))
+    (* mult acc)))
+    
+(defmethod parse-metric-expression ((s symbol))
+  (parse-metric-expression (symbol-name s)))
+      

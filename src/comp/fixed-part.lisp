@@ -57,7 +57,7 @@
 
 	   (parse-duration (evn)
 			   (let* ((d-spec (cdr (assoc :dur evn)))
-				  (d (or (and d-spec (metric d-spec))
+				  (d (or (and d-spec (parse-metric-expression d-spec))
 					 default-duration)))
 			     (setf default-duration d)
 			     d))
