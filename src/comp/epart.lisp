@@ -21,8 +21,8 @@
 
   ARGS:
      name - (unquoted) symbol.  The new instance is bound to name.
-     instruments - symbol, instrument, list of symbols or instruments 
-                   The instruments used to render this part.
+     instruments - instrument or list of instruments.
+                   All instruments are layerd.
     :period - Duration of part in seconds, defaults to duration of
               parent section.
     :qfn    - Function used to parse or 'cue' time values.
