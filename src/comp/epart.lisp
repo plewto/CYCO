@@ -127,7 +127,8 @@
          :CHORD - mandatory, either a chord name from the project's 
                   chord-dictionary or a list of keynumber offsets.
                   For example a major triad is specified either by the symbol
-                  [MAJ] or the list (0 4 7).
+                  [MAJ] or the list (0 4 7). A series of repeated notes may 
+                  be created by settintg all in the list to the same value.
          :DUR   - optional note duration, defaults to previous value.
          :AMP   - optional amplitude, defaults to previous value.
          :STRUM - optional list (rate [pattern...]). Where rate is 
@@ -274,7 +275,7 @@
 			    (let ((spec (cdr (assoc :strum evn))))
 			      (if spec
 				  (let ((rate (float (car spec)))
-					(pat (cycle :of (cdr spec))))
+					(pat (cycle :of (reverse (cdr spec)))))
 				    (setf default-strum-rate rate
 					  default-strum-pattern pat)))
 			      (cons default-strum-rate
@@ -284,7 +285,7 @@
 	 		 (let ((dspec (cdr (assoc :dur evn))))
 	 		   (if dspec
 	 		       (let* ((map (property prt :duration-map))
-	 			      (dur (funcall map (metric dspec))))
+	 			      (dur (funcall map (parse-metric-expression dspec))))
 	 			 (setf default-duration dur)))
 	 		   default-duration))
 
