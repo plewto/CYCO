@@ -47,6 +47,7 @@
 		      (project *project*)
 		      (section nil))
   "TODO: add docs for transposable
+   TODO: change doc for instrument pattern
 Binds new instance of QBALL to name.
    A QBALL is a PART which uses patterns to generate MIDI note events.
    A QBALL has 4 patterns: cue, key, duration and amplitude.  The cue 
@@ -57,8 +58,14 @@ Binds new instance of QBALL to name.
    different, complex combinations of the parameters are produced.
 
    name        - Symbol, the QBALL is bound to name.
-   instruments - List of instruments or instrument names.  A single instrument
-                 or name may also be specified.
+   instruments - Instrument pattern may be either a single instrument, a list 
+                 of instruments or a PATTERN of instruments.
+                   single instrument      - plays all events.
+                   list of instruments    - all notes plays by all instruments
+                                            in a layer.
+                   pattern of instruments - Specific instrument is selected 
+                                            for each note as per the pattern
+                                            pattern type.
    :cue        - List of time specifications.  The format is a nested list
                  ((time-1)(time-2)...(time-n))  where (time-i) must be a form
                  expected by the qfn argument.  The default qfn is #'BAR so 
@@ -68,6 +75,9 @@ Binds new instance of QBALL to name.
                  the SECTION duration, then the QBALL will be repeated as 
                  needed.
    :qfn        - Function used to evaluate time expressions, default #'BAR.
+   :transposable - Boolean, if nil transpose! and invert! have no effect.
+                 It is often useful to set percussion parts to be non
+                 transposable.
    :key        - List or PATTERN of keynumbers.  If :key is a list it is 
                  converted to a CYCLE. Default '(60)
    :dur        - List or PATTERN of duration values.  If :dur is a list
@@ -97,11 +107,15 @@ Binds new instance of QBALL to name.
      (flet ((->pattern (arg)
      		       (cond ((pattern-p arg) arg)
      			     (t (cycle :of (->list arg))))))
-       (let* ((sec (or ,section (current-section ,project)))
-	      (ilist (->instrument-list ,instruments ,project))
+       (let* ((ipat (cond ((listp ,instruments)
+			   (cycle :of (list ,instruments)))
+			  ((pattern-p ,instruments)
+			   ,instruments)
+			  (t (cycle :of (->list ,instruments)))))
+	      (sec (or ,section (current-section ,project)))
      	      (prt (make-instance 'qball
      				  :name ',name
-     				  :instruments ilist
+     				  :instruments ipat
      				  :period (or ,period (duration sec))
 				  :cue-fn ,qfn
      				  :cue (cycle :of ,cue)
@@ -153,21 +167,23 @@ Binds new instance of QBALL to name.
 	  (let* ((time1 (+ offset (apply qfn (next-1 cuepat))))
 		 (k (funcall kmap (next-1 (key-pattern prt))))
 		 (d (funcall dmap (next-1 (dur-pattern prt))))
-		 (a (funcall amap (next-1 (amp-pattern prt)))))
-	    (dolist (inst (instruments prt))
+		 (a (funcall amap (next-1 (amp-pattern prt))))
+		 (ilist (->list (next-1 (instruments prt)))))
+	    (dolist (inst ilist)
 	      (let* ((cindex (1- (channel inst :resolve t)))
 		     (k2 (instrument-keynumber inst k))
 		     (d2 (* dscale (instrument-duration inst d)))
 		     (a2 (instrument-amplitude inst a))
 		     (velocity (truncate (* 127 a2)))
 		     (time2 (+ time1 d2)))
-	      	(setf acc
+		(setf acc
 		      (append acc
 			      (list
-			       (cons time1 (midi-note-on cindex k2 velocity))
-			       (cons time2 (midi-note-off cindex k2 0)))))))))
+			        (cons time1 (midi-note-on cindex k2 velocity))
+				(cons time2 (midi-note-off cindex k2 0)))))))))
 	acc)
     nil))
+
 
 (defmethod clone ((p qball) &key
 		  (newname "~A-clone")

@@ -26,7 +26,7 @@
 
 (defclass part (node)
   ((instruments
-    :type list
+    :type t
     :accessor instruments
     :initform '()
     :initarg :instruments)

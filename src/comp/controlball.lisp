@@ -40,8 +40,7 @@
   "Bind new CONTROLBALL to name.
    name        - Symbol
    ctrl        - MIDI controller number or a controller alias.
-   instruments - Instrument or instrument name, or list of instruments
-                 and names.
+   instruments - Instrument or list of instruments.
    :cue        - List of time cue events.  See QBALL
    :values     - List of controller values or PATTERN of values.
                  If values is a list it is converted to a CYCLE. 
