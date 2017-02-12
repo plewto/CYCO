@@ -101,6 +101,7 @@
        
 (defun beatbox (&key (parent pro3))
   (let ((program-number (car (cdr (assoc 'beatbox +PROCUSSION-PROGRAMS+)))))
+    (free-orchestra! :node parent :force t)
     (setf beatbox (create-instrument
 		   'beatbox
 		   :parent parent

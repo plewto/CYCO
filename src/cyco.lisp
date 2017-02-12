@@ -157,10 +157,6 @@
     (funcall (property inst :amplitude-map) :?)
     (funcall (property inst :program-change-hook) 0 0 :? nil)))
 
-(setfn lp load-project)
-(setfn lpf load-project-file)
-
-
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST

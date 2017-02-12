@@ -47,8 +47,11 @@
       (error (format nil frmt s)))))
 
 (defgeneric --project-filename (obj))
+
 (defmethod --project-filename ((s string)) s)
-(defmethod --project-filename ((s symbol))(string-downcase (symbol-name s)))
+
+(defmethod --project-filename ((s symbol))
+  (string-downcase (symbol-name s)))
 
 (defun project (name &key
 		     (title nil)
@@ -144,6 +147,9 @@
     (format t "Loading project \"~A\"~%" fqn)
     (load fqn)))
 
+(defun lp (&optional project-name)
+  (load-project project-name))
+
 (defun load-project-file (&optional filename (project *project*))
   "Load a file from the project directory.
    If filename is not specified, reload the previously load file.
@@ -156,6 +162,8 @@
 	(format t "Loading \"~A\"~%" fqn)
 	(load fqn))
     (error (format t "load-project-file Invalid project"))))
+
+(setfn lpf load-project-file)
 
 (defmethod reset ((p project))
   (dolist (s (sections p))
