@@ -104,7 +104,7 @@
        :amplitude-map #'default-amplitude-map
        :program-change-hook #'default-program-change-hook))
 
-(defun free-orchestra! (&key (node *project*)(force t))
+(defun free-orchestra! (&key (node *project*)(force nil))
   "Remove all non-transient instruments from orchestra.
    node - default *PROJECT*
    force - Boolean, if true remove ALL instruments from orchestra
