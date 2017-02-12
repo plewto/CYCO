@@ -27,7 +27,7 @@
 (assign-channel! :OBX        2)		; Oberheim Matrix 1000
 (assign-channel! :VOP2       3)		; Alternate Voices of Passion
 (assign-channel! :MU100R2    4)		; Alternate  MUR100R
-(assign-channel! :LLIA2      5)		; Alternate Llia
+(assign-channel! :LLIA2     15)		; Alternate Llia
 (assign-channel! :BASS      :QL1)	; Ministry of Rock II Bass
 (assign-channel! :GUITAR    :QL2)	; Ministry of Rock II / Gypsy Guitar 
 (assign-channel! :GYPSY1    :QL3)	; Gypsy

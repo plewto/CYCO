@@ -31,4 +31,20 @@
 		 :duration-map ,duration-map
 		 :amplitude-map ,amplitude-map
 		 :program-number ,program)))
+
+(defmacro llia2 (name program &key
+		      (parent llia2)
+		      (channel nil)
+		      (keynumber-map nil)
+		      (duration-map nil)
+		      (amplitude-map nil))
+  `(param ,name (create-instrument
+		 ',name
+		 :parent ,parent
+		 :channel ,channel
+		 :transient t
+		 :keynumber-map ,keynumber-map
+		 :duration-map ,duration-map
+		 :amplitude-map ,amplitude-map
+		 :program-number ,program)))
 	     

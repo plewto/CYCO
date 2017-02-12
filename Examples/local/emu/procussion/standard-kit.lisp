@@ -182,27 +182,27 @@
 (param pkick (create-instrument 'pkick
 			      :parent standard-procussion-kit
 			      :transient nil
-			      :keynumber-map --pro-sk-kick-map))
+			      :keynumber-map #'--pro-sk-kick-map))
 
 (param psnare (create-instrument 'psnare
 			      :parent standard-procussion-kit
 			      :transient nil
-			      :keynumber-map --pro-sk-snare-map))
+			      :keynumber-map #'--pro-sk-snare-map))
 
 (param ptom (create-instrument 'ptom
 			      :parent standard-procussion-kit
 			      :transient nil
-			      :keynumber-map --pro-sk-tom-map))
+			      :keynumber-map #'--pro-sk-tom-map))
 
 (param phat (create-instrument 'phat
 			      :parent standard-procussion-kit
 			      :transient nil
-			      :keynumber-map --pro-sk-hat-map))
+			      :keynumber-map #'--pro-sk-hat-map))
 
 (param pcym (create-instrument 'pcym
 			      :parent standard-procussion-kit
 			      :transient nil
-			      :keynumber-map --pro-sk-cym-map))
+			      :keynumber-map #'--pro-sk-cym-map))
 
 (param ptuned (create-instrument 'ptuned
 			       :parent standard-procussion-kit
