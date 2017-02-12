@@ -54,11 +54,11 @@
              (0 4 7 12 16 19 13 17 20).
    Returns list."
   (let* ((cd (property project :chord-dictionary))
-	 (template (or (property cd cname :default nil)
-		       (if (listp cname)
-			   (keynumber cname)
+	 (template (if (listp cname)
+		       cname
+		     (or (property cd cname :default nil)
 			 (error
-			  (format nil "~A is not a recognized chord!" cname))))))
+			  (format nil "~A is not a chord type!" cname))))))
     (setf template (rotate template inversion))
     (if octave (push-end (+ 12 (car template)) template))
     (let ((acc (clone template)))
