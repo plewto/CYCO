@@ -42,7 +42,7 @@
 			 (copies nil))
   "Construct chord as list of keynumbers from root and chord name cname.
    root - keynumber, the root key.
-   cname - symbol, the chord name.
+   cname - symbol the chord name, or a list of intervals.
    :project - The project suppling the CHORD-DICTIONARY, defaults to *PROJECT*.
    :inversion - fixnum, apply inversion to note list by rotation. default 0.
    :octave - boolean, if true add octave transposed copy of first chord note
