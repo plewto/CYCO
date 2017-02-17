@@ -59,8 +59,12 @@
 			       :name (gen-name name))))
 	(add-child! parent ts)
 	(flet ((set?! (key value)
+
 		      (if value
-			  (property! ts key value))))
+			  (progn
+			    (format t "DEBUG set!? ~A -> ~A~%" key value)
+			    (property! ts key value)))))
+	  
 	  (set?! :tempo tempo)
 	  (set?! :unit unit)
 	  (set?! :bars bars)
@@ -75,16 +79,16 @@
   (property ts :unit))
 
 (defmethod bar-count ((ts timesig))
-  (property ts :count-bars))
+  (property ts :bars))
 
 (defmethod beat-count ((ts timesig))
-  (property ts :count-beats))
+  (property ts :beats))
 
 (defmethod subbeat-count ((ts timesig))
-  (property ts :count-subbeats))
+  (property ts :subbeats))
 
 (defmethod tsubbeat-count ((ts timesig))
-  (property ts :count-tsubbeats))
+  (property ts :tsubbeats))
 
 (defmethod tick-count ((ts timesig))
   (property ts :count-ticks))
@@ -118,10 +122,10 @@
 				 :transient nil)))
 	    (property! root :tempo 60)
 	    (property! root :unit 'q)
-	    (property! root :count-bars 1)
-	    (property! root :count-beats 4)
-	    (property! root :count-subbeats 4)
-	    (property! root :count-tsubbeats 6)
+	    (property! root :bars 1)
+	    (property! root :beats 4)
+	    (property! root :subbeats 4)
+	    (property! root :tsubbeats 6)
 	    (property! root :count-ticks +TICKS-PER-QUARTER-NOTE+)
 	    root))
 
@@ -153,10 +157,10 @@
   (property ts :dur-tick))
 
 (defmethod rep-timesig ((ts timesig))
-  (let ((br (property ts :count-bars))
-	(bt (property ts :count-beats))
-	(sub (property ts :count-subbeats))
-	(tsub (property ts :count-tsubbeats))
+  (let ((br (property ts :bars))
+	(bt (property ts :beats))
+	(sub (property ts :subbeats))
+	(tsub (property ts :tsubbeats))
 	(u (property ts :unit))
 	(tmp (property ts :tempo)))
     (if (or (/= sub 4)(/= tsub 6))
