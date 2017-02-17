@@ -61,9 +61,7 @@
 	(flet ((set?! (key value)
 
 		      (if value
-			  (progn
-			    (format t "DEBUG set!? ~A -> ~A~%" key value)
-			    (property! ts key value)))))
+			  (property! ts key value))))
 	  
 	  (set?! :tempo tempo)
 	  (set?! :unit unit)
