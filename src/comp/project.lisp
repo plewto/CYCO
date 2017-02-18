@@ -11,7 +11,7 @@
 
 (in-package :cyco)
 
-(setf *cyco-projects-directory* (join-path (home-dir) "Documents" "cyco-projects"))
+(setf *cyco-projects-directory* (join-path (home-dir) "cyco-projects"))
 (setf *default-project-boot-file* "main")
 (setf *default-project-midi-directory* "MIDI")
 (setf *project* nil)
