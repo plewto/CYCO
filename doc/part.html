@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Part">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Part</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION part **** -->
+        <a id="part"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Part</h1>
+    <a class="navigation" href="section.html">Previous(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="programs.html">Next(&nbsp;Programs&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            <a href="section.html">SECTIONS</a> are made of PARTS.  There are several 
+            different types of PART, some very specific, others less so.  All PARTS
+            share a few common features.</p>
+            
+            
+            <ul>
+              <li>All parts have a name and are always a child element of a section.</li>
+              <li>A part may be marked as muted.  A muted part does not contribute<br>
+                  when it's parent section is rendered.</li>
+              <li>Parts have a 'period' which is by default the same as it's parent<br>
+                  sections duration.  The period of a part may also be some fixed <br>
+                  divisor of the sections duration.  When the section is rendered, the<br>
+                  part is repeated as needed to every period seconds, as needed to <br>
+                  to fill the section's duration.  An 8-bar section may have parts <br>
+                  with 1, 2, 4, or 8 bar periods.</li>
+            </ul>
+            <p class="section-body">
+            
+            Specific types of PART are described starting on the next page.  The following
+            functions apply to all parts.</p>
+            
+            <p class="section-body">
+            
+            <b>(PART-P obj)</b><br>
+            Predicate, returns true if obj is an instance of PART or one of it's sub-classes.</p>
+            
+            <p class="section-body">
+            
+            <b>(MUTE part flag)</b><br>
+            Sets the mute status of part to flag.  A muted part is not used when it's parent section 
+            is rendered.  See also <a href="group.html">Groups</a>.</p>
+            
+            <p class="section-body">
+            
+            <b>(SOLO part)</b><br>
+            Set part as unmuted. Mute all other parts in the same section.</p>
+            
+            <p class="section-body">
+            
+            <b>(RENDER-ONCE part &key (offset 0))</b><br>
+            Generates MIDI events from part specification. Returns nested list of events with form:</p>
+            
+            <pre class="code">
+            
+            ((time1 . event1)
+             (time2 . event2)
+              ..............
+             (timen . eventn))
+            </pre>
+            
+            <p class="section-body">
+            
+            If the part is muted returns nil.  The offset value is a time shift applied to all 
+            event times.</p>
+            
+            <p class="section-body">
+            
+            <b>(RENDER part &key (repeat 1)(offset 0))</b><br>
+            Call RENDER-ONCE repeat times.  Returns list of events.</p>
+            
+            <p class="section-body">
+            
+            <b>(CLONE part &key (newname "~A-clone")(parent nil)(hook #'identity))</b><br>
+            Creates clone of part.  Arguments have the same usage as 
+            <a href="section.html#clone">Section clone</a>.</p>
+            
+            <p class="section-body">
+            
+            <b>(TRANSPOSE! part x &key (range '(0 127))</b><br>
+            Transpose part by x half-steps.  If the part is 'non-transposable' TRANSPOSE! will
+            have no effect.  The optional range argument sets the possible range of resulting
+            keynumbers.  Any keynumber which is transposed outside of range it is transposed by 
+            octaves as needed to be in range.  Returns part.</p>
+            
+            <p class="section-body">
+            
+            <b>(INVERT! part pivot &key (range '(0 127))</b><br>
+            Apply key inversion around pivot-point.  If the part is 'non-transposable' INVERT!! will
+            have no effect.  The optional range argument sets the possible range of resulting
+            keynumbers.  Any keynumber which is outside of range it is transposed by 
+            octaves as needed to be in range.  Returns part.</p>
+            
+    <a class="navigation" href="section.html">Previous(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="programs.html">Next(&nbsp;Programs&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

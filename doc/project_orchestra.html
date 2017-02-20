@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Project Orchestra">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Project Orchestra</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION project_orchestra **** -->
+        <a id="project_orchestra"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Project Orchestra</h1>
+    <a class="navigation" href="orchestra.html">Previous(&nbsp;Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="section.html">Next(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            CYCO defines the Orchestra in two separate locations.</p>
+            
+            
+            <ul>
+               <li>Permanent instruments established by the <a href="local.html">local configuration</a>.</li>
+               <li>Project level instruments.</li>
+            </ul>
+            <p class="section-body">
+            
+            The local configuration should provide functions for creating project level instruments.
+            </p>
+            
+            <pre class="code">
+            
+            000 : ;;; Sample local orchestra configuration.
+            001 : ;;; Defines permanent instruments and macros
+            002 : ;;; used by projects to create child instruments.
+            003 : ;;;
+            004 : 
+            005 : (in-package :cyco)
+            006 : 
+            007 : ;; Create a permanent instrument named 'foo'
+            008 : ;;
+            009 : (param foo (create-instrument 'FOO
+            010 : 			      :parent *ROOT-INSTRUMENT*
+            011 : 			      :transient nil
+            012 : 			      :channel 3))
+            013 : 
+            014 : ;; Define macro used within a project to create specific 
+            015 : ;; child instruments of foo.
+            016 : ;;
+            017 : (defmacro foo (name program &key keynumber-map duration-map amplitude-map)
+            018 :   `(param ,name (create-instrument
+            019 : 		 ,name
+            020 : 		 :parent foo
+            021 : 		 :transient t
+            022 : 		 :program-change-hook #'(lambda (time cindex _1 _2)
+            023 : 					  (dismiss _1 _2)
+            024 : 					  (list (cons time (midi-program-change cindex program))))
+            025 :            :keynumber-map ,keynumber-map
+            026 :            :duration-map ,duration-map
+            027 :            :amplitude-map ,amplitude-map))
+            </pre>
+            
+            <p class="footnote">
+            
+            NOTES: On line 22 the underline for the two arguments _1 and _2 indicate they
+            are not being used.  The call to dismiss on the next line is there to trick 
+            certain Lisp systems (specifically SBCL) that _1 and _2 are being used.
+            Without dismiss SBCL generates 'Unused&nbsp;Variable' warnings. </p>
+            
+            <p class="section-body">
+            
+            The parent instrument sets the MIDI channel while any  
+            child instrument takes care of specific MIDI program numbers.</p>
+            
+            <p class="section-body">
+            
+            To use foo within a project, simply call it with the instrument name 
+            and program number.</p>
+            
+            <pre class="code">
+            
+            (foo piano 2)
+            (foo organ 3)
+            
+            ;; After the calls above the orchestra tree will look 
+            ;; something like
+            ;;
+            ;; *ROOT-INSTRUMENT*
+            ;;   |
+            ;;   +-- FOO
+            ;;        |
+            ;;        +-- piano
+            ;;        +-- organ
+            ;;
+            </pre>
+            
+            <p class="section-body">
+            
+            In addition to creating child instruments the foo macro also binds the instrument
+            to a variable with the same name.  The name argument passed to foo should not be
+            quoted.</p>
+            
+            <pre class="code">
+            
+            > (boundp 'piano)
+              t
+            > piano
+              #&lt;INSTRUMENT {XXXXXXX}&gt;
+            </pre>
+            
+            <p class="section-body">
+            
+            The example above assumes that FOO is not multi-timbral, it is therefore not
+            possible to use piano and organ at the same time.
+            If an instrument is multi-timbral it is best to define a permanent instrument for each 
+            voice.</p>
+            
+            <pre class="code">
+            
+            028 : 
+            029 : ;; Create a permanent multi-timbral instrument BAZ
+            030 : ;; 
+            031 : (param baz (create-instrument 'BAZ
+            032 : 			      :parent *ROOT-INSTRUMENT*
+            033 : 			      :transient nil))
+            034 : 
+            035 : ;; Create specific instruments for each voice of BAZ,
+            036 : ;; assumed to be 2 voices here.
+            037 : ;;
+            038 : (param BAZ-A (create-instrument 'BAZ-A
+            039 : 				:parent baz
+            040 : 				:transient nil
+            041 : 				:channel 1))
+            042 : (param BAZ-B (create-instrument 'BAZ-B
+            043 : 				:parent baz
+            044 : 				:transient nil
+            045 : 				:channel 2))
+            046 : 
+            047 : (defmacro baz-a (name program)
+            048 :   `(param ,name (create-instrument
+            049 : 		 ,name
+            050 : 		 :parent baz-a
+            051 : 		 :transient t
+            052 : 		 :program-change-hook #'(lambda (time cindex _1 _2)
+            053 : 					  (dismiss _1 _2)
+            054 : 					  (list (cons time (midi-program-change cindex program)))))))
+            055 : 
+            056 : (defmacro baz-b (name program)
+            057 :   `(param ,name (create-instrument
+            058 : 		 ,name
+            059 : 		 :parent baz-b
+            060 : 		 :transient t
+            061 : 		 :program-change-hook #'(lambda (time cindex _1 _2)
+            062 : 					  (dismiss _1 _2)
+            063 : 					  (list (cons time (midi-program-change cindex program)))))))
+            064 :
+            </pre>
+            
+            <p class="section-body">
+            
+            Within a project baz-a and baz-b are used exactly like foo.</p>
+            
+            <pre class="code">
+            
+            (foo piano 2)
+            (foo organ 3)
+            (baz-a vibes 15)
+            (baz-b bass 22)
+            
+            ;; *ROOT-INSTRUMENT*
+            ;;   |
+            ;;   +-- FOO
+            ;;   |    |
+            ;;   |    +-- PIANO
+            ;;   |    +-- ORGAN
+            ;;   |
+            ;;   +-- BAZ
+            ;;        |
+            ;;        +-- BAZ-A
+            ;;        |    |
+            ;;        |    +-- VIBES
+            ;;        |
+            ;;        +-- BAZ-B
+            ;;             |
+            ;;             +-- BASS
+            </pre>
+            
+            <p class="section-body">
+            
+            Use the function <b>(?O)</b> to see the current orchestra structure.</p>
+            
+            <p class="section-body">
+            
+            The Example/local folder contains many examples for defining permanent 
+            orchestra instruments.</p>
+            
+            <p class="section-body">
+            
+            A project should call <b>FREE-ORCHESTRA!</b> before creating any project-level instruments.  
+            A typical project orchestra file, using the instruments described above, will look something 
+            like this.</p>
+            
+            <pre class="code">
+            
+            ;;;; Project xxxx orchestra.lisp
+            
+            (in-package :cyco)
+            (free-orchestra!)
+            (foo piano 2)
+            (foo organ 3)
+            (baz-a vibes 15)
+            (baz-b bass 22)
+            </pre>
+            
+    <a class="navigation" href="orchestra.html">Previous(&nbsp;Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="section.html">Next(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

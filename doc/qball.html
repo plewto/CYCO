@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO QBall">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO QBall</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION qball **** -->
+        <a id="qball"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO QBall</h1>
+    <a class="navigation" href="pattern.html">Previous(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="controlball.html">Next(&nbsp;Controlball&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            A <b>QBALL</b> is a type of <a href="part.html">PART</a> which uses 
+            <a href="pattern.html">PATTERNS</a> to generate events.  The 
+            <a href="metronome.html">metronome</a> is actually a QBALL
+            and there are other closely related types:</p>
+            
+            
+            <ul>
+              <li>PRESSUREBALL  - MIDI channel events</li>
+              <li>CONTROLBALL - MIDI control change events</li>
+              <li>BENDBALL - MIDI pitch bend events</li>
+            </ul>
+            <p class="section-body">
+            
+            The QBALL macro is used to create qballs.</p>
+            
+            <pre class="code">
+            
+            <b>(QBALL name instruments &key
+                        (cue '())
+                        (period nil)
+                        (qfn #'bar)
+                        (transposable t)
+                        (key (cycle :of '(60)))
+                        (dur (cycle :of '(q)))
+                        (amp (cycle :of '(ff)))
+                        (key-map #'identity)
+                        (dur-map #'identity)
+                        (amp-map #'identity)
+                        (project *project*)
+                        (section nil))</b>
+            
+            Creates QBALL and binds it to a variable named name.
+            
+            ARGS:
+              name          - Symbol
+              instruments   - Instrument or list of instruments or pattern of instruments.
+                              If a single instrument or list of instruments convert to a cycle.
+                              Instruments are applied to events according to the pattern 
+                              order. 
+              :cue          - List of time cue points. The number of cue points dictate the 
+                              number of events generated.  Internally the cue list is a cycle.
+              :period       - Float, part duration, defaults to parent section duration.
+                              If specified period should be an even divisor of the section 
+                              duration.  The BARS function is useful for setting the period.
+              :qfn          - Function used to interpret cue points.  The default qfn is
+                              #'BAR so cue points should have the form (bar beat subbeat).
+              :transposable - Boolean, if true this part may be transposed or inverted.
+              :key          - <a href="keynumber.html">Keynumber</a> pattern.  
+                              If a single key is supplied it is converted to a cycle.
+                              If a list is supplied it is converted to a cycle.
+              :dur          - <a href="metric.html">duration</a> pattern.
+                              If a single value is supplied it is converted to a cycle.
+                              If a list is supplied it is converted to a cycle.
+              :amp          - <a href="amplitude.html">amplitude</a> pattern.
+                              If a single value is supplied it is converted to a cycle.
+                              If a list is supplied it is converted to a cycle.
+              :key-map      - Mapping function applied to keynumbers.  This function
+                              is applied prior to any instrument keynumber-map. It
+                              should take a single argument and return a keynumber.
+                              If the argument can not be converted, it should be 
+                              used as the return value without warning or error.
+            
+                              key-map which transposes all notes down an octave
+            
+                              (lambda (k)
+                                 (if (keynumber-p)
+                                       (- (keynumber k) 12)
+                                     k))
+                             
+              :dur-map      - Mapping function applied to note duration. This function
+                              is applied prior to any instrument duration-map.  It should
+                              take a single argument and return a non-negative float.
+                              If the argument can not be converted it should be passed
+                              as the return value without warning or error.
+              :amp-map      - Mapping function applied to note amplitude.  This function
+                              is applied prior to any instrument amplitude-map.  it should
+                              take a single argument and return a float between 0.0 and 1.0.
+                              If the argument can not be converted, it should be used as the
+                              return value without warning or error.
+              :project      - Defaults to *project*
+              :section      - Defaults to current section of project.
+            </pre>
+            
+            <p class="section-body">
+            
+            A QBALL can generate complex combinations of values.</p>
+            
+            <pre class="code">
+            
+            (project 'foo :timesig (timesig :bars 4 :beats 4 :unit 'q :tempo 60)
+            (param piano (create-instrument 'piano :channel 1))
+            (param vibes (create-instrument 'vibes :channel 2))
+            (param organ (create-instrument 'organ :channel 3))
+            (section s)
+            
+            (qball qb piano
+              :period (bars 2)
+              :cue '((1 1 1)(1 2 1)(1 3 1)(1 4 1)
+                     (2 1 1)(2 2 1)(2 3 1)(2 4 1))
+              :key '(c4 e4 g4)
+              :dur '(q q e e)
+              :amp '(mf ff))
+            
+            ;; The cue list generates 8 notes over 2 bars, one note every quarter note.
+            ;; Since the :key pattern is a list of 3 values, it is converted to a 
+            ;;   (cycle :of '(c4 e4 g4)).
+            ;; Likewise for the duration and amplitude patterns.
+            ;; When this qball is rendered the resulting combinations are:
+            ;;  
+            ;;  time   key dur amp 
+            ;; (1 1 1) c4  q   mf
+            ;; (1 2 1) e4  q   ff
+            ;; (1 3 1) g4  e   mf
+            ;; (1 4 1) c4  e   ff
+            ;; (2 1 1) e4  q   mf
+            ;; (2 2 1) g4  q   ff
+            ;; (2 3 1) c4  e   mf
+            ;; (2 4 1) e4  e   ff
+            ;;
+            ;; Since a single instrument is supplied, it is used for all events.
+            ;; If two instruments were supplied as a list they are used alternately
+            
+            (qball qb (list piano vibes)
+              :period (bars 2)
+              :cue '((1 1 1)(1 2 1)(1 3 1)(1 4 1)
+                     (2 1 1)(2 2 1)(2 3 1)(2 4 1))
+              :key '(c4 e4 g4)
+              :dur '(q q e e)
+              :amp '(mf ff))
+             
+            ;;  time   key dur amp inst 
+            ;; (1 1 1) c4  q   mf  piano
+            ;; (1 2 1) e4  q   ff  vibes
+            ;; (1 3 1) g4  e   mf  piano
+            ;; (1 4 1) c4  e   ff  vibes
+            ;; (2 1 1) e4  q   mf  piano 
+            ;; (2 2 1) g4  q   ff  vibes
+            ;; (2 3 1) c4  e   mf  piano 
+            ;; (2 4 1) e4  e   ff  vibes
+            ;;
+            ;; If instead the instruments are a nested list, they are layered.
+            
+            (qball qb (list piano (list vibes organ))
+              :period (bars 2)
+              :cue '((1 1 1)(1 2 1)(1 3 1)(1 4 1)
+                     (2 1 1)(2 2 1)(2 3 1)(2 4 1))
+              :key '(c4 e4 g4)
+              :dur '(q q e e)
+              :amp '(mf ff))
+             
+            ;;  time   key dur amp inst 
+            ;; (1 1 1) c4  q   mf  piano
+            ;; (1 2 1) e4  q   ff  vibes organ
+            ;; (1 3 1) g4  e   mf  piano
+            ;; (1 4 1) c4  e   ff  vibes organ
+            ;; (2 1 1) e4  q   mf  piano 
+            ;; (2 2 1) g4  q   ff  vibes organ
+            ;; (2 3 1) c4  e   mf  piano 
+            ;; (2 4 1) e4  e   ff  vibes organ
+            ;;
+            ;; Other patterns,including nested patterns, are possible 
+            ;; for the instruments, key, dur and amp parameters.
+            ;;
+            
+            (qball qb (line :of (list piano piano piano vibes))
+              :period (bars 2)
+              :cue '((1 1 1)(1 2 1)(1 3 1)(1 4 1)
+                     (2 1 1)(2 2 1)(2 3 1)(2 4 1))
+              :key '(c4 e4 g4)
+              :dur '(q q e e)
+              :amp (line :of '(pp p mp mf f ff))
+            
+            ;;  time   key dur amp inst 
+            ;; (1 1 1) c4  q   pp  piano
+            ;; (1 2 1) e4  q   p   piano
+            ;; (1 3 1) g4  e   mp  piano
+            ;; (1 4 1) c4  e   mf  vibes 
+            ;; (2 1 1) e4  q   f   vibes
+            ;; (2 2 1) g4  q   ff  vibes
+            ;; (2 3 1) c4  e   ff  vibes 
+            ;; (2 4 1) e4  e   ff  vibes 
+            </pre>
+            
+            <p class="section-body">
+            
+            The function <b>CUE-LIST</b> may be used to generate QBALL cue list.</p>
+            
+            <pre class="code">
+            
+            <b>(CUE-LIST timesig &key
+                              (use-tsubbeats nil)
+                              (bars #'(lambda (br) t))
+                              (beats #'(lambda (br bt) t))
+                              (subbeats #'(lambda (br bt sb) t)))</b>
+            </pre>
+            
+            <p class="section-body">
+            
+            Using the defaults CUE-LIST generates a cue-list with an event on every bar, every beat 
+            and every subbeat of the time signature.  The format for the result is for use with 
+            either BAR or TBAR cuing functions.</p>
+            
+            <pre class="code">
+            
+            (cue-list (timesig :bars 2 :beats 4 :subbeats 4 :unit 'q)) -&gt;
+                ((1 1 1)(1 1 2)(1 1 3)(1 1 4)
+                 (1 2 1)(1 2 2)(1 2 3)(1 2 4)
+                 (1 3 1)(1 3 2)(1 3 3)(1 3 4)
+                 (1 4 1)(1 4 2)(1 4 3)(1 4 4)
+                 (2 1 1)(2 1 2)(2 1 3)(2 1 4)
+                 (2 2 1)(2 2 2)(2 2 3)(2 2 4)
+                 (2 3 1)(2 3 2)(2 3 3)(2 3 4)
+                 (2 4 1)(2 4 2)(2 4 3)(2 4 4))
+            </pre>
+            
+            <p class="section-body">
+            
+            The three arguments bars, beats and subbeats are functions which filter out 
+            selected events.  The bars function takes a single argument, the bar number, 
+            and returns t if the bar is to be included.</p>
+            
+            <pre class="code">
+            
+            (param tsig (timesig :bars 2 :beats 4 :subebeats 4 :unit 'q))
+            (cue-list tsig
+                      :bars #'(lambda (br)(oddp br)))  ;; keep odd numbered bars
+            
+               ((1 1 1)(1 1 2)(1 1 3)(1 1 4)
+                (1 2 1)(1 2 2)(1 2 3)(1 2 4)
+                (1 3 1)(1 3 2)(1 3 3)(1 3 4)
+                (1 4 1)(1 4 2)(1 4 3)(1 4 4))
+            </pre>
+            
+            <p class="section-body">
+            
+            The beats function takes two arguments, the bar number and the beat number.</p>
+            
+            <pre class="code">
+            
+            ;; Use only odd beats on odd bars and even beats on even bars
+            
+            (cue-list tsig
+                      :beats #'(lambda (br bt)
+                                 (or (and (oddp br)(oddp bt))
+                                     (evenp bt)))
+            
+                ((1 1 1)(1 1 2)(1 1 3)(1 1 4)
+            
+                 (1 3 1)(1 3 2)(1 3 3)(1 3 4)
+            
+                 (2 2 1)(2 2 2)(2 2 3)(2 2 4)
+            
+                 (2 4 1)(2 4 2)(2 4 3)(2 4 4))
+            </pre>
+            
+            <p class="section-body">
+            
+            The subbeats function is similar except it takes three arguments, 
+            the bar, beat and subbeat numbers</p>
+            
+            <pre class="code">
+            
+            (lambda (br bt su) ...)
+            </pre>
+            
+            <p class="section-body">
+            
+            The remaining argument to cue-list is the :use-tsubbeats flag.
+            If this flag is true then the subbeats predicate is applied to the 
+            time signature tsubbeats (typically triplets) as opposed to 
+            "regular" subbeats (typically sixteenth notes).   If the 
+            QBALL uses TBAR as the qfn, then use-tsubbeat should be true.</p>
+            
+    <a class="navigation" href="pattern.html">Previous(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="controlball.html">Next(&nbsp;Controlball&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Metronome">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Metronome</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION metronome **** -->
+        <a id="metronome"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Metronome</h1>
+    <a class="navigation" href="programs.html">Previous(&nbsp;Programs&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="fixedpart.html">Next(&nbsp;Fixed Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            <b>METRONOME</b> is a type of <a href="part.html">PART</a> for adding metronome clicks to 
+            a Section.</p>
+            
+            <pre class="code">
+            
+            <b>(METRONOME name &key
+                            (instrument *metronome-instrument*)
+                            (project *project*)
+                            (section nil))</b>
+            
+            ARGS:
+            name        - Symbol, part name, The part is bound to a symbol with the same name.
+            :instrument - Default *metronome-instrument*  see below
+            :project    - Default *project*
+            :section    - Default current-section of project.
+            </pre>
+            
+            
+            The metronome generates three tones:
+            <ol>
+              <li>'PHRASE - The first note of the section.
+              <li>'ACCENT - The first note of every bar (except the first bar)
+              <li>'BEEP   - All quarter notes, except for the first note of each bar.
+            </ol>
+            <p class="section-body">
+            
+            The <b>*METRONOME-INSTRUMENT*</b> should be defined by the 
+            <a href="local.html">local configuration</a> files and is the default
+            metronome instrument.  It should have a specialized
+            keynumber-map for the three metronome sounds.</p>
+            
+            <pre class="code">
+            
+            (setf *metronome-instrument* 
+                  (create-instrument 'metronome-instrument
+                                     :parent ???
+                                     :transient nil
+                                     :program-number ???
+                                     :keynumber-map #'(lambda (k)
+                                                       (cond ((eq k :?)
+                                                              (format t "Metronome keymap (beep, accent, phrase)~%")
+                                                              100)
+                                                             ((eq k 'phrase) 102)
+                                                             ((eq k 'accent) 101)
+                                                             ((eq k 'beep) 100)
+                                                             (t (cyco-warning (format nil "~A is not a valid metronome keynumber" k))
+                                                                100))))
+            </pre>
+            
+            <p class="section-body">
+            
+            Typical usage:</p>
+            
+            <pre class="code">
+            
+            (section verse1)
+            (metronome v1-metronome)
+            
+            ...
+            
+            (mute v1-metronome   nil)
+            (->midi verse1)
+            </pre>
+            
+    <a class="navigation" href="programs.html">Previous(&nbsp;Programs&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="fixedpart.html">Next(&nbsp;Fixed Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

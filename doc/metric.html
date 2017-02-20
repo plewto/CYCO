@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Metric">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Metric</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION metric **** -->
+        <a id="metric"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Metric Values</h1>
+    <a class="navigation" href="keynumber.html">Previous(&nbsp;Keynumbers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="amplitude.html">Next(&nbsp;Amplitude&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            Metric values are used for event duration.  They may be expressed directly as 
+            non-negative numbers or symbolically.</p>
+            
+            <pre class="code">
+            
+            Basic Metric Values:
+              
+              W - 4    Whole note
+              H - 2    Half note
+              Q - 1    Quarter note
+              E - 1/2  Eighth note
+              S - 1/4  Sixteenth note
+              T - 1/8  Thirtysecond note 
+              X - 1/16 Sixtyfourth note
+            
+            </pre>
+            
+            <p class="section-body">
+            
+            The basic values may be modified by appending one of the following to symbols above.</p>
+            
+            <pre class="code">
+            
+               .   - single dot  3/2 original value
+               ..  - double dot  7/4 original value
+               T   - triplet     2/3 original value
+               5   - tuplet      4/5 original value
+               +   - increment   Adds 1 tick to original 
+               -   - decrement   Subtracts 1 tick from original
+            </pre>
+            
+            <p class="section-body">
+            
+            Thus 'QT' is a quarter note triplet, while 'E..' is a double dotted eighth note.</p>
+            
+            <p class="section-body">
+            
+            The symbol R is used for a rest of any length and has a value of -1.  All
+            negative values are "promoted" to -1.</p>
+            
+            <p class="section-body">
+            
+            A limited type of metric expression may be used.</p>
+            
+            <pre class="code">
+            
+            [n*]a[+b[+c[+...]]]
+            
+            Brackets [] indicate optional elements.
+            The elements a, b, c are metric values as above,  and the expression a+b+c returns the 
+            their sum.  
+            
+            H+Q+ST = half note+quarter note + sixteenth triplet, or equivalently H.+ST.
+            
+            The optional term [n*] is a scaler which multiplies the sum by n.
+            The scaler term must precede all other terms and is applied after the sum. 
+            
+            n*(a+b+c).
+            
+            3*W+Q is 3 times the sum of a whole note and quarter note.
+            
+            Metric expressions are represented by Lisp symbols and may not include
+            spaces:
+            
+            H+Q+S     - correct
+            H + Q + S - incorrect
+            </pre>
+            
+            <p class="section-body">
+            Metric related functions</p>
+            
+            <pre class="code">
+            
+            <b>(METRIC-P obj)</b>
+            
+            Predicate, returns true if obj is a valid metric value. 
+            Does not recognize metric expressions.
+                
+                (METRIC-P 13)   -&gt; T
+                (METRIC-P 'W.)  -&gt; T
+                (METRIC-P 'W+Q) -&gt; NIL
+            
+            <b>(METRIC obj)</b>
+            
+            Returns metric value of argument.
+            If argument can not be converted, it is used as the return value.
+            METRIC is defined for floats, symbols and list.
+            
+               (METRIC -99)   -&gt;  0  (hum this contradicts statement above?)
+               (METRIC 'R)    -&gt; -1
+               (METRIC 13)    -&gt; 13
+               (METRIC 'Q)    -&gt;  1
+               (METRIC 'APE)  -&gt; APE
+               (METRIC 'Q+S)  -&gt; Q+S
+               (METRIC '(1 2 3 Q. APE))  -&gt; (1 2 3 3/2 APE)
+            
+            </pre>
+            
+    <a class="navigation" href="keynumber.html">Previous(&nbsp;Keynumbers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="amplitude.html">Next(&nbsp;Amplitude&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

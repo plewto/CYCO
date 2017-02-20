@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Programs">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Programs</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION programs **** -->
+        <a id="programs"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Programs</h1>
+    <a class="navigation" href="part.html">Previous(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="metronome.html">Next(&nbsp;Metronome&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            PROGRAMS is a type of <a href="part.html">PART</a> used to generate MIDI 
+            program changes.<br><br></p>
+            
+            <pre class="code">
+            
+            <b>(PROGRAMS name time instruments &key 
+                           (qfn #'bar)
+                           (project *project*)
+                           (section nil)</b>
+            
+            ARGS:
+            name       - Symbol, part name
+            time       - Time of event.  Format should be as expected by qfn.
+                         For default qfn = #'bar, time is (bar beat subbeat).
+            instrments - List of instruments.
+            :qfn       - Function. Time cuing function.
+            :project   - Default *PROJECT*
+            :section   - Default current section of project.
+            
+            part is bound to variable named name.
+            </pre>
+            
+            <p class="section-body">
+            Typical usage:</p>
+            
+            <pre class="code">
+            
+            (section verse1)
+            
+            (programs v1-programs (1 1 1) (list piano organ bass))
+            
+            ...
+            
+            (mute v1-programs nil)
+            (->midi verse1)
+            </pre>
+            
+    <a class="navigation" href="part.html">Previous(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="metronome.html">Next(&nbsp;Metronome&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

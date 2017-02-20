@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Timesig">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Timesig</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION timesig **** -->
+        <a id="timesig"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Timesig</h1>
+    <a class="navigation" href="amplitude.html">Previous(&nbsp;Amplitude&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="chords.html">Next(&nbsp;Chords&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            The CYCO TIMESIG object is a generalization of common notion of a time-signature.  
+            TIMESIG maintains the following fields:</p>
+            
+            
+            <ul>
+               <li>BARS - Number of bars in a phrase.</li>
+               <li>BEATS - Number of beats per bar.</li>
+               <li>SUBBEATS - Number of subbeats per beat.</li>
+               <li>TSUBBEATS - Number of 'tsubbeats' per beat.</li>
+               <li>UNIT - basic beat unit.</li>
+               <li>TEMPO - tempo in beats per minute.</li>
+            </ul>
+            <p class="section-body">
+            
+            SUBBEATS is typically used to indicate the number of sixteenth notes per beat. 
+            Assuming 4/4 time, SUBBEATS would have a value of 4.</p>
+            
+            <p class="section-body">
+            
+            TSUBBEATS is an alternate to SUBBEATS and is typically used for the 
+            number of sixteenth note triplets per beat.  For 4/4 time. TSUBBEATS 
+            is 6.</p>
+            
+            <p class="section-body">
+            
+            The possible beat units are: 'W 'H 'Q (default) 'E or 'S</p>
+            
+            <p class="section-body">
+            
+            TIMESIG is a sub-class of NODE so that an instance of TIMESIG may have a parent
+            TIMESIG.  All null fields in the child are inherited from the parent.  The 
+            <a href="section.html">SECTION</a> class is a sub-class of TIMESIG which inherits
+            default values form the parent <a href="project.html">PROJECT</a>.</p>
+            
+            <p class="section-body">
+            
+            TIMESIG related functions:</p>
+            
+            <pre class="code">
+            
+            <b>(TIMESIG &key 
+                     (parent *root-timesig*)
+                     (name nil)
+                     (tempo nil)
+                     (unit nil)
+                     (bars nil)
+                     (beats nil)
+                     (subbeats nil)
+                     (tsubbeats nil))</b>
+            
+            Creates new TIMESIG object.
+            ARGS:
+              parent    - Timesig, default *ROOT-TIMESIG* 
+              name      - Symbol, (rarely used)
+              tempo     - Float, tempo in Beats per Minute (BPM), 
+                          inherited from parent, default 60.
+              unit      - Symbol, basic beat unit, may be W H Q E or S, 
+                          inherited from parent, default 'Q.
+              bars      - Fixnum, number of bars per phrase, 
+                          inherited from parent, default 1.
+              beats     - Fixnum, number of beat units per bar,
+                          inherited from parent, default 4.
+              subbeats  - Fixnum, number of subbeats (usually 1/16 note) per beat,
+                          inherited from parent, default 4.
+              tsubbeats - Fixnum, number of "t"subbeats (usually 1/16 triplet) per beat,
+                          inherited from parent, default 6.
+            
+            <b>(UNIT ts)</b>              Returns basic beat unit.
+            <b>(BAR-COUNT ts)</b>         Returns bars per phrase.
+            <b>(BEAT-COUNT ts)</b>        Returns beats per bar.
+            <b>(SUBBEAT-COUNT ts)</b>     Returns subbeats per beat.
+            <b>(TSUBBEAT-COUNT ts)</b>    Returns tsubbeats per beat
+            <b>(TICK-COUNT ts)</b>        Returns number of ticks per beat.
+            <b>(TEMPO ts)</b>             Returns tempo in BPM.
+            <b>(TEMPO! ts bpm)</b>        Changes timesig tempo.
+            <b>(DURATION ts)</b>          Returns duration of 1 phrase in seconds.
+            <b>(PHRASE-DURATION ts)</b>   Same as DURATION.
+            <b>(BAR-DURATION ts)</b>      Returns duration of 1 bar.
+            <b>(BEAT-DURATION ts)</b>     Returns duration of a single beat.
+            <b>(SUBBEAT-DURATION ts)</b>  Returns duration of a single subbeat.
+            <b>(TSUBBEAT-DURATION ts)</b> Returns duration of a single tsubbeat.
+            <b>(TICK-DURATION ts)</b>     Returns duration of single tick.
+            
+            </pre>
+            
+    <a class="navigation" href="amplitude.html">Previous(&nbsp;Amplitude&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="chords.html">Next(&nbsp;Chords&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

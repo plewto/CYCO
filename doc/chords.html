@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Chord Dictionary">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Chord Dictionary</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION chords **** -->
+        <a id="chords"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Chord Dictionary</h1>
+    <a class="navigation" href="timesig.html">Previous(&nbsp;Timesig&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="local.html">Next(&nbsp;Local configuration&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            Each <a href="project.html">PROJECT</a> maintains a chord dictionary for 
+            use with <a href="epart.html">EPART</a> chord events.</p>
+            
+                      
+            <b>*GLOBAL-CHORD-DICTIONARY*</b> is the master chord dictionary. When a project<br>
+            is created it inherits *GLOBAL-CHORD-DICTIONARY* but then may define<br>
+            project specific chords.<br>
+            <p class="section-body">
+            
+            Chord related functions:</p>
+            
+            <pre class="code">
+            
+            <b>(?CHORDS &optional (silent nil))</b>
+            
+            Displays a list of defined chords for the current project.
+            If optional silent flag is t, return the list without printing it.
+            
+            
+            
+            <b>(CHORD-DICTIONARY &optional (parent *GLOBAL-CHORD-DICTIONARY*))</b>
+            
+            Create new CHORD-DICTIONARY with given parent.
+            
+            
+            
+            <b>(PARSE-CHORD root cname &key
+                                    (project *project*)
+                                    (inversion 0)
+                                    (octave nil)
+                                    (copies nil))</b>
+            
+            Generate keynumber list using current project chord-dictionary.
+            ARGS:
+              root       - Keynumber, the chord root.
+              cname      - Symbol or list, the chord name or a list of intervals
+              :project   - Default *project*
+              :inversion - Fixnum, chord inversion 0..mx where mx is the number
+                           of notes in the chord. 
+              :octave    - Boolean, if true add an octave copy of the initial chord note.
+              :copies    - Fixnum or list of fixnums.   For each value, transpose the 
+                           base chord by that amount and append to results. Default 0.
+            RETURNS: List
+            
+            
+            
+            <b>(CHORD! name template &key (project *project*))</b>
+            
+            Define new chord for current project.
+            ARGS:
+              name     - Symbol, the chord name. By convention chord names
+                         are enclosed in square brackets as in [MAJ].
+              template - List of note intervals.  The root key has value 0.
+              :project - Defaults to current project.
+            
+            
+            </pre>
+            
+    <a class="navigation" href="timesig.html">Previous(&nbsp;Timesig&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="local.html">Next(&nbsp;Local configuration&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

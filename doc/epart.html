@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO epart">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO epart</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION epart **** -->
+        <a id="epart"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO EPART</h1>
+    <a class="navigation" href="fixedpart.html">Previous(&nbsp;Fixed Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            An EPART looks superficially like a FIXED-PART but is considerably more powerful.</p>
+            
+            <pre class="code">
+            
+            <b>(EPART name instruments &key
+                        (period nil)
+                        (qfn #'bar)
+                        (amp-map #'identity)
+                        (duration-map #'identity)
+                        (project *project*)
+                        (section nil)
+                        (events '()))</b>
+            
+            name          - Symbol, part name.  The new EPART object is bound to a 
+                            variable named name.
+            instruments   - List of instruments.  All instruments are applied as a layer
+                            to each event.
+            :period       - Float, part duration in seconds.  By default period is the 
+                            duration of the parent section.  If period is specified it 
+                            should be an even divisor of the section duration.
+                            The BARS function is useful for setting part periods.
+            :qfn          - Function used to resolve event times. By default #'bar
+            :amp-map      - Function applied to note amplitudes.  (lambda (a)) --&gt;a'
+                            This function is separate from the instrument amplitude 
+                            maps and is applied prior to the instrument. The function 
+                            takes a single argument and returns an <a href="amplitude.html">amplitude</a>. 
+                            If the argument can not be converted to an amplitude it should 
+                            be passed as the return value without producing an error or 
+                            warning.
+            
+                            (lambda (a)
+                              (if (amplitude-p a)
+                                  (* 0.5 (amplitude a))  ;; scale amplitude by 50%
+                                a))                      ;; return unrecognized argument without fuss
+            
+            :duration-map - Function applied to note duration.  (lambda (d)) -&gt;d'
+                            It takes a single argument and returns a non-negative float.
+                            This function is separate, and applied prior to, the instrument 
+                            duration maps.  Any argument which can not be converted to 
+                            a duration should be passed as the return value without 
+                            producing an error or warning.  See <a href="metric.html">metric values</a>
+            
+                            (lambda (d)
+                              (if (metric-p d)  
+                                  (* 0.5 (metric d))  ;; scale duration by 50%
+                                d))
+            
+            :project      - Default *PROJECT*
+            :section      - Defaults to current section of project.
+            :events       - List, see below.
+            </pre>
+            
+            
+            The events list has the general form:
+            <pre>
+            :events '((:time t &lt;command&gt;  ...)
+                      (:time t &lt;command&gt;  ...)
+                       ......................
+                      (:time t &lt;command&gt;  ...))
+            
+            Where 
+            
+            time t has the form expected by the cuing function qfn, For the default 
+            qfn #'bar, time has form (bar beat subbeat).
+            
+            &lt;command&gt; is one of :PROGRAM  :PRESSURE  :BEND  :CC  :KEY  or :CHORD
+            </pre>
+            <pre class="code">
+            
+            <b>:PROGRAM event   (:TIME (br bt sub) :PROGRAM p :BANK b)</b>
+                     
+                     generate program-change events by passing program p and bank b
+                     to each instruments program-change-hook.  Note however the 
+                     program-change-hook may ignore these arguments.  For that reason 
+                     the PROGRAM event is not too useful, particularly if more then one
+                     instrument is being used.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>:PRESSURE event  (:TIME (br bt sub) :TO (br bt sub) :PRESSURE :START s :END e :STEPS stp)</b>
+            
+                     Generate series of MIDI channel-pressure events starting at 
+                     time :TIME and ending at time :TO.  The initial pressure value 
+                     is :START s and the final value is :END e.  Pressure values are
+                     "normalized" to be between 0.0 and 1.0.  The number of events
+                     generated is set by :STEPS stp (default 100).
+                     TIME, TO, START, END and STEPS all default to their previous values.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>:BEND event  (:TIME (br bt sub) :TO (br bt sub) :BEND :START s :END e :STEPS stp)</b>
+            
+                     Generates series of MIDI pitch-bend events.
+                     All clauses have the same usage as with :PRESSURE.  
+                     Bend values are normalized between -1.0 and +1.0.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>:CC event  (:TIME (br bt sub) :TO (br bt sub) :CC ctrl :START s :END e :STEPS stp)</b>
+            
+                     Generates series of MIDI controller events.
+                     With exception of :CC, all clauses have the same usage as with :PRESSURE
+                     Controller values are normalized between 0.0 and 1.0.
+            
+                     With :CC ctrl sets the MIDI controller number.  ctrl may be 
+                     an integer between 0 and 127 or a symbolic controller name.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>:KEY event  (:TIME (br bt sub) :key k :DUR d :AMP A)</b>
+            
+                    Generate a single note on/note off event.
+                    :key k is a <a href="keynumber.html">keynumber</a>.
+                    :dur d is note <a href="metric.html">duration</a>.
+                    :amp a is note <a href="amplitude.html">amplitude</a>.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>:CHORD event  (:TIME (br bt sub) :KEY k :CHORD ch :DUR d :AMP a :INVERSION inv :STRUM strm)</b>
+            
+                   Generate chord or arpeggio.
+                   :KEY :DUR and :AMP have the same usage as the :KEY event.
+                   
+                   :CHORD ch - specifies what chord to play.
+                               There are two ways to do this.
+                               1. As a list of intervals   (0 4 7) for a major triad.
+                               2. By name using the <a href="chords.html">chords dictionary</a>.
+                                  By convention chord names are enclosed in square brackets     
+                                  [maj] - a major chord.
+            
+                   :INVERSION inv - Applies a modification to the chord structure.
+                              The inv value has the form (n octave-flag transpose)
+                              Where n is the inversion   n = 0   (0 4 7) -&gt; (0 4 7)
+                                                         n = 1   (0 4 7) -&gt; (4 7 0)
+                                                         n = 2   (0 4 7) -&gt; (7 0 4)
+                             If octave-flag is true add a copy of the first note (after any inversion)
+                             transposed up an octave     n = 0 octave-flag t  (0 4 7) -&gt; (0 4 7 12)
+                                                         n = 1 octave-flag t  (0 4 7) -&gt; (4 7 0 16)
+            
+                             Finally the transpose value is a list of transpositions.
+                             For each element in the transpose list the chord is copied 
+                             with that transposition.  The transposed copies are applied
+                             after any inversion and octave-flag modifications.
+                             :INVERSION (0 nil (0))     (0 4 7) -&gt; (0 4 7)
+                             :INVERSION (0 nil (0 12))  (0 4 7) -&gt; (0 4 7 12 16 19)
+                             :INVERSION (0 nil (0 1 2)) (0 4 7) -&gt; (0 4 7 1 5 8 2 6 9)
+            
+                   :STRUM strm thickens the plot by adding a delay between chord notes.
+                          strm has the form (delay (pattern...))
+                          Where delay is the time delay between chord notes in seconds.
+                                (pattern) is a list of how the order of the chord notes 
+                                are used.   Possible directions are 
+                                       :up      - reverse note order
+                                       :down    - play notes in order
+                                       :random  - randomly pick :up or :down
+                                       :permute - play notes in random order
+                                Since the strum value is saved between chord events, 
+                                the directions may be applied to the next several chords.
+                                Once the end of the directions list is reached.
+                                Start over from the beginning.
+            
+                    Examples
+            
+                    A C-Major chord     (:time (1 1 1) :key c4 :chord (0 4 7))
+                    Also a  C-Major     (:time (1 1 1) :key c4 :chord [maj])
+                    C-Major arpeggio    (:time (1 1 1) :key c4 :chord [maj] :inversion (0 nil (0 12)) :strum (0.1))
+                    4-chords with       (:time (1 1 1) :key c4 :chord [maj] :strum (0.01 (:up :up :random :permute))) 
+                    alternating         (:time (1 1 2) :key a5 :chord [min])
+                    directions          (:time (1 1 3) :key g5 :chord [maj])
+                                        (:time (1 1 4) :key f5 :chord [maj])
+            </pre>
+            
+            <p class="section-body">
+            
+            Example: First 4 bars of Mary Had a Little Lamb, layering piano and organ.</p>
+            
+            <pre class="code">
+            
+            (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90) ;; 2/4 time
+            (param piano (create-instrument 'piano
+                                             :channel 1
+                                             :program-number 1))
+            (param organ (create-instrument 'organ
+                                            :channel 2
+                                            :program-number 13))
+            (section verse :bars 4)
+            (epart epart-example (list piano organ)
+                :period (bars 4)
+                :events '((:time (1 1 1) :key a4 :dur e. :amp mf)
+                          (:time (1 1 3) :key g3 :dur s)
+                          (:time (1 2 1) :key f3 :dur e)
+                          (:time (1 2 3) :key g3)
+                          (:time (2 1 1) :key a3 :dur e)  ;; bar 2
+                          (:time (2 1 3) :key a3)
+                          (:time (2 2 1) :key a3 :dur q)
+                          (:time (3 1 1) :key c4 :dur e)  ;; bar 3
+                          (:time (3 1 3) :key c4)
+                          (:time (3 2 1) :key c4 :dur q)
+                          (:time (4 1 1) :key a3 :dur e)  ;; bar 4
+                          (:time (4 1 3) :key c4)
+                          (:time (4 2 1) :key c4 :dur q)))
+            
+            (mute epart-example nil)
+            (-&gt;midi verse)
+            </pre>
+            
+            <p class="section-body">
+            
+            The other major PART types are variations on <a href="qball.html">QBALL</a>  
+            Before looking at QBALL however we'll take a detour and look at 
+            <a href="pattern.html">Patterns</a></p>
+            
+    <a class="navigation" href="fixedpart.html">Previous(&nbsp;Fixed Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

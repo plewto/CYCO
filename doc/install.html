@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Installation">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Installation</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION install **** -->
+        <a id="install"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Installation</h1>
+    <a class="navigation" href="index.html">Previous(&nbsp;Home&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="project.html">Next(&nbsp;Project&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            CYCO is implemented in pure Lisp and any standard Common Lisp should work.  
+            It has been tested against both Armed Bear 
+            <a href="http://abcl.org/">(ABCL)</a> and Steel Banks
+            <a href="http://www.sbcl.org/">(SBCL)</a>.  In the future interaction with 
+            Java applications may be added, which would point towards Armed Bear as the 
+            preferred Lisp.</p>
+            
+            <p class="section-body">
+            
+            Installation is straight forward.  On startup CYCO reads a configuration file
+            used to adapt CYCO to the <a href="local.html">local</a> studio environment.  There is no
+            pre determined structure for the configuration file. It is simply a Lisp 
+            file, which may load additional files, and may be structured in any way that
+            makes local sense. However the file does need to exists, even if it does nothing.</p>
+            
+            <p class="section-body">
+            
+            The Examples/local folder contains the configuraiton files used for my 
+            personal studio and may be used as a guide.  In the mean time create the following 
+            empty file ~/.config/cyco/local-settings.lisp</p>
+            
+            <pre class="code">
+            
+            cd ~
+            # If ~/.config does not exists, create it
+            mkdir .config
+            touch .config/local-settings.lisp
+            </pre>
+            
+            
+            Otherwise there is not that much to do.
+            <ol>
+              <li>Place CYCO directory wherever you like.</li>
+              <li>Navigate to the CYCO folder.</li>
+              <li>Fire up your favorite Lisp.</li>
+              <li>At the Lisp prompt, enter (load "src/cyco")</li>
+              <li>After CYCO loads enter (cyco)</li>
+            </ol>
+            <p class="section-body">
+            
+            As for what to do next, read the manual.</p>
+            
+    <a class="navigation" href="index.html">Previous(&nbsp;Home&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="project.html">Next(&nbsp;Project&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

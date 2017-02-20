@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Amplitude">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Amplitude</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION amplitude **** -->
+        <a id="amplitude"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Amplitude Values</h1>
+    <a class="navigation" href="metric.html">Previous(&nbsp;Metric Values&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="timesig.html">Next(&nbsp;Timesig&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            CYCO amplitudes are real numbers between 0.0 and 1.0.  At project render 
+            time amplitudes are converted to MIDI velocity 0..127.  Thus
+            amplitude has a resolution of 1/127 or ~0.007874.  Amplitude values of
+            0 are considered as rest and all negative amplitudes are "promoted" to 0.
+            All amplitudes greater then 1.0 are clipped to 1.0.</p>
+            
+            <p class="section-body">
+            
+            Symbolic amplitudes borrow from the common music notation of P and F.
+            The following amplitude symbols are defined:</p>
+            
+            <pre class="code">
+            
+            R    -   0/127  (rest)
+            PPPP -   6/127
+            PPP  -  19/127
+            PP   -  32/127
+            P    -  45/127
+            MP   -  58/127
+            MF   -  71/127
+            F    -  84/127
+            FF   -  97/127
+            FFF  - 110/127
+            FFFF - 123/127
+            </pre>
+            
+            <p class="section-body">
+            
+            With exception to R, the symbols above may be append with either - or +
+            for finer grained values.</p>
+            
+            <pre class="code">
+            
+            PPPP- -   2/127
+            PP+   -  36/127
+            P-    -  40/127
+            P     -  45/127
+            P+    -  49/127
+            MP-   -  53/127
+            FFFF+ - 127/127
+            </pre>
+            
+            <p class="section-body">
+            
+            Amplitude related functions:</p>
+            
+            <pre class="code">
+            
+            <b>(AMPLITUDE-P obj)</b>
+            
+            Predicate test if obj is a valid amplitude.
+            
+            
+            <b>(AMPLITUDE obj &key (range '(0.0 . 1.0)))</b>
+            
+            Convert obj to real amplitude value. Values outside of range are clipped.
+            
+            AMPLITUDE is defined for float, symbol and list.  Unrecognized symbols 
+            are not converted and used as the return value.
+            
+            (AMPLITUDE -9)    -&gt; 0.0
+            (AMPLITUDE  0)    -&gt; 0.0
+            (AMPLITUDE 0.5)   -&gt; 0.5
+            (AMPLITUDE 'R)    -&gt; 0.0
+            (AMPLITUDE 'PP)   -&gt; 0.252
+            (AMPLITUDE 'PIG)  -&gt; PIG
+            (AMPLITUDE '(0.5 F MF- PIG)  -&gt;  (0.5 0.661 0.52 PIG)
+            
+            
+            <b>(AMPLITUDE-&gt;VELOCITY amp &key (range '(0.0 . 1.0)))</b>
+            
+            Converts amplitude to MIDI velocity.  Argument may be any type
+            accepted by AMPLITUDE.
+            
+            
+            <b>(AMPLITUDE-SYMBOL n)</b>
+            
+            Returns closest symbolic amplitude for value n.  
+            AMPLITUDE-SYMBOL is defined for float and list.
+            
+            (AMPLITUDE-SYMBOL 0.45)   -&gt;  MP-
+            (AMPLITUDE-SYMBOL '(0.1 0.3 0.75))  -&gt;  (PPPP+ PP+ FF-)
+            
+            </pre>
+            
+    <a class="navigation" href="metric.html">Previous(&nbsp;Metric Values&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="timesig.html">Next(&nbsp;Timesig&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

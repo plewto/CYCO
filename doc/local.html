@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Local">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Local</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION local **** -->
+        <a id="local"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Local Configuration</h1>
+    <a class="navigation" href="chords.html">Previous(&nbsp;Chords&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            The local configuration feature is provided to customize CYCO to the local environment.
+            Typically this involves defining symbolic names of MIDI channels and controllers and
+            creating the default orchestra.</p>
+            
+            <p class="section-body">
+            
+            There is no pre-defined structure for the local configuration. The only defined value
+            is the name of the file used to load the remaining configuration files.  This file is
+            </p>
+            
+            <pre class="code">
+            
+            ~/.config/cyco/local-settings.lisp
+            </pre>
+            
+            <p class="section-body">
+            
+            local-settings.lisp may be an empty file to skip loading any configuration.  However
+            defining local values greatly simplifies using CYCO.</p>
+            
+            <p class="section-body">
+            
+            The folder Examples/local contains the configuration files used for my personal
+            studio. Most of these files deal with describing the available MIDI instruments.
+            The way the orchestra is structured is for each manufacture to have a defined 
+            instrument, with specific instruments defined below these.  For example I have 
+            several Yamaha synths, The structure for these instruments are:</p>
+            
+            <pre class="code">
+            
+            *ROOT-INSTRUMENT*
+              |
+              +-- Yamaha
+                   |
+                   +-- TX816
+                   |    |
+                   |    +-- TXA
+                   |    +-- TXB
+                   |    +-- TXC
+                   |
+                   +-- SY35
+                   |
+                   +-- MU100R
+            </pre>
+            
+            <p class="section-body">
+            
+            Macros are defined for attaching child instruments off of specific nodes.</p>
+            
+            <pre class="code">
+            
+            
+            (txa 'bass 1)
+            (sy35 'piano 18)
+            (sy35 'vibes 23)
+            
+            *ROOT-INSTRUMENT*
+              |
+              +-- Yamaha
+                   |
+                   +-- TX816
+                   |    |
+                   |    +-- TXA
+                   |    |    |
+                   |    |    +-- bass
+                   |    |
+                   |    +-- TXB
+                   |    +-- TXC
+                   |
+                   +-- SY35
+                   |    |
+                   |    +-- piano
+                   |    +-- vibes
+                   |
+                   +-- MU100R
+            </pre>
+            
+            <p class="section-body">
+            
+            An orchestra need not be structured this way, it is just the way I have done so.</p>
+            
+            <p class="section-body">
+            
+            Two other groups of instruments in the examples are worth looking at.
+            The Emu Procussion is a multi-timbral percussion module. Several of it's programs use
+            a "standard kit" for key assignments.  These standard kits all have the same compliment 
+            of child instruments, such as snare and kick.   These child instruments have customized 
+            keynumber-maps for use as percussion instruments.</p>
+            
+            <p class="section-body">
+            
+            The other instruments of interest are the QuantumLeap Ministry Of Rock (MOR2) 
+            sound library.   This group defines percussion, bass guitar and electric guitar instruments.
+            The percussion instruments are similar to the Emu instruments.  The bass and guitar 
+            instruments have program-change-hooks to facilitate "key-switching" </p>
+            
+    <a class="navigation" href="chords.html">Previous(&nbsp;Chords&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION index **** -->
+        <a id="index"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Overview</h1>
+    <a class="navigation" href="install.html">Next(&nbsp;Install&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            CYCO is a LISP based MIDI composition language.  It borrows somewhat from 
+            <a href="http://commonmusic.sourceforge.net/">Common Music</a> but has a 
+            more restricted usage domain.</p>
+            
+            <p class="section-body">
+            
+            Compositions are defined by creating a <a href="project.html">Project</a>,
+            which establishes several global properties and is composed of a series of
+            <a href="section.html">Sections</a>.  A Section corresponds to a major division
+            of the composition, such as a verse or chorus.  Sections are composed of 
+            <a href="part.html">Parts</a>, which combines one or more instruments with 
+            instructions for what events to produce.  Once defined a project is rendered
+            to a standard MIDI file.</p>
+            
+        <img class="center" src="images/project.png" alt="Project Heriarchy" />
+            <p class="section-body">
+            
+            There are many ways to define a part. Some are highly 
+            specific, such as a metronome, others are more general.
+            The code samples below illustrate a few basic features using 
+            different types of parts. These illustrations are not 
+            intended as working examples, detailed explanations 
+            are provided elsewhere. </p>
+            
+            <pre class="code">
+            
+            ;; A <b>FIXED-PART</b> specifies explicit MIDI events.
+            ;;
+            ;; First 4 bars of Mary Had a Little Lamb using a FIXED-PART.
+            ;;
+            (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90)
+            (section verse)
+            (fixed-part piano 
+                :events '((:time (1 1 1) :key a4 :dur e. :amp mf :channel 1)
+                          (:time (1 1 3) :key g3 :dur s)
+                          (:time (1 2 1) :key f3 :dur e)
+                          (:time (1 2 3) :key g3)
+                          (:time (2 1 1) :key a3 :dur e)  ;; bar 2
+                          (:time (2 1 3) :key a3)
+                          (:time (2 2 1) :key a3 :dur q)
+                          (:time (3 1 1) :key c4 :dur e)  ;; bar 3
+                          (:time (3 1 3) :key c4)
+                          (:time (3 2 1) :key c4 :dur q)
+                          (:time (4 1 1) :key a3 :dur e)  ;; bar 4
+                          (:time (4 1 3) :key c4)
+                          (:time (4 2 1) :key c4 :dur q)))
+            </pre>
+            
+            <pre class="code">
+            
+            ;; A more flexible type of part is called an <b>EPART</b>.
+            ;; An EPART looks superficially like a FIXED-PART but is 
+            ;; considerably more powerful.
+            ;;
+            
+            (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90)
+            
+            ;; Define an "orchestras" of a few basic instruments.
+            ;; The piano plays staccato and softly
+            ;; The organ is transposed down an octave
+            ;;
+            (param piano (create-instrument 'piano :channel 1 :program-number 1
+                          :duration-map #'(lambda (d)(* 0.5 (metric d)))
+                          :amplitude-map #'(lambda (a)(* 0.5 (amplitude a)))))
+            
+            (param organ (create-instrument 'piano :channel 2 :program-number 7
+                          :keynumber-map #'(lambda (k)(- (keynumber k) 12))))
+            
+            (section verse)
+            (programs verse-programs '(1 1 1) (list piano organ)) ;; send MIDI program change
+            (epart epart-example (list piano organ)
+                :events '((:time (1 1 1) :key a4 :dur e. :amp mf)
+                          (:time (1 1 3) :key g3 :dur s)
+                          (:time (1 2 1) :key f3 :dur e)
+                          (:time (1 2 3) :key g3)
+                          (:time (2 1 1) :key a3 :dur e)  ;; bar 2
+                          (:time (2 1 3) :key a3)
+                          (:time (2 2 1) :key a3 :dur q)
+                          (:time (3 1 1) :key c4 :dur e)  ;; bar 3
+                          (:time (3 1 3) :key c4)
+                          (:time (3 2 1) :key c4 :dur q)
+                          (:time (4 1 1) :key a3 :dur e)  ;; bar 4
+                          (:time (4 1 3) :key c4)
+                          (:time (4 2 1) :key c4 :dur q)))
+            </pre>
+            
+            <p class="section-body">
+            
+            For both FIXED-PART and EPART it is not necessary to repeat event parameters which 
+            do not change between events.  For example the key dynamic of MF is
+            specified once and remains the same for all subsequent events.</p>
+            
+            <p class="section-body">
+            
+            The only obvious difference is that EPART takes a list of instruments
+            and FIXED-PART does not. With EPART there is no need to specify MIDI 
+            channels in the event list and all instruments in an EPART are "layered"
+            </p>
+            
+            <p class="section-body">
+            
+            What is not obvious is that a "single" EPART event can 
+            produce a complex series of MIDI events.</p>
+            
+            <pre class="code">
+            
+            ;; Three ways to produce a C Major chord using EPART.
+            ;;
+            (epart foo piano
+                :events '((:time (1 1 1) :key c4)       ; Explicit c major chord, 
+                          (              :key e4)       ; time defaults to previous
+                          (              :key g4)       ; value.
+            
+                          (:time (0 1 0) :key c4 :chord (0 4 7)) ; Chord by interval list.
+            
+                          (:time (0 2 0) :key c4 :chord [maj]))) ; Chord by name.
+            
+            </pre>
+            
+            <p class="section-body">
+            
+            The final event uses the <a href="chords.html">chord dictionary</a>, which may 
+            be modified by the user.</p>
+            
+            <pre class="code">
+            
+            (chord! '[cluster] '(0 1 2 3 4 5 6 7 8 9 10 11 12))
+            (chord! '[cluster] (range 0 12)) ; or more concisely
+            
+            (epart foo piano
+               :events '((:time (1 1 1) :key c4 :chord [cluster])))
+            </pre>
+            
+            <p class="section-body">
+            
+            Chords may be inverted and extended using an inversion clause.</p>
+            
+            <pre class="code">
+            
+            
+            ;; Produce 1st inversion of a major chord.
+            ;; The list (0 24) generates notes in the original octave
+            ;; and 2 octaves higher. 
+            
+            (epart foo piano
+               :events '((:time (1 1 1) :key c4 :chord [maj] :inversion (1 (0 24)))))
+            
+            </pre>
+            
+            <p class="section-body">
+            
+            A strum clause is used to arpeggiate chords.</p>
+            
+            <pre class="code">
+            
+            ;; Produce chord notes every 0.1 seconds.
+            ;;
+            (epart foo
+               :events '((:time (1 1 1) :key c4 :chord [maj] :strum 0.1)))
+            
+            ;; Strum can produce complex effects.  The first two chords are played 
+            ;; in the 'up' (reversed) direction. The third chord is played
+            ;; in the 'down' direction. The direction of every fourth chord is 
+            ;; selected randomly.
+            ;; 
+            (epart foo2 piano
+               :events '((:time (1 1 1) :key c4 :chord [maj] :strum (0.1 (:up :up :down :random)))
+                         (:time (1 2 1) :key a4 :chord [min])
+                         (:time (1 3 1) :key g4 :chord [maj])
+                         (:time (1 4 1) :key f4 :chord [maj])))
+            </pre>
+            
+            <p class="section-body">
+            
+            Parts are not limited to MIDI note events, they may also produce pitch bend,
+            channel pressure, controller and program change events. The following EPART 
+            generates a sequence of modulation wheel events.</p>
+            
+            <pre class="code">
+            
+            (epart foo3 piano
+               :events '((:time (1 1 1) :to (2 1 1) :cc :wheel :start 0.0 :end 1.0)))
+            
+            </pre>
+            
+            <p class="section-body">
+            
+            A completely different type of part, called a <a href="qball.html">QBALL</a>, generates events
+            by a kind of recombinant shuffling of parameters.</p>
+            
+            <pre class="code">
+            
+            ;; Mary Had A Little Lamb using a QBALL
+            
+            (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90)
+            (param piano (create-instrument 'piano :channel 1 :program-number 1))
+            (param vibes (create-instrument 'vibes :channel 3 :program-number 5))
+            (param organ (create-instrument 'organ :channel 2 :program-number 13))
+            (section verse)
+            
+            (qball foo (list piano vibes)
+                :cue '((1 1 1)(1 1 3)(1 2 1)(1 2 3)
+                       (2 1 1)(2 1 3)(2 2 1)
+                       (3 1 1)(3 1 3)(3 2 1)
+                       (4 1 1)(4 1 3)(4 2 1))
+                :key '(a4 g3 f3 g3 
+                       a3 a3 a3
+                       c4 c4 c4
+                       a3 c4 c4)           
+                :dur '(e. s e e
+                       e e q
+                       e e q
+                       e e q)
+                :amp '(fff mf))
+            </pre>
+            
+            <p class="section-body">
+            
+            The cue list determines the total number of events. Since the amp list only
+            has two values, they are reused in a cyclical pattern.  Odd notes are
+            played at amplitude FFF, even notes at MF.  In the above example the piano 
+            and vibes are layered; both instruments play every note.  In the following
+            example the instruments are used in a cycle, the piano plays odd notes, the vibes even.</p>
+            
+            <pre class="code">
+            
+            (qball foo (cycle :of (list piano vibes))
+                :cue ....)
+            </pre>
+            
+            <p class="section-body">
+            
+            More complex patterns are possible.  In the following code the piano is used for 
+            the first 3 notes, and then the vibes and organ alternate for the remaining 
+            notes.</p>
+            
+            <pre class="code">
+            
+            (qball foo (line :of (list piano piano piano (cycle :of (list vibes organ))))
+               :cue...)
+            </pre>
+            
+            <p class="section-body">
+            
+            QBALL is particularly useful with percussion instruments.</p>
+            
+            <pre class="code">
+            
+            (project 'foo)
+            
+            (param snare (create-instrument 'snare
+                            :channel 10
+                            :keynumber-map #'(lambda (k)
+                                               (cond ((eq k 'hit) 36)
+                                                     ((eq k 'rim) 38)
+                                                     ((eq k 'flam) 39)
+                                                     (t 36)))))
+            (section verse)
+            
+            (qball snare-part snare
+                :cue '((1 1 1)(1 2 1)...)
+                :key '(hit hit rim hit flam)
+                :amp '(fff f f ))
+            </pre>
+            
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

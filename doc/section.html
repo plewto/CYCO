@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Section">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Section</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION section **** -->
+        <a id="section"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Section</h1>
+    <a class="navigation" href="project_orchestra.html">Previous(&nbsp;Project Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            A Section corresponds to a major division of the composition and is typically defined in 
+            a section file within the project directory.   Just as there is a <em>current</em> project, 
+            there is also a <em>current</em> section within the current project.  Many section related
+            functions use the current section of the current project by default.</p>
+            
+            <p class="section-body">
+            
+            Sections are created by the <b>SECTION</b> macro.</p>
+            
+            <pre class="code">
+            
+            (section name &key 
+                          (parent *PROJECT*)
+                          (tempo nil)
+                          (unit nil)
+                          (bars nil)
+                          (beats nil)
+                          (subbeats nil)
+                          (tsubbeats nil))
+            
+            Creates section named name and bind it to a symbol with the same name.
+            The new section becomes the <em>current</em> section of the parent project.
+            
+            ARGS:
+               name       - Symbol.
+               :parent    - The parent project, *PROJECT* by default.
+               :tempo     - Float, section tempo in BPM, defaults to parent tempo.
+               :unit      - Symbol, time-signature unit, defaults to parent value.
+               :bars      - Fixnum, number of bars, defaults to parent value.
+               :beats     - Fixnum, number of units per bar, defaults to parent value.
+               :subbeats  - Fixnum, number of subbeats per beat, defaults to parent value.
+               :tsubbeats - Fixnum, number of tsubbeats per beat, defaults to parent value.
+            
+               See <a href="timesig.html">timesig</a>.
+            
+               RETURNS: instance of SECTION.
+            </pre>
+            
+            <hr><h3>Anatomy of a Section file</h3>
+            <p class="section-body">
+            
+            A section by itself is not too useful until <a href="part.html">PARTS</a> are 
+            created within it.  Skipping over details for creating parts, a typical 
+            section file will look something like this:</p>
+            
+            <pre class="code">
+            
+            000 : ;;;; Sample section named verse1
+            001 : ;;;;
+            002 : 
+            003 : (in-package :cyco)
+            004 : 
+            005 : (section verse1 :bars 8)
+            006 : 
+            007 : (metronome v1-metronome)
+            008 : 
+            009 : (qball v1-kick  ...)
+            010 : (qball v1-snare ...)
+            011 : (qball v1-hats  ...)
+            012 : (epart v1-bass  ...)
+            013 : (epart v1-piano ...)
+            014 : 
+            015 : (group v1-percussion
+            016 :        (list v1-kick
+            017 : 	     v1-snare
+            018 : 	     v1-hats))
+            019 : 
+            020 : (group v1-instruments
+            021 :        (list v1-bass
+            022 : 	     v1-piano))
+            023 : 
+            024 : (mute v1-metronome     t)
+            025 : (mute v1-percussion  nil)
+            026 : (mute v1-instruments nil)
+            027 : 
+            028 : (-&gt;midi verse1)
+            029 : (-&gt;midi verse1 :filename "test-verse1" :repeat 8) 
+            </pre>
+            
+            <p class="section-body">
+            
+            A section named 'verse1' is created on line 005.  It automatically becomes the
+            current section of *PROJECT*, and is bound to the variable VERSE1.  The :bars keyword
+            sets the section length to 8 bars.  The tempo and all other <a href="timesig.html">timesig</a> 
+            related values are inherited from the project.</p>
+            
+            <p class="section-body">
+            
+            Starting on line 007 the section parts are defined.  
+            For now there is nothing to see here...</p>
+            
+            <p class="section-body">
+            
+            On line 015 an optional GROUP object is created. Groups allow related parts 
+            to be treated in mass.  Typical operations on groups include muting and soloing, and 
+            possibly modifications such as transpose.  See <a href="group.html">Group</a></p>
+            
+            <p class="section-body">
+            
+            Starting on line 027 are options for muting or soloing the various groups.  Mute 
+            may also be used with individual parts, as it is with v1-metronome.</p>
+            
+            <p class="section-body">
+            
+            Starting on line 028 the section is saved to two MIDI files. The name of the first file
+            defaults to the section name "verse1.mid" and is played once (in this case 8 bars).
+            The second file has the name "test-verse1.mid" and is repeated 8 times for a total 
+            of 64 bars.  Both files are stored in the project's MIDI directory.</p>
+            
+            <hr><h3>Section related functions</h3>
+            <p class="section-body">
+            <b>(SECTION-P obj)</b><br>
+            Predicate, test if obj is an instance of SECTION.</p>
+            
+            <p class="section-body">
+            <b>(DURATION section)</b><br>
+            Returns duration of section in seconds.  If a section is marked 
+            as "skipped", the duration will be 0.</p>
+            
+            <p class="section-body">
+            <b>(BARS n)</b><br>
+            Returns the duration of n bars of the current section in seconds.</p>
+            
+            <p class="section-body">
+            <b>(BAR &optional (bar 1)(beat 1)(subbeat 1)(tick 0))</b><br>
+            Returns the relative time of bar beat subbeat in the current section.
+            The BAR function is the default time cuing function used for event 
+            specification in parts.  A cue value using bar is a list of the form 
+            (bar&nbsp;beat&nbsp;subbeat&nbsp;ticks) where all values are optional.
+            Thus (BAR), or equivalently (BAR&nbsp;1), returns the time of the first bar of 
+            the section. (BAR&nbsp;2) returns the start time for the second bar.  Individual 
+            beats are similarly specified (BAR&nbsp;1&nbsp;1) is the first beat of the first bar.
+            (BAR&nbsp;2&nbsp;3) is the third beat of the 2nd bar.  Assuming the default 4/4 time
+            with 4 subbeats to the quarter note, (BAR&nbsp;1&nbsp;1&nbsp;3) is the third sixteenth note
+            of the first beat of the first bar.  See <a href="timesig.html">timesig</a>.
+            </p>
+            
+            <p class="section-body">
+            <b>(TBAR &optional (bar 1)(beat 1)(tsubbeat 1)(tick 0))</b><br>
+            An alternative to BAR as a cuing function.  TBAR uses tubbeats (typically these are triplets) 
+            instead of "regular" subbeats.  In all other aspects TBAR and BAR behave identically.</p>
+            
+            <p class="section-body">
+            <b>(SKIP flag &optional (section-name nil))</b><br>
+            Set Section skip flag.   If skip is true, the section will be skipped over when the 
+            project is rendered.  The duration of a skipped section is 0. 
+            By default skip alters the current-section.</p>
+            
+            <p class="section-body">
+            <b>(RENDER-ONCE section &key (offset 0))</b><br>
+            Generate MIDI events for section.  The result is a nested list of the form:</p>
+            
+            <pre class="code">
+            
+            ((time0 . event0)
+             (time1 . event1)
+              ..............
+             (timen . eventn))
+            </pre>
+            
+            <p class="section-body">
+            
+            The offset argument is a float which adds a fixed time offset to the generated events.</p>
+            
+            <p class="section-body">
+            <b>(RENDER section &key (repeat 1)(offset 0))</b><br>
+            Calls RENDER-ONCE repeat times.</p>
+            
+            <p class="section-body">
+            <b>(-&gt;MIDI section &key filename (offset 0)(repeat 1)(pad-end 2))</b><br>
+            Calls RENDER and saves result to MIDI file. The section name (lowercase) is 
+            used as the default filename.</p>
+            
+            
+            <a id="clone"></a>
+            <b>(CLONE section &key (newname "~A-clone")(parent nil)(hook #'identity))</b><br>
+            <pre>
+            Creates cloned copy of section.
+            
+            ARGS:
+              newname - A format string used by Lisp format to create name of the new section.
+                        Using the default "~A-cone", the name for a clone of section foo is "foo-clone".
+              parent  - The parent for the cloned object.  By default the cloned section has the 
+                        same parent as the source section.  parent would be used if a section 
+                        where being cloned into a separate project.
+              hook    - A function which is called just prior to returning the cloned section.
+                        hook should take a single Section argument and return a Section.
+                        The default #'identity hook does not modify the clone.
+            
+             RETURNS: an instance of SECTION.
+            </pre>
+            <p class="section-body">
+            
+            <b>(TRANSPOSE! section x &key (range '(0 127))</b><br>
+            Transposes all constituent parts of section by x half-steps.
+            A part may be marked as not transposable, in which case transpose has no effect.
+            The optional :range keyword argument sets the range of excepted keynumbers. All 
+            resulting keynumbers out side of range are transposed by octaves as needed to 
+            be in range.   Returns section.</p>
+            
+            <p class="section-body">
+            
+            <b>(INVERT! section pivot &key (range '(0 127))</b><br>
+            Applies key inversion to all parts of section. If a part is marked as not
+            transposable, invert! has no effect.  The pivot argument is keynumber around
+            which the inversion is produced.  The optional range argument has the same 
+            usage as in TRANSPOSE!; out of bound keys are transposed by octaves as needed
+            to be in range.  Returns section.</p>
+            
+    <a class="navigation" href="project_orchestra.html">Previous(&nbsp;Project Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Project">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Project</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION project **** -->
+        <a id="project"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Projects</h1>
+    <a class="navigation" href="install.html">Previous(&nbsp;Install&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="orchestra.html">Next(&nbsp;Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            The highest level of CYCO organization is the <b>PROJECT</b>.  There may be 
+            more then one project in memory simultaneously but there is only one
+            <em>current</em> project at any one time.  The current project is
+            referenced
+            by the <b>*PROJECT*</b> global variable.  Many CYCO functions operate
+            on *PROJECT* by default.</p>
+            
+            <p class="section-body">
+            
+            Projects are closely linked to specific directories where all the related
+            project files are stored.  It makes little sense to work with a project 
+            without first creating a project directory.</p>
+            
+            <p class="section-body">
+            
+            There are a few global variables related to project file locations.
+            These may be altered in the <a href="local.html">local&nbsp;configuration</a> 
+            if desired.</p>
+            
+            
+            <ol>
+              <li><b>*CYCO-PROJECTS-DIRECTORY*</b><br> 
+                  Location where CYCO project directories are located.  By default ~/cyco-projects/</li>
+            
+              <li><b>*DEFAULT-PROJECT-BOOT-FILE*</b><br>
+                  Name of the primary project file within a project, Default "main.lisp".<br>
+                  Within a project the boot file is responsible for creating a Project object<br>
+                  and loading all remaining project files.</li>
+            
+              <li><b>*DEFAULT-PROJECT-MIDI-DIRECTORY*</b><br>
+                  Name of folder <em>within</em> the project folder where MIDI files are stored.<br>
+                  Default MIDI</li>
+            </ol>
+            <p class="section-body">
+            
+            Using these defaults, files for a project named 'foo' are stored in the folder <b>~/cyco-projects/foo</b><br>
+            The primary project file is <b>~/cyco-projects/foo/main.lisp</b><br>
+            And the folder <b>~/cyco-projects/foo/MIDI/</b> is used for generated MIDI files.</p>
+            
+            
+            Generally the project main file contains the following sections.
+            <ol>
+               <li>Create project object.</li>
+               <li>Create orchestra, most likely by loading an orchestra file.</li>
+               <li>Define or load files for each section.</li>
+               <li>Specify order in which sections are played.</li>
+               <li>Save project to a MIDI file.</li>
+            </ol>
+            
+            The <b>LOAD-PROJECT</b> function is used to load a main project file.
+            <pre class="code">
+            
+            (load-project project-name &key dir boot-file)
+            
+            Load main project file.
+            ARGS:
+               project-name  - Symbol.
+               :dir          - Optional location of projects directory.
+                               Default *CYCO-PROJECTS-DIRECTORY*
+               :boot-file    - Optional name of project boot file.
+                               Default *DEFAULT-PROJECT-BOOT-FILE*
+            </pre>
+            
+            
+            The <b>LP</b> function is usually more convenient.
+            <pre class="code">
+            
+            (lp &optional project-name)
+            
+            Load main project file.  
+            ARGS:
+               project-name - Optional symbol.  If name is not specified, the 
+                              previously loaded project is re-loaded.
+            
+            (lp 'foo)   --&gt;  load ~/cyco/projects/foo/main.lisp
+            (lp)        --&gt;  reload foo/main.lisp
+            
+            </pre>
+            
+            <hr><h3>Anatomy of main.lisp</h3>
+            <pre class="code">
+            
+            000 : ;;;; foo/main.lisp
+            001 : ;;;;
+            002 : 
+            003 : (in-package :cyco)
+            004 : 
+            005 : (project 'foo
+            006 : 	 :title "The actual title"
+            007 : 	 :catalog-number "whatever"
+            008 : 	 :timesig (timesig :bars 4 :beats 4 :unit 'q :tempo 120))
+            009 : 
+            010 : (lpf 'orchestra)
+            011 : (lpf 'intro)
+            012 : (lpf 'verse)
+            013 : (lpf 'chorus)
+            014 : 
+            015 : (seq-order '(intro verse verse chorus verse))
+            016 : 
+            017 : (-&gt;midi *project*)
+            </pre>
+            
+            <p class="section-body">
+            
+            The project proper is created on line 005. This project is named 'foo and 
+            it becomes the "current" project by setting *PROJECT* to the project object.
+            The :title and :catalog-number values are optional and are basically for 
+            documentation, these values are not further used by CYCO.</p>
+            
+            <p class="section-body">
+            
+            The :timesig argument sets the default project time-signature.  The CYCO
+            <a href="timesig.html">timesig</a> class is a bit more general then the 
+            traditional notion of a time-signature. In this case the default time 
+            signature is 4 bars of 4/4 time with a tempo of 120 BPM. Individual 
+            sections may override the default time-signature.</p>
+            
+            <p class="section-body">
+            
+            Individual project files are loaded by calls to <b>LPF</b> (for&nbsp;"Load&nbsp;Project&nbsp;File") 
+            starting on line 10.
+            LPF takes an optional argument.  If no argument t is specified then LPF reloads
+            the previous project file.</p>
+            
+            <pre class="code">
+            
+            (lpf 'orchestra)  --&gt;  load ~/cyco-projects/foo/orchestra.lisp
+            </pre>
+            
+            <p class="section-body">
+            
+            The call to SEQ-ORDER on line 15 sets the order in which sections are played.</p>
+            
+            <p class="section-body">
+            
+            Finally the call to (-&gt;midi *project*) on line 017 renders the project to a 
+            standard MIDI file.  By default the output file is ~/cyco-projects/foo/MIDI/foo.mid</p>
+            
+            <hr><h3>Project related functions</h3>
+            <p class="section-body">
+            <b>(?P)</b><br>  
+            Display current project structure.</p>
+            
+            <p class="section-body">
+            <b>(PROJECT-P obj)</b><br>  
+            Predicate, test if obj is an instance of PROJECT.</p>
+            
+            <p class="section-body">
+            <b>(SECTIONS &optional (project *PROJECT*))</b><br>
+            Returns list of sections in a project.</p>
+            
+            <p class="section-body">
+            <b>(RESET project)</b></p>
+            
+            <p class="section-body">
+            <b>(DURATION project)</b><br>
+            Returns duration of project in seconds.</p>
+            
+            <p class="section-body">
+            <b>(ORCHESTRA &key (project *PROJECT*)(print t))</b><br>
+            Return reference to the root instrument in project's orchestra.  If
+            print is true display the orchestra tree.</p>
+            
+            <p class="section-body">
+            <b>(?O)</b><br>
+            Display project's orchestra structure.</p>
+            
+            <p class="section-body">
+            <b>(SEQ-ORDER sqlist &key (project *PROJECT*))</b><br>
+            Set order of sections within project.  sqlist is a list of section 
+            names.</p>
+            
+            <p class="section-body">
+            <b>(RENDER-PROJECT)</b></p>
+            
+            <pre class="code">
+            
+            (RENDER-PROJECT &key (project *PROJECT*)
+                                 (offset 0)
+                                 (write-midi-file t)
+                                 (midi-filename nil)
+                                 (pad-end 2.0))
+            
+            Returns a nested list of MIDI events, sorted by time.
+            
+                 ((time1 . event1)
+                  (time2 . envet2)
+                   ..............
+                  (timen . eventn))
+            
+            ARGS:
+               :project         - Defaults to *PROJECT*
+               :offset          - Float, time in seconds used to shift MIDI event times.
+                                  Default 0.
+               :pad-end         - Float, number of seconds to pad end of track.  pad-end
+                                  is used to prevent final decay tails from being cut off.
+               :write-midi-file - Boolean, if true write results to MIDI file. Default t
+               :midi-filename   - Optional MIDI filename. If not specified the MIDI file
+                                  has the same name as the project.  The file is saved
+                                  to the MIDI folder in the project's folder.
+            RETURNS: list
+            </pre>
+            
+            <p class="section-body">
+            <b>(-&gt;MIDI project)</b><br>
+            Same as calling RENDER-PROJECT using defaults.</p>
+            
+    <a class="navigation" href="install.html">Previous(&nbsp;Install&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="orchestra.html">Next(&nbsp;Orchestra&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

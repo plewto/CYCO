@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Patterns">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Patterns</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION pattern **** -->
+        <a id="pattern"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Patterns</h1>
+    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="qball.html">Next(&nbsp;QBall&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            A PATTERN is an object which returns values on demand.  Patterns may be 
+            nested to any level, that is a Pattern may return another Pattern.
+            There are several different pattern types, each with a different behavior
+            on how they return values.  The major Pattern types are:</p>
+            
+            
+            <ul>
+              <LI>LINE</LI>
+              <LI>CYCLE</LI>
+              <LI>HEAP</LI>
+              <LI>BAG</LI>
+            </ul>
+            <p class="section-body">
+            
+            To retrieve the next value from a pattern use the NEXT-1 method.</p>
+            
+            <pre class="code">
+            
+            (setf q (cycle :of '(A B C D)))
+            
+            (next-1 q)  -&gt; A
+            (next-1 q)  -&gt; B
+            </pre>
+            
+            <p class="section-body">
+            
+            The CYCO pattern returns it's values in a cycle.</p>
+            
+            <pre class="code">
+            
+            (next-1 q)  -&gt; C
+            (next-1 q)  -&gt; D
+            (next-1 q)  -&gt; A
+            </pre>
+            
+            <p class="section-body">
+            
+            The LINE pattern returns it's values in order until 
+            it reaches the final value.  Thereafter it continues to 
+            return the final value.</p>
+            
+            <pre class="code">
+            
+            (setf w (line :of '(A B C D))
+            
+            (nest-1 w)  -&gt; A
+            (nest-1 w)  -&gt; B
+            (nest-1 w)  -&gt; C
+            (nest-1 w)  -&gt; D
+            (nest-1 w)  -&gt; D
+            (nest-1 w)  -&gt; D
+            </pre>
+            
+            <p class="section-body">
+            
+            The HEAP pattern returns it's values randomly without 
+            replacement.  Once all the values have been returned
+            it shuffles the deck and starts over.</p>
+            
+            <pre class="code">
+            
+            (setf h (heap :of '(A B C D))
+            
+            (next-1 h)  -&gt;  C
+            (next-1 h)  -&gt;  B
+            (next-1 h)  -&gt;  D
+            (next-1 h)  -&gt;  A
+            (next-1 h)  -&gt;  D  ;; start over.
+            </pre>
+            
+            <p class="section-body">
+            
+            The BAG pattern returns it's values in random order
+            with replacement.</p>
+            
+            <pre class="code">
+            
+            (setf b (bag :or '(A B C D)))
+            
+            (next-1 b)  -&gt;  C
+            (next-1 b)  -&gt;  D
+            (next-1 b)  -&gt;  C
+            (next-1 b)  -&gt;  B
+            </pre>
+            
+            <p class="section-body">
+            
+            The NEXT method is more general then NEXT-1.</p>
+            
+            <pre class="code">
+            
+            (NEXT pat &optional (n 1))
+            </pre>
+            
+            <p class="section-body">
+            
+            When called without the optional argument NEXT is identical to NEXT-1.</p>
+            
+            <pre class="code">
+            
+            (setf q (cycle :of '(A B C D E F G H I J K L)))
+            
+            (next q)  -&gt; A
+            (next q)  -&gt; B
+            (next q)  -&gt; C
+            </pre>
+            
+            <p class="section-body">
+            
+            If the optional argument to NEXT is an integer, then that many values are 
+            returned as a list.</p>
+            
+            <pre class="code">
+            
+            (next q 2)  -&gt; (D E)
+            (next q 3)  -&gt; (E F G)
+            </pre>
+            
+            <p class="section-body">
+            
+            If the optional argument to NEXT is the keyword :REST, then the 
+            remaining values are returned.</p>
+            
+            <pre class="code">
+            
+            (next q :rest)  -&gt; (H J K L)
+            </pre>
+            
+            <p class="section-body">
+            
+            There is one other option to NEXT.  If the option is :ALL
+            then a list of all values is returned, no matter what the 
+            current state of the pattern is.</p>
+            
+            <pre class="code">
+            
+            (setf q (cycle :of '(A B C D E F)))
+            
+            (next q 2)     -&gt; (A B)
+            (next q :ALL)  -&gt; (A B C D E F)
+            (next q 2)     -&gt; (C D)
+            </pre>
+            
+            <p class="section-body">
+            
+            As promised patterns may be nested.</p>
+            
+            <pre class="code">
+            
+            (setf q (cycle :of '(A B))
+            (setf w (line :of (list 'APE BAT q))
+            
+            (next w)  -&gt;  APE
+            (next w)  -&gt;  BAT
+            (next w)  -&gt;  A
+            (next w)  -&gt;  B
+            (next w)  -&gt;  A
+            (next w)  -&gt;  B
+            
+            ;; Or the other way around.
+            
+            (setf w (line :of '(APE BAT)))
+            (setf q (cycle :of (list A B w)))
+            
+            (next q)  -&gt;  A
+            (next q)  -&gt;  B
+            (next q)  -&gt;  APE
+            (next q)  -&gt;  A
+            (next q)  -&gt;  B
+            (next q)  -&gt;  BAT
+            (next q)  -&gt;  A
+            (next q)  -&gt;  B
+            (next q)  -&gt;  BAT
+            (next q)  -&gt;  A
+            (next q)  -&gt;  B
+            (next q)  -&gt;  BAT
+            </pre>
+            
+            <p class="section-body">
+            
+            Pattern nesting may be to any depth.</p>
+            
+            <p class="section-body">
+            
+            Functions and method on Patterns.</p>
+            
+            <pre class="code">
+            
+            <b>(PATTERN-P obj)</b>
+            Predicate returns true if obj is a PATTERN.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(CLONE pat &key newname parent (hook #'identity))</b>
+            Returns a cloned copy of pattern. The optional newname and parent 
+            arguments are ignored.  If hook is specified it should be a function
+            which takes a single pattern argument and returns a pattern.
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(RESET pat)</b>
+            Reset pattern (and all nested patterns) to the initial state.
+            
+            (setf q (cycle :of '(A B C D)))
+            (next q)  -&gt; A
+            (next q)  -&gt; B
+            (reset q)
+            (next q)  -&gt; A
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(ELEMENTS pat)</b>
+            Returns list of values.
+            
+            (setf q (cycle :of '(A B C D)))
+            (elements q) -&gt; (A B C D)
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(VALUE pat)</b>
+            Returns current value of pattern without changing it's state.
+            
+            (setf q (cycle :of '(A B C D)))
+            (next q)  -&gt; A
+            (next q)  -&gt; B
+            (value q) -&gt; B
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(CARDINALITY pat)</b>
+            Returns number of elements.
+            
+            (setf q (cycle :of '(A B C D)))
+            (cardinality q)  -&gt; 4
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(REMAINING pat)</b>
+            Returns the number of elements remaining.
+            (setf q (cycle :of '(A B C D)))
+            (remaining q)   -&gt; 4
+            (next q)        -&gt; A
+            (remaining q)   -&gt; 3
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(FILTER! pat &key (test #'true))</b>
+            Apply predicate test to each element of pattern. Retain those elements for
+            which test returns true,  Remove all elements for which test is false.
+            
+            (setf q (cycle :of '(0 1 2 3 4 5 6 7 8 9)))
+            (filter! q :test #'oddp)
+            (elements q) -&gt; (1 3 5 7 9)
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(FILTER pat &key (test #'true))</b>
+            Like FILTER! except creates a new pattern.  The original pattern 
+            is unchanged.
+            
+            (setf q (cycle :of '(0 1 2 3 4 5 6 7 8 9)))
+            (setf f (filter q :test #'oddp))
+            
+            (elements q)  -&gt; (0 1 2 3 4 5 6 7 8 9)
+            (elements r)  -&gt; (1 3 5 7 9)
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(TRANSPOSE! pat x &key (range '(0 127))</b>
+            Apply transposition to pattern elements.
+            If values are keynumber and they are outside of :RANGE
+            transpose by octaves as needed to be in range
+            It is an error if any value can not be transposed.
+            
+            (setf q (cycle :of '(10 20 30)))
+            (transpose! q 12)
+            (elements q)  -&gt;  (22 32 42)
+            </pre>
+            
+            <pre class="code">
+            
+            <b>(INVERT! pat pivot &key (range '(0 127))</b>
+            Apply key inversion to pattern values.  
+            it is an error if any value can not be inverted.
+            
+            (setf q (cycle :of '(30 40 50)))
+            (invert! q 60)
+            (elements q)   -&gt; (90 80 10))
+            </pre>
+            
+    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="qball.html">Next(&nbsp;QBall&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Fixed Part">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Fixed Part</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION fixedpart **** -->
+        <a id="fixedpart"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Fixed Part</h1>
+    <a class="navigation" href="metronome.html">Previous(&nbsp;Metronome&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="epart.html">Next(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            A <b>FIXED-PART</b> is a PART where explicit MIDI events are specified.  A 
+            FIXED-PART is used for special cases where, for whatever reason, the other
+            major part types do not work.</p>
+            
+            <pre class="code">
+            
+            <b>(FIXED-PART name &key
+                             (period nil)
+                             (qfn #'bar)
+                             (project *project*)
+                             (section nil)
+                             (events '()))</b>
+            
+            ARGS:
+            name     - Symbol, the part name.  The new PART object is bound to a variable
+                       named name.
+            :period  - Float, duration of part. Defaults to duration of the parent section.
+                       If supplied period should be some even division of the section duration.
+                       See BARS function.
+            :qfn     - Function. Time cuing function. Defaults to #'bar.
+            :project - Default *project*.
+            :section - Default current section of project.
+            :events  - List, see below.
+            </pre>
+            
+            <p class="section-body">
+            
+            FIXED-PART is unique amongst the sub-classes of PART in that no 
+            instruments are specified.  This is because MIDI channel is specified
+            directly in the events list.</p>
+            
+            <p class="section-body">
+            The events list has the general form:</p>
+            
+            <pre class="code">
+            
+            :events '((:TIME t :CHANNEL c &lt;command&gt; ...)
+                      (:TIME t :CHANNEL c &lt;command&gt; ...)
+                       ................................
+                      (:TIME t :CHANNEL c &lt;command&gt; ...))
+            
+            Where:
+            
+            :TIME t is the event time.  The format of TIME should be as expected by 
+                  by the cuing function qfn.  For the default qfn #'BAR, time has
+                  the format (bar beat subbeat).
+            
+            :CHANNEL c  is MIDI channel number.  
+            
+            
+            &lt;command&gt; is one of :KEY  :CC  :PRESSURE  :BEND  or  :PROGRAM
+                      The remaining values after command are determined by the command type.
+            </pre>
+            
+            <p class="section-body">
+            
+            Most values are remembered between events.  For instance once a channel has 
+            been specified, there is no reason to specify channel again unless it changes.</p>
+            
+            <pre class="code">
+            
+            FIXED-PART commands:
+            
+            <b>:KEY</b>  (:TIME t :CHANNEL c :KEY k :DUR d :AMP a)
+                   Generate note events.
+                   :KEY k   where k is a <a href="keynumber.html">keynumber</a>.  
+                            Keynumber k is not preserved between events.
+                   :DUR d   where d is note duration. See <a href="metric.html">metric values</a>.
+                            Duration d is preserved between events.
+                   :AMP a   where a is note <a href="amplitude.html">amplitude</a>.
+                            Amplitude a is preserved between events.
+            
+            <b>:CC</b>  (:TIME t :CHANNEL c :CC ctrl :VALUE v)
+                  Generate MIDI control change event.
+                  :CC ctrl - Is the MIDI controller.  Either as an integer (0..127) or
+                             a symbolic controller name.
+                             ctrl is not preserved between events.
+                  :VALUE v - "normalized" controller value as a float between 0.0 and 1.0
+                             The value is converted to a fixnum between 0 and 127.
+                             Value v is preserved between events.
+            
+            <b>:PRESSURE</b>  (:TIME t :CHANNEL c :PRESSURE p)
+                  Generate MIDI channel-pressure event.
+                  :PRESSURE p is a "normalized" float between 0.0 and 1.0, and is
+                  not preserved between events.
+            
+            <b>:BEND</b>  (:TIME t :CHANNEL c :BEND b)
+                  Generate MIDI pitch-bend event.
+                  :BEND b is signed and normalized between -1.0 and +1.0
+                  b is not preserved between events.
+            
+            <b>:PROGRAM</b>   (:TIME t :CHANNEL c :PROGRAM p)
+                  Generate MIDI program-change event.
+                  :PROGRAM p is the MIDI program number between 0 and 127.
+                  p is not preserved between events.
+            </pre>
+            
+            <p class="section-body">
+            
+            Example: First 4 bars of Mary Had a Little Lamb on channel 1</p>
+            
+            <pre class="code">
+            
+            (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90)  ;; 2/4 time
+            (section verse)
+            (fixed-part piano 
+                :events '((:time (1 1 1) :key a4 :dur e. :amp mf :channel 1)
+                          (:time (1 1 3) :key g3 :dur s)  ;; no need to respecify channel.
+                          (:time (1 2 1) :key f3 :dur e)
+                          (:time (1 2 3) :key g3)
+                          (:time (2 1 1) :key a3 :dur e)  ;; bar 2
+                          (:time (2 1 3) :key a3)
+                          (:time (2 2 1) :key a3 :dur q)
+                          (:time (3 1 1) :key c4 :dur e)  ;; bar 3
+                          (:time (3 1 3) :key c4)
+                          (:time (3 2 1) :key c4 :dur q)
+                          (:time (4 1 1) :key a3 :dur e)  ;; bar 4
+                          (:time (4 1 3) :key c4)
+                          (:time (4 2 1) :key c4 :dur q)))
+            </pre>
+            
+            <p class="section-body">
+            
+            Example: Crude pitch-bend events, every 1/16th note for 2 bars on channel 1, 2/4 time.</p>
+            
+            <pre class="code">
+            
+            (fixed-part bend-example
+                :events '((:time (1 1 1) :bend -1.000 :channel 1)
+                          (:time (1 1 2) :bend -0.750)
+                          (:time (1 1 3) :bend -0.500)
+                          (:time (1 1 4) :bend -0.250)
+                          (:time (1 2 1) :bend  0.000)
+                          (:time (1 2 2) :bend +0.250)
+                          (:time (1 2 3) :bend +0.500)
+                          (:time (1 2 4) :bend +0.750)
+                          (:time (2 1 1) :bend +1.000)))
+            </pre>
+            
+    <a class="navigation" href="metronome.html">Previous(&nbsp;Metronome&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="epart.html">Next(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

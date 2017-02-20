@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Keynumbers">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Keynumbers</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION keynumber **** -->
+        <a id="keynumber"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Keynumbers</h1>
+    <a class="navigation" href="controlball.html">Previous(&nbsp;Controlball&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="metric.html">Next(&nbsp;Metric Values&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            Ultimately CYCO keynumbers are MIDI keynumbers, that is integers between 0 
+            and 127 inclusive.  All negative keynumbers are "promoted" to -1 and treated as 
+            rest.</p>
+            
+            <p class="section-body">
+            
+            Keynumbers may also be expressed symbolically with the general form:</p>
+            
+            <pre class="code">
+            
+            RMO
+            
+            Where R is the root key (white key) and is one of C D E F G A or B.
+                  M is optional modifier and may be one of.
+                    F  - flat
+                    S  - sharp
+                       - natural
+                  O is octave number between 0 and 10.
+            
+            C4  - Note C in 4th octave
+            CS4 - Note C sharp also in 4th octave.
+            
+            Enharmonic values are defined for B-sharp, C-flat, E-sharp and F-flat
+            
+            CF4 = B3 
+            BS3 = C4
+            
+            CYCO octave numbers are 1 octave lower then typical notation.
+            C5 is middle C with keynumber 60.   This is to avoid negative octave 
+            numbers.
+            
+            The special keynumber R corresponds to -1 and is treated as a rest.
+            </pre>
+            
+            <p class="section-body">
+            
+            Functions related to keynumbers:</p>
+            
+            <pre class="code">
+            
+            <b>(KEYNUMBER-P obj)</b>
+                Predicate true if obj is a valid key-number.
+            
+            <b>(KEYNUMBER obj)</b>
+               Returns MIDI keynumber between 0 and 127 or -1.
+               keynumber is defined for
+                 integers
+                 symbols
+                 list - if argument is a list, return a list.
+            
+            <b>(REST-P obj)</b>
+               Predicate returns true if obj is a keynumber and it is a rest.
+            
+            <b>(KEYNAME obj)</b>
+               Returns symbolic keynumber name for obj.
+               In the case where obj may have two names, such as a-flat and g-sharp,
+               the sharp value is always returned.
+            
+               (keyname 34)  -&gt;  AS2
+               (keyname 'c4) -&gt;  C4
+               (keyname '(34 35 36))  -&gt;  (AS2 B2 C3)
+            
+            <b>(PITCH-CLASS obj)</b>
+               Returns pitch class of keynumber
+            
+               (pitch-class 60)  -&gt; 0
+               (pitch-class 61)  -&gt; 1
+               (pitch-class 'g7) -&gt; 7
+               (pitch-class '(60 61 62)) -&gt; (0 1 2)
+            
+            <b>(OCTAVE obj)</b>
+               Returns octave of keynumber
+            
+               (octave 60)  -&gt; 5
+               (octave 'g7) -&gt; 7
+               (octave '(c4 c5 c6)) -&gt; (4 5 6)
+            
+            <b>(TRANSPOSE kn x &key (range '(0 127)))</b>
+               Transpose kn by x half-steps
+               If result is outside of range, transpose by octaves as needed
+               to be in range.
+            
+               Transpose is defined for integer, symbol and list.
+            
+             <b>(INVERT kn pivot (range '(0 127)))</b>
+                Return key inversion of keynumber.
+                If result is out of range, transpose by octaves as needed 
+                to be in range.
+            
+            </pre>
+            
+    <a class="navigation" href="controlball.html">Previous(&nbsp;Controlball&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="metric.html">Next(&nbsp;Metric Values&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

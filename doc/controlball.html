@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Controlball">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Controlball</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION controlball **** -->
+        <a id="controlball"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Controlball</h1>
+    <a class="navigation" href="qball.html">Previous(&nbsp;QBall&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="keynumber.html">Next(&nbsp;Keynumbers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            The <b>CONTROLBALL</b> and related <b>BENDBALL</b> and <b>PRESSUREBALL</b> classes
+            are MIDI controll, bend and pressure versions of QBALL.</p>
+            
+            <p class="section-body">
+            
+            They all have similar structures:</p>
+            
+            <pre class="code">
+            
+            <b>(CONTROLBALL name ctrl instruments &key
+                                      (cue '())
+                                      (values 0)   ;; A pattern as in QBALL
+                                      (period nil)
+                                      (qfn #'bar)
+                                      (project *project*)
+                                      (section nil))</b>
+            </pre>
+            
+            <p class="section-body">
+            
+            Values are "normalized" between  0.0 to 1.0 for controlball and pressureball,
+            -1.0 and +1.0 for bendball.</p>
+            
+            <pre class="code">
+            
+            <b>(PRESSUREBALL name instruments &key
+                                      (cue '())
+                                      (values 0) 
+                                      (period nil)
+                                      (qfn #'bar)
+                                      (project *project*)
+                                      (section nil))</b>
+            
+            <b>(BENDBALL name instruments &key
+                                      (cue '())
+                                      (values 0)
+                                      (period nil)
+                                      (qfn #'bar)
+                                      (project *project*)
+                                      (section nil))</b>
+            </pre>
+            
+    <a class="navigation" href="qball.html">Previous(&nbsp;QBall&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="keynumber.html">Next(&nbsp;Keynumbers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>
