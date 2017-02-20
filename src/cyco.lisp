@@ -44,7 +44,7 @@
        (current-file cyco-boot)
        (enable-rl t))
 
-  (defun ld (filename &key (verbose nil)(print nil))
+  (defun ld (filename &key (verbose t)(print nil))
     "Loads CYCO source file.  If verbose is true display message.
      Pass the value of print to the CL load function."
     (let ((temp *load-print*))
@@ -106,6 +106,7 @@
 (ld "src/comp/fixed-part")
 (ld "src/comp/epart")
 (ld "src/comp/qball")
+(ld "src/comp/qlist")
 (ld "src/comp/controlball")
 (format t "~%")
 (ld "src/local")
@@ -156,6 +157,27 @@
     (funcall (property inst :duration-map) :?)
     (funcall (property inst :amplitude-map) :?)
     (funcall (property inst :program-change-hook) 0 0 :? nil)))
+
+(defun ?chords (&optional (silent nil))
+  "Display list of defined chords in current project.
+   If silent is true, return list without printing."
+  (let* ((cd (property *project* :chord-dictionary))
+	 (keys (property-keys cd))
+	 (acc '()))
+    (dolist (k keys)
+      (push (cons k (property cd k)) acc))
+    (setf acc (sort acc #'(lambda (a b)(string> (->string (car a))
+						(->string (car b))))))
+    (if (not silent)
+	(progn
+	  (dolist (c acc)
+	    (format t "~12A -> ~A~%" (car c)(cdr c)))
+	  nil)
+      acc)))
+    
+      
+		 
+
 
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
