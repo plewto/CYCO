@@ -62,9 +62,7 @@
 				:ctrl (controller-assignment ,ctrl :cmap cmap)
 				:period (or ,period (duration sec))
 				:cue (cycle :of ,cue)
-				:values (if (pattern-p ,values)
-					    ,values
-					  (cycle :of (->list ,values))))))
+				:values (->pattern ,values))))
        (property! prt :transposable nil)
        (add-child! sec prt)
        (param ,name prt)
@@ -178,9 +176,7 @@
 				:ctrl :pressure
 				:period (or ,period (duration sec))
 				:cue (cycle :of ,cue)
-				:values (if (pattern-p ,values)
-					    ,values
-					  (cycle :of (->list ,values))))))
+				:values (->pattern ,values))))
        (add-child! sec prt)
        (property! prt :qfn ,qfn)
        (param ,name prt)
@@ -238,9 +234,7 @@
 				:ctrl :bend
 				:period (or ,period (duration sec))
 				:cue (cycle :of ,cue)
-				:values (if (pattern-p ,values)
-					    ,values
-					  (cycle :of (->list ,values))))))
+				:values (->pattern ,values))))
        (add-child! sec prt)
        (property! prt :qfn ,qfn)
        (param ,name prt)

@@ -104,33 +104,30 @@ Binds new instance of QBALL to name.
    :section    - Default current section of project."
   `(progn
      (validate-part-parents ,project ,section)
-     (flet ((->pattern (arg)
-     		       (cond ((pattern-p arg) arg)
-     			     (t (cycle :of (->list arg))))))
-       (let* ((ipat (cond ((listp ,instruments)
-			   (cycle :of (list ,instruments)))
-			  ((pattern-p ,instruments)
-			   ,instruments)
-			  (t (cycle :of (->list ,instruments)))))
-	      (sec (or ,section (current-section ,project)))
-     	      (prt (make-instance 'qball
-     				  :name ',name
-     				  :instruments ipat
-     				  :period (or ,period (duration sec))
-				  :cue-fn ,qfn
-     				  :cue (cycle :of ,cue)
-     				  :key (->pattern ,key)
-     				  :dur (->pattern ,dur)
-     				  :amp (->pattern ,amp)))) ;
-     	 (add-child! sec prt)
-     	 ;(property! prt :qfn ,qfn)
-     	 (property! prt :keynumber-map ,key-map)
-     	 (property! prt :duration-map ,dur-map)
-     	 (property! prt :amplitude-map ,amp-map)
-	 (property! prt :transposable ,transposable)
-     	 (param ,name prt)
-	 (part-banner sec prt)
-     	 prt))))
+     (let* ((ipat (cond ((listp ,instruments)
+			 (cycle :of (list ,instruments)))
+			((pattern-p ,instruments)
+			 ,instruments)
+			(t (cycle :of (->list ,instruments)))))
+	    (sec (or ,section (current-section ,project)))
+	    (prt (make-instance 'qball
+				:name ',name
+				:instruments ipat
+				:period (or ,period (duration sec))
+				:cue-fn ,qfn
+				:cue (cycle :of ,cue)
+				:key (->pattern ,key)
+				:dur (->pattern ,dur)
+				:amp (->pattern ,amp)))) ;
+       (add-child! sec prt)
+					;(property! prt :qfn ,qfn)
+       (property! prt :keynumber-map ,key-map)
+       (property! prt :duration-map ,dur-map)
+       (property! prt :amplitude-map ,amp-map)
+       (property! prt :transposable ,transposable)
+       (param ,name prt)
+       (part-banner sec prt)
+       prt)))
 
 (defmethod reset ((obj qball))
   (reset (cue-pattern obj))
