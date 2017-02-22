@@ -106,6 +106,7 @@
 (ld "src/comp/fixed-part")
 (ld "src/comp/epart")
 (ld "src/comp/qball")
+(ld "src/comp/metronome")
 (ld "src/comp/qlist")
 (ld "src/comp/controlball")
 (format t "~%")

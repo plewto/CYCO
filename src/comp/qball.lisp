@@ -48,16 +48,23 @@
 		      (section nil))
   "TODO: add docs for transposable
    TODO: change doc for instrument pattern
-Binds new instance of QBALL to name.
-   A QBALL is a PART which uses patterns to generate MIDI note events.
-   A QBALL has 4 patterns: cue, key, duration and amplitude.  The cue 
-   pattern is always a CYCLE of event times.  For each element in the 
-   the cue PATTERN the key, duration and amplitude patterns are evaluated.
-   By default the key, duration and amplitude patterns are CYCLEs but 
-   may be any PATTERN type.  If the lengths of the various patterns are
-   different, complex combinations of the parameters are produced.
+
+   Binds new instance of QBALL to name.
+   A QBALL is a PART which uses multiple patterns to generate MIDI note events.
+   For each event, a new combination of pattern values are combined to 
+   produce note parameters.   The patterns are:
+       :qfn - cueing function
+       :cue - cue values 
+       :key - key numbers
+       :dur - duration
+       :amp - amplitude
+
+   The default pattern type for all parameters is a CYCLE.
+   If the lengths of the various patterns are different, complex combinations 
+   of the parameters are produced.
 
    name        - Symbol, the QBALL is bound to name.
+
    instruments - Instrument pattern may be either a single instrument, a list 
                  of instruments or a PATTERN of instruments.
                    single instrument      - plays all events.
@@ -66,15 +73,20 @@ Binds new instance of QBALL to name.
                    pattern of instruments - Specific instrument is selected 
                                             for each note as per the pattern
                                             pattern type.
+
    :cue        - List of time specifications.  The format is a nested list
                  ((time-1)(time-2)...(time-n))  where (time-i) must be a form
-                 expected by the qfn argument.  The default qfn is #'BAR so 
-                 time expressions should be (bar beat subbeat tick).
+                 expected by the qfn.  For the default qfn #'BAR time expressions 
+                 should be (bar beat subbeat tick).
    :period     - Duration of this PART in seconds.  The default is to inherit
                  the duration of the parent SECTION.  If period is less then 
                  the SECTION duration, then the QBALL will be repeated as 
                  needed.
-   :qfn        - Function used to evaluate time expressions, default #'BAR.
+
+   :qfn        - Function, list of functions or pattern of functions.
+                 The cueing function.  The values contained in the cue list 
+                 *MUST* match the expected format of the cuing function.
+
    :transposable - Boolean, if nil transpose! and invert! have no effect.
                  It is often useful to set percussion parts to be non
                  transposable.
@@ -114,13 +126,12 @@ Binds new instance of QBALL to name.
 				:name ',name
 				:instruments ipat
 				:period (or ,period (duration sec))
-				:cue-fn ,qfn
+				:cue-fn (->pattern ,qfn)
 				:cue (cycle :of ,cue)
 				:key (->pattern ,key)
 				:dur (->pattern ,dur)
-				:amp (->pattern ,amp)))) ;
+				:amp (->pattern ,amp))))
        (add-child! sec prt)
-					;(property! prt :qfn ,qfn)
        (property! prt :keynumber-map ,key-map)
        (property! prt :duration-map ,dur-map)
        (property! prt :amplitude-map ,amp-map)
@@ -134,53 +145,8 @@ Binds new instance of QBALL to name.
   (reset (key-pattern obj))
   (reset (dur-pattern obj))
   (reset (amp-pattern obj))
+  (reset (cue-fn obj))
   obj)
-
-(defmethod dump ((prt qball) &key (depth 0)(max-depth 10))
-  (if (< depth max-depth)
-      (if (mute? prt)
-	  (format t "~AMUTED ~A ~A~%"  (tab depth)(type-of prt)(name prt))
-	(let ((pad (tab (1+ depth))))
-	  (format t "~A~A ~A~%" (tab depth) (type-of prt)(name prt))
-	  (if (< (1+ depth) max-depth)
-	      (progn
-		(format t "~ACUE: ~A~%" pad (->string (cue-pattern prt)))
-		(format t "~AKEY: ~A~%" pad (->string (key-pattern prt)))
-		(format t "~ADUR: ~A~%" pad (->string (dur-pattern prt)))
-		(format t "~AAMP: ~A~%" pad (->string (amp-pattern prt))))))))
-  nil)
-
-(defmethod render-once ((prt qball) &key (offset 0))
-  (reset prt)
-  (if (not (mute? prt))
-      (let ((acc '())
-	    (qfn (cue-fn prt))
-	    (kmap (property prt :keynumber-map))
-	    (dmap (property prt :duration-map))
-	    (amap (property prt :amplitude-map))
-	    (dscale (beat-duration (parent prt)))
-	    (cuepat (cue-pattern prt)))
-	(dotimes (i (cardinality cuepat))
-	  (let* ((time1 (+ offset (apply qfn (next-1 cuepat))))
-		 (k (funcall kmap (next-1 (key-pattern prt))))
-		 (d (funcall dmap (next-1 (dur-pattern prt))))
-		 (a (funcall amap (next-1 (amp-pattern prt))))
-		 (ilist (->list (next-1 (instruments prt)))))
-	    (dolist (inst ilist)
-	      (let* ((cindex (1- (channel inst :resolve t)))
-		     (k2 (instrument-keynumber inst k))
-		     (d2 (* dscale (instrument-duration inst d)))
-		     (a2 (instrument-amplitude inst a))
-		     (velocity (truncate (* 127 a2)))
-		     (time2 (+ time1 d2)))
-		(setf acc
-		      (append acc
-			      (list
-			        (cons time1 (midi-note-on cindex k2 velocity))
-				(cons time2 (midi-note-off cindex k2 0)))))))))
-	acc)
-    nil))
-
 
 (defmethod clone ((p qball) &key
 		  (newname "~A-clone")
@@ -216,54 +182,48 @@ Binds new instance of QBALL to name.
   qb)
 
 
-;;; ---------------------------------------------------------------------- 
-;;;			     METRONOME 
+(defmethod dump ((prt qball) &key (depth 0)(max-depth 10))
+  (if (< depth max-depth)
+      (if (mute? prt)
+	  (format t "~AMUTED ~A ~A~%"  (tab depth)(type-of prt)(name prt))
+	(let ((pad (tab (1+ depth))))
+	  (format t "~A~A ~A~%" (tab depth) (type-of prt)(name prt))
+	  (if (< (1+ depth) max-depth)
+	      (progn
+		(format t "~ACUE: ~A~%" pad (->string (cue-pattern prt)))
+		(format t "~AKEY: ~A~%" pad (->string (key-pattern prt)))
+		(format t "~ADUR: ~A~%" pad (->string (dur-pattern prt)))
+		(format t "~AAMP: ~A~%" pad (->string (amp-pattern prt))))))))
+  nil)
 
+(defmethod render-once ((prt qball) &key (offset 0))
+  (reset prt)
+  (if (not (mute? prt))
+      (let ((acc '())
+	    (kmap (property prt :keynumber-map))
+	    (dmap (property prt :duration-map))
+	    (amap (property prt :amplitude-map))
+	    (dscale (beat-duration (parent prt)))
+	    (cuepat (cue-pattern prt)))
+	(dotimes (i (cardinality cuepat))
+	  (let* ((qfn (next-1 (cue-fn prt)))
+		 (time1 (+ offset (apply qfn (->list (next-1 cuepat)))))
+		 (k (funcall kmap (next-1 (key-pattern prt))))
+		 (d (funcall dmap (next-1 (dur-pattern prt))))
+		 (a (funcall amap (next-1 (amp-pattern prt))))
+		 (ilist (->list (next-1 (instruments prt)))))
+	    (dolist (inst ilist)
+	      (let* ((cindex (1- (channel inst :resolve t)))
+		     (k2 (instrument-keynumber inst k))
+		     (d2 (* dscale (instrument-duration inst d)))
+		     (a2 (instrument-amplitude inst a))
+		     (velocity (truncate (* 127 a2)))
+		     (time2 (+ time1 d2)))
+		(setf acc
+		      (append acc
+			      (list
+			        (cons time1 (midi-note-on cindex k2 velocity))
+				(cons time2 (midi-note-off cindex k2 0)))))))))
+	acc)
+    nil))
 
-(defun --metronome-key-list (bars beats)
-  (let ((pat1 (cons 'phrase (copies (1- beats) 'beat)))
-	(pat2 (cons 'accent (copies (1- beats) 'beat))))
-    (flatten (cons pat1 (copies (1- bars) pat2)))))
-
-(defmacro metronome (name &key
-		      (instrument *metronome-instrument*)
-		      (project *project*)
-		      (section nil))
-  "Creates QBALL for use as metronome.
-   name       - Symbol, the QBALL is bound to name.
-   instrument - Default *METRONOME-INSTRUMENT*
-   project    - Default *PROJECT*
-   section    - Default current section of project.
-
-   The instrument keynumber-map should accept the following symbols:
-   BEEP ACCENT and PHRASE.  The PHRASE tone is produced each time 
-   the phrase is repeated.  The ACCENT tone is produced at the start
-   of each bar.  The BEEP tone produced at all other beats."
-  `(progn
-     (validate-part-parents ,project ,section)
-     (let* ((sec (or ,section (current-section ,project)))
-     	    (bars (bar-count sec))
-     	    (beats (beat-count sec))
-     	    (cue-list (let ((acc '()))
-     	    		(dotimes (br bars)
-     	    		  (dotimes (bt beats)
-     	    		    (push (list (1+ br)(1+ bt) 1) acc)))
-     	    		(reverse acc)))
-     	    (key-list (--metronome-key-list bars beats))
-     	    (amp-list key-list)
-     	    (prt (make-instance 'qball
-     	    			:name ',name
-     	    			:instruments (->list ,instrument)
-     	    			:period (duration sec)
-     	    			:cue (cycle :of cue-list)
-     	    			:key (cycle :of key-list)
-     	    			:dur (cycle :of '(0.01))
-     	    			:amp (cycle :of amp-list))))
-       (property! prt :qfn #'bar)
-       (property! prt :keynumber-map #'identity)
-       (property! prt :duration-map #'identity)
-       (property! prt :amplitude-map #'identity)
-       (add-child! sec prt)
-       (property! prt :qfn #'bar)
-       (param ,name prt)
-       prt)))
