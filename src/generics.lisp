@@ -62,6 +62,13 @@
                pad-end is used to prevent cutting off final release tails.
                Default 2.0 seconds."))
 
+(defgeneric ->pattern (obj)
+  (:documentation
+   "Returns pattern containing object.
+    If obj is a pattern, it is returned as is.
+    If obj is a list, the result is (cycle :of ibj)
+    Otherwise the result is (cycle :of (->list obj))"))
+
 (defgeneric ->string (obj)
   (:documentation
    "Return string representation of an object.  If the obj is a string

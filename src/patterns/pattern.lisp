@@ -166,3 +166,13 @@
 (defmethod next-1 ((pat bag))
   (next-1 (pick (elements pat))))
 
+
+
+;;; Functions on Patterns
+;;;
+
+(defmethod ->pattern ((p pattern)) p)
+
+(defmethod ->pattern ((lst list)) (cycle :of lst))
+
+(defmethod ->pattern ((obj t)) (cycle :of (->list obj)))
