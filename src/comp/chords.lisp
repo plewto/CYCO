@@ -41,7 +41,7 @@
 			 (octave nil)
 			 (copies nil))
   "Construct chord as list of keynumbers from root and chord name cname.
-   root - keynumber, the root key.
+   root - keynumber, the root key.  If root is negative return nil.
    cname - symbol the chord name, or a list of intervals.
    :project - The project suppling the CHORD-DICTIONARY, defaults to *PROJECT*.
    :inversion - fixnum, apply inversion to note list by rotation. default 0.
@@ -53,18 +53,21 @@
              is (0 4 7 12 16 19).   If copies is (12 13) the result is
              (0 4 7 12 16 19 13 17 20).
    Returns list."
-  (let* ((cd (property project :chord-dictionary))
-	 (template (if (listp cname)
-		       cname
-		     (or (property cd cname :default nil)
-			 (error
-			  (format nil "~A is not a chord type!" cname))))))
-    (setf template (rotate template inversion))
-    (if octave (push-end (+ 12 (car template)) template))
-    (let ((acc (clone template)))
-      (dolist (x (->list copies))
-	(setf acc (append acc (transpose template x))))
-      (transpose acc (keynumber root)))))
+  (if (minusp root)
+      nil
+    
+    (let* ((cd (property project :chord-dictionary))
+	   (template (if (listp cname)
+			 cname
+		       (or (property cd cname :default nil)
+			   (error
+			    (format nil "~A is not a chord type!" cname))))))
+      (setf template (rotate template inversion))
+      (if octave (push-end (+ 12 (car template)) template))
+      (let ((acc (clone template)))
+	(dolist (x (->list copies))
+	  (setf acc (append acc (transpose template x))))
+	(transpose acc (keynumber root))))))
 
 (defun chord! (name template &key (project nil))
   "Define new chord in current project.  By convention chords names are

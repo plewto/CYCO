@@ -271,6 +271,7 @@
 	 ;;              :permute - permute note list
 	 ;;
 	 ;; return cons (rate . pattern)
+	 ;; 
 	 (parse-chord-strum (evn)
 			    (let ((spec (cdr (assoc :strum evn))))
 			      (if spec
@@ -298,81 +299,83 @@
 	 		   default-amplitude)) )
 	 
     (flet ((chord-handler (prt evn offset)
-	   		  (setf evn (->alist evn))
-			  (parse-chord-strum evn)
-	   		  (let* ((time (+ offset (parse-time prt evn)))
-	   			 (root (parse-keynumber evn))
-	   			 (inv (parse-chord-inversion evn))
-	   			 (chord-type (cdr (assoc :chord evn)))
-	   			 (note-list (parse-chord 
-					     root chord-type
-					     :inversion (first inv)
-					     :octave (second inv)
-					     :copies (third inv)))
-	   			 ;(--strum (parse-chord-strum evn)) 
-	   			 (strum-rate default-strum-rate)
-	   			 (strum-pattern default-strum-pattern)
-	   			 (strum-direction (next strum-pattern))
-	   			 (orc (property prt :orchestra))
-				 (dscale (beat-duration (parent prt)))
-	   			 (acc '()))
-	   		    (setf note-list (cond 
-					     ((eq strum-direction :up)
-					      (reverse note-list))
-					     ((eq strum-direction :random)
-					      (if (> (random 100) 50)
-						  (reverse note-list)
-						note-list))
-					     ((eq strum-direction :permute)
-					      (permutation note-list))
-					     (t note-list)))
-			    (dolist (kn note-list)
-			      (dolist (inst-name (->list (instruments prt)))
-				(let* ((inst (find-node orc inst-name))
-				       (cindex (1- (channel inst :resolve t)))
-				       (keynum (instrument-keynumber inst kn))
-				       (dur (* dscale (instrument-duration 
-						       inst (parse-duration prt evn))))
-				       (amp (instrument-amplitude 
-					     inst (parse-amplitude prt evn)))
-				       (t2 (+ time dur)))
-				  (push (cons time (midi-note-on
-						    cindex 
-						    keynum 
-						    (truncate (* 127 amp))))
-					acc)
-				  (push (cons t2 
-					      (midi-note-off cindex keynum 0)) 
-					acc)))
-			      (setf time (+ time strum-rate)))
-			    (reverse acc)))
+    	   		  (setf evn (->alist evn))
+    			  (parse-chord-strum evn)
+    	   		  (let* ((time (+ offset (parse-time prt evn)))
+    	   			 (root (parse-keynumber evn))
+    	   			 (inv (parse-chord-inversion evn))
+    	   			 (chord-type (cdr (assoc :chord evn)))
+    	   			 (note-list (parse-chord 
+    					     root chord-type
+    					     :inversion (first inv)
+    					     :octave (second inv)
+    					     :copies (third inv)))
+    	   			 ;(--strum (parse-chord-strum evn)) 
+    	   			 (strum-rate default-strum-rate)
+    	   			 (strum-pattern default-strum-pattern)
+    	   			 (strum-direction (next strum-pattern))
+    	   			 (orc (property prt :orchestra))
+    				 (dscale (beat-duration (parent prt)))
+    	   			 (acc '()))
+    	   		    (setf note-list (cond 
+    					     ((eq strum-direction :up)
+    					      (reverse note-list))
+    					     ((eq strum-direction :random)
+    					      (if (> (random 100) 50)
+    						  (reverse note-list)
+    						note-list))
+    					     ((eq strum-direction :permute)
+    					      (permutation note-list))
+    					     (t note-list)))
+    			    (dolist (kn note-list)
+    			      (dolist (inst-name (->list (instruments prt)))
+    				(let* ((inst (find-node orc inst-name))
+    				       (cindex (1- (channel inst :resolve t)))
+    				       (keynum (instrument-keynumber inst kn))
+    				       (dur (* dscale (instrument-duration 
+    						       inst (parse-duration prt evn))))
+    				       (amp (instrument-amplitude 
+    					     inst (parse-amplitude prt evn)))
+    				       (t2 (+ time dur)))
+    				  (push (cons time (midi-note-on
+    						    cindex 
+    						    keynum 
+    						    (truncate (* 127 amp))))
+    					acc)
+    				  (push (cons t2 
+    					      (midi-note-off cindex keynum 0)) 
+    					acc)))
+    			      (setf time (+ time strum-rate)))
+    			    (reverse acc)))
 
 	   ;; :time :key :dur :amp
 	   (note-handler (prt evn offset)
-			 (setf evn (->alist evn))
-			 (let* ((time (+ offset (parse-time prt evn)))
-				(kn (parse-keynumber evn))
-				(orc (property prt :orchestra))
-				(dscale (beat-duration (parent prt)))
-				(acc '()))
-			   (dolist (inst-name (->list (instruments prt)))
-			     (let* ((inst (find-node orc inst-name))
-				    (cindex (1- (channel inst :resolve t)))
-				    (keynum (instrument-keynumber inst kn))
-				    (dur (* dscale (instrument-duration
-						    inst 
-						    (parse-duration prt evn))))
-				    (amp (instrument-amplitude 
-					  inst 
-					  (parse-amplitude prt evn)))
-				    (t2 (+ time dur)))
-			       (push (cons time (midi-note-on 
-						 cindex 
-						 keynum 
-						 (truncate (* 127 amp)))) acc)
-			       (push (cons t2 (midi-note-off cindex keynum 0)) 
-				     acc)))
-			   (reverse acc)))
+	   		 (setf evn (->alist evn))
+	   		 (let* ((time (+ offset (parse-time prt evn)))
+	   			(kn (parse-keynumber evn))
+	   			(orc (property prt :orchestra))
+	   			(dscale (beat-duration (parent prt)))
+	   			(acc '()))
+	   		   (dolist (inst-name (->list (instruments prt)))
+	   		     (let* ((inst (find-node orc inst-name))
+	   			    (cindex (1- (channel inst :resolve t)))
+	   			    (keynum (instrument-keynumber inst kn))
+	   			    (dur (* dscale (instrument-duration
+	   					    inst 
+	   					    (parse-duration prt evn))))
+	   			    (amp (instrument-amplitude 
+	   				  inst 
+	   				  (parse-amplitude prt evn)))
+	   			    (t2 (+ time dur)))
+			       (if (and (>= keynum 0)(>= dur 0)(plusp amp))
+				   (progn 
+				     (push (cons time (midi-note-on 
+						       cindex 
+						       keynum 
+						       (truncate (* 127 amp)))) acc)
+				     (push (cons t2 (midi-note-off cindex keynum 0)) 
+					   acc)))))
+	   		   (reverse acc)))
 
 	   ;; :time :to :ctrl :start :end :steps
 	   (cc-handler (prt evn offset)
