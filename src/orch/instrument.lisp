@@ -64,8 +64,15 @@
               defaults to nil (*GLOBAL-CHANNEL-ASSIGNMENTS* from parent)
    controller-assignments - instance of CONTROLLER-ASSIGNMENT-MAP
               defaults to nil (*GLOBAL-CONTROLLER-ASSIGNMENTS* from parent)
-   keynumber-map - See orch/keymaps.lisp
-              defaults to nil (DEFAULT-KEYMAP from parent)
+   keynumber-map - 
+              A single argument function (lambda k) -> k'
+              which interprests keynumbers for the instrument.
+              The special value :? shold display help text and return +REST+
+              For any non-recognized argument the function should do one or 
+              more of the following, depending on application:
+              1) - Display warning message.
+              2) - Return resoanable default (such as default drum sound).
+              3) - Return +REST+
    duration-map - defaults to nil (DEFAULT-DURATION-MAP from parent)
    amplitude-map - defaults to nil (DEFAULT-AMPLITUDE-MAP from parent)
    program-change-hook defaults to nil (DEFAULT-PROGRAM-CHANGE-HOOK from parent)

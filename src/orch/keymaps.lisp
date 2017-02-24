@@ -13,10 +13,10 @@
   (cond ((eq n :?)
 	 (progn 
 	   (format t "default keymap [0 : 127]~%")
-	   60))
+	   +REST+))
 	((keynumber-p n)(keynumber n))
 	(t 
-	   60)))
+	 +REST+)))
 
 (defmacro defkeymap (name alist)
   "Creates keymap function with symbolic mapping useful for percussion 
@@ -46,7 +46,7 @@
 		   (car (cdr (cnth (keynumber kn) acc))))
 		  (t (let ((frmt "~A is invalid ~A keynumber"))
 		       (cyco-warning (format nil frmt kn (->string ',name)))
-		       (car (cdr (car acc)))))))))))
+		       +REST+))))))))
 			  
 (defmacro circular-keymap (name keys)
   "Creates keynumber map with circular assignments.   Any out of bound
