@@ -95,3 +95,8 @@
 	    (setf (gethash +SEQ-SPECIFIC-EVENT+ table) "SSE      ")
 	    table))
 
+
+;; +REST+ must be sufficiently negative so that,as a keynumber,
+;; any reasonable transposition is still negative.
+;;
+(constant +REST+ -100000)
