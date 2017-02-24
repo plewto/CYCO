@@ -219,11 +219,13 @@
 		     (a2 (instrument-amplitude inst a))
 		     (velocity (truncate (* 127 a2)))
 		     (time2 (+ time1 d2)))
-		(setf acc
-		      (append acc
-			      (list
-			        (cons time1 (midi-note-on cindex k2 velocity))
-				(cons time2 (midi-note-off cindex k2 0)))))))))
+		(dolist (k3 (->list k2))
+		  (if (not (minusp k3))
+		      (setf acc
+			    (append acc
+				    (list
+				     (cons time1 (midi-note-on cindex k3 velocity))
+				     (cons time2 (midi-note-off cindex k3 0)))))))))))
 	acc)
     nil))
 
