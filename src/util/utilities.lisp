@@ -70,3 +70,27 @@
      (if ,rename (setf (slot-value ,obj 'name) ',name))
      (param ,name other)
      other))
+
+(defun rnd ()
+  "Returns random float between 0.0 and 1.0"
+  (random 1.0))
+
+(defun coin (&optional (p 0.5)(heads t)(tails nil))
+  "Returns heads with probability p, tails otherwise.
+   If heads or tails are functions, the function is called when selected."
+  (let ((rs (if (< (rnd) p) heads tails)))
+    (if (functionp rs)
+	(funcall rs)
+      rs)))
+
+(defun rnd-sign (&optional (p 0.5)(n 1.0))
+  "Returns +n with probability 0.5, -n otherwise."
+  (* n (coin p 1 -1)))
+
+(defun approx (n &key (scale 0.1)(min -1e6)(max 1e6))
+  "Returns a value approximately the same as n.
+   scale - maximum ratio of result relative to n.
+   min   - Lower limit of result
+   max   - Upper limit of result."
+  (let* ((v (rnd-sign 0.5 (random (* n scale)))))
+    (limit (+ n v) min max)))
