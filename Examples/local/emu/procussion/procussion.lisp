@@ -38,7 +38,7 @@
             (beatbox         . (031 ))		; *
             (rocket-drums    . (032 ))          
             (huge-room       . (033 standard))	; *
-            (churchyard      . (034 tuned2))   ; *
+            (churchyard      . (034 tuned2))    ; *
             (drum-dance      . (035 standard))	; *
             (percussion3     . (036 ))          
             (malletbells     . (037 tuned))     
@@ -129,3 +129,4 @@
 (load-local "emu/procussion/discoball")
 (load-local "emu/procussion/proshake")
 (load-local "emu/procussion/thundadome")
+(load-local "emu/procussion/latin-drums")
