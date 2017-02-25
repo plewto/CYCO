@@ -99,17 +99,16 @@
 	 (setf (data2 evn)(--validate-midi-data value)))
 	(t (let ((msg (format nil "Invalid index to data!, expected 1 or 2, encountered ~A" index)))
 	     (error msg)))))
-	
 
 (defmethod ->string ((evn channel-event))
   (let* ((dcount (data-count evn))
 	 (acc (str+ (call-next-method)
-		  (format nil "cindex: ~x   " (channel-index evn)))))
+		  (format nil "cindex: ~2d   " (channel-index evn)))))
     (if (= dcount 1)
 	(str+ acc
-	      (format nil "data: ~2X" (data1 evn)))
+	      (format nil "data: ~3D" (data1 evn)))
       (str+ acc
-	    (format nil "data: ~2X ~2X" (data1 evn)(data2 evn))))))
+	    (format nil "data: ~3D ~3D" (data1 evn)(data2 evn))))))
 
 (defmethod render-event ((evn channel-event))
   (let ((status (+ (command evn)(channel-index evn))))
@@ -134,6 +133,13 @@
 
 (defmethod key-event-p ((obj key-event)) obj)
 
+(defmethod ->string ((ke key-event))
+  (str+ (format nil "~A " (mnemonic ke))
+	(format nil "cindex ~2d  " (channel-index ke))
+	(format nil "data: ~3d ~3d  (key ~A)"
+		(data1 ke)(data2 ke)(keyname (data1 ke)))))
+
+
 (defmethod keynumber ((obj key-event))
   (data1 obj))
 
@@ -151,14 +157,14 @@
   (while (> kn 127)(setf kn (- kn 12)))
   kn)
 
-(defclass note-off (channel-event key-event)
+(defclass note-off (key-event channel-event)
   ((command
     :type fixnum
     :initform +NOTE-OFF+)
    (priority
     :initform 13)))
 
-(defclass note-on (channel-event key-event)
+(defclass note-on (key-event channel-event)
   ;; NOTE: NOTE-ON event with velocity 0 is converted to NOTE-OFF.
   ((command
     :type fixnum
@@ -166,7 +172,7 @@
    (priority
     :initform 11)))
 
-(defclass poly-pressure (channel-event key-event)
+(defclass poly-pressure (key-event channel-event)
   ;; POLY-PRESSURE included for compleatnes, but is otherwise not
   ;; supported by cyco.
   ((command
@@ -203,13 +209,6 @@
 			     (transpose (slot-value n 'data1) x
 					:range range))
 		       n)))
-
-;; (defmethod inversion ((obj key-event)(pivot t) &key (range '(0 127)))
-;;   (clone obj :hook #'(lambda (n)
-;; 		       (setf (slot-value n 'data1)
-;; 			     (inversion (slot-value n 'data1) pivot
-;; 					:range range))
-;; 		       n)))
 
 (defmethod invert ((obj key-event)(pivot t) &key (range '(0 127)))
   (clone obj :hook #'(lambda (n)
