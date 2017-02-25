@@ -119,18 +119,20 @@
   (let* ((sec (current-section *project*)))
     (* n (bar-duration sec))))
 
-(defun bar (&optional (bar 1)(beat 1)(subbeat 1)(tick 0))
+(defun bar (&optional (bar 1)(beat 1)(sub 1)(tsub nil)(tick 0))
   "BAR is the default time cuing function used by many types of PART.
    bar  - bar number 1,2,3,... Default 1
    beat - beat within bar  (for 4/4 time 1,2,3 or 4) Default 1
-   subbeat - subbeat within beat (for 4 sixteenth notes per beat  1,2,3 or 4)
+   sub  - subbeat within beat (for 4 sixteenth notes per beat  1,2,3 or 4)
           Default 1
-   tick - Adds/removes duration of specified number of ticks. Default 0.
-   Returns float, a time in seconds relative to the start of the SECTION."
+   tsub - flag, if true interpret sub as tsubbeats, 
+   tick - Adds/removes duration of specified number of ticks. Default 0."
   (let* ((sec (current-section *project*)))
     (+ (* (max 0 (1- bar))(bar-duration sec))
        (* (max 0 (1- beat))(beat-duration sec))
-       (* (max 0 (1- subbeat))(subbeat-duration sec))
+       (* (max 0 (1- sub))(if tsub
+			      (tsubbeat-duration sec)
+			    (subbeat-duration sec)))
        (* tick (tick-duration sec)))))
 
 (defun tbar (&optional (bar 1)(beat 1)(tsubbeat 1)(tick 0))
