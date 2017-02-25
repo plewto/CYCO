@@ -167,6 +167,24 @@
   (next-1 (pick (elements pat))))
 
 
+;;; ---------------------------------------------------------------------- 
+;;;				  Wrapper
+;;;
+;;; WRAPPER is a PATTERN which calls a function.
+;;; The function shuld take no arguments and has no defined reteurn type
+;;; The NEXT-1 method calls the function and returns the results.
+
+(defclass wrapper (pattern)
+  ((function
+    :initform #'false
+    :initarg :function)))
+
+(defun wrapper (&key (of #'false))
+  (make-instance 'wrapper :function of))
+		     
+(defmethod next-1 ((w wrapper))
+  (funcall (slot-value w 'function)))
+
 
 ;;; Functions on Patterns
 ;;;
