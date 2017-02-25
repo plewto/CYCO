@@ -158,6 +158,9 @@
 	(setf (events p)(reverse acc))))
   p)
 
+(defmethod dump-events ((p part) &key (filter nil)(time (cons 0 1e6)))
+  (dump-events (render-once p) :filter filter :time time))
+
 ;;; ---------------------------------------------------------------------- 
 ;;;			     Programs class
 

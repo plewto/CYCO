@@ -77,6 +77,9 @@
 	    (dump c :depth (1+ depth) :max-depth max-depth)))))
   nil)
 
+(defmethod dump-events ((s section) &key (filter nil)(time (cons 0 1e6)))
+  (dump-events (render-once s) :filter filter :time time))
+
 (defmethod add-child! ((s section)(n node) &key (test :ignore))
   "Adds a child node to the section, but only if it is a PART.
    The test predicate does not allow duplicate parts to be added."
