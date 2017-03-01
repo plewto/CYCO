@@ -66,80 +66,46 @@
 
 (in-package :cyco)
 
-(defkeymap --bbox-kick-map '((X . 036)))
+(let ((kick-map (keymap 'bbox-kick '((X . 036))))
+      (snare-map (keymap 'bbox-snamre '((WET    . 034)
+					(ANALOG . 038)
+					(KLAPZ  . 039)
+					(SNAP   . 053)
+					(SNAP2  . 054)
+					(SNAP3  . 055)
+					(SNAP4  . 056))))
+      (ido-map (keymap 'bbox-ido '((CLAVE   . 037)
+				   (COW     . 046)
+				   (CABASA  . 048)
+				   (CABASA2 . 049)
+				   (ANALOG  . 057))))
+      (tom-map (circular-keymap 'bbox-tom '(40 41 43 45 47 58)))
+      (hat-map (circular-keymap 'bbox-hat '(42 44 50 51 52)))
+      (tuned-map (reduced-keymap 'bbox-tuned 60 96))
+      (program-number (car (cdr (assoc 'beatbox +PROCUSSION-PROGRAMS+)))))
+  (param beatbox nil)
 
-(defkeymap --bbox-snare-map '((WET    . 034)
-			      (ANALOG . 038)
-			      (KLAPZ  . 039)
-			      (SNAP   . 053)
-			      (SNAP2  . 054)
-			      (SNAP3  . 055)
-			      (SNAP4  . 056)))
-
-(defkeymap --bbox-ido-map '((CLAVE   . 037)
-			    (COW     . 046)
-			    (CABASA  . 048)
-			    (CABASA2 . 049)
-			    (ANALOG  . 057)))
-
-(circular-keymap --bbox-tom-map '(40 41 43 45 47 58))
-
-(circular-keymap --bbox-hat-map  '(42 44 50 51 52))
-
-(circular-keymap --bbox-tuned-map '(60 61 62 63 64 65 66 67 68 69 70 71
-				       72 73 74 75 76 77 78 79 80 81 82 83
-				       84 85 86 87 88 89 90 91 92 93 94 95
-				       96))
-
-(param beatbox nil)
-(param bb-kick nil)
-(param bb-snare nil)
-(param bb-tom nil)
-(param bb-ido nil)
-(param bb-hat nil)
-(param bb-tuned nil)
-       
-(defun beatbox (&key (parent pro3))
-  (let ((program-number (car (cdr (assoc 'beatbox +PROCUSSION-PROGRAMS+)))))
-    (free-orchestra! :node parent :force t)
-    (setf beatbox (create-instrument
-		   'beatbox
-		   :parent parent
-		   :transient t
-		   :program-change-hook (constant-program-hook
-					 'beatbox
-					 program-number)))
-    (setf bb-kick (create-instrument
-		   'bb-kick
-		   :parent beatbox
-		   :keynumber-map #'--bbox-kick-map))
-
-    (setf bb-snare (create-instrument
-		    'bb-snare
-		    :parent beatbox
-		    :transient t
-		    :keynumber-map #'--bbox-snare-map))
-
-    (setf bb-tom (create-instrument
-		  'bb-tom
-		  :parent beatbox
-		  :transient t
-		  :keynumber-map #'--bbox-tom-map))
-
-    (setf bb-ido (create-instrument
-		  'bb-ido
-		  :parent beatbox
-		  :transient t
-		  :keynumber-map #'--bbox-ido-map))
-    
-    (setf bb-hat (create-instrument
-		  'bb-hat
-		  :parent beatbox
-		  :transient t
-		  :keynumber-map #'--bbox-hat-map))
-    
-    (setf bb-tuned (create-instrument
-		    'bb-tuned
-		    :parent beatbox
-		    :keynumber-map #'--bbox-tuned-map))
+  (defun beatbox (&key (parent pro3))
+    (setf beatbox (create-instrument 'beatbox
+				     :parent parent
+				     :transient t
+				     :program-change-hook
+				     (constant-program-hook
+				      'beatbox program-number)))
+    (param bb-kick (create-instrument 'bb-kick
+				      :parent beatbox
+				      :keynumber-map kick-map))
+    (param bb-snare (create-instrument 'bb-snare
+				       :parent beatbox
+				       :keynumber-map snare-map))
+    (param bb-tom (create-instrument 'bb-tom
+				     :parent beatbox
+				     :keynumber-map tom-map))
+    (param bb-hat (create-instrument 'bb-hat
+				     :parent beatbox
+				     :keynumber-map hat-map))
+    (param bb-tuned (create-instrument 'bb-tuned
+				       :parent beatbox
+				       :keynumber-map tuned-map))
     beatbox))
+    

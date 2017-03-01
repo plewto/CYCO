@@ -1,4 +1,4 @@
-;;;; cyco/Local/Emu/Procussion/rocket-drums.lisp
+;;;; emu procussion rocket-drums
 ;;;; 2013.04.22
 ;;;; Instruments          
 ;;;;    rocket-drums
@@ -34,72 +34,36 @@
 ;;;; 24	:224 ElecTomic     : 048 - 072                                       
 ;;;;
 
-(defun --rd-kick-map (k)
-  (cond ((numberp k)
-	 (cnth (truncate k) '(35 36 38)))
-	((eq k '?)(format t "0 1 2~%") 0)
-	((and k (symbolp k))(--rd-kick-map (keynum k)))
-	(t 0)))
+(in-package :cyco)
 
-(defun --rd-snare-map(k)
-  (cond ((numberp k)
-	 (cnth (truncate k) '(40 41 43 45)))
-	((eq k '?)(format t "0 1 2 3~%") 0)
-	((and k (symbolp k))(--rd-snare-map (keynum k)))
-	(t 0)))
+(let ((kick-map (keymap 'rocket-kick '((A 35)(B 36)(C 38))))
+      (snare-map (keymap 'rocket-snare '((A 40)(B 41)(C 43)(D 45))))
+      (cym-map (circular-keymap 'rocket-cymbals '(37 39 42 44 46 47)))
+      (tom1-map (circular-keymap 'rocket-toms1 (range 48 73)))
+      (tom2-map (circular-keymap 'rocket-toms2 (range 72 123)))
+      (program-number (car (cdr (assoc 'latin-drums +PROCUSSION-PROGRAMS+)))) )
+  (param rocket-drums)
 
-(defun --rd-cym-map(k)
-  (cond ((numberp k)
-	 (cnth (truncate k) '(37 39 42 44 46 47)))
-	((eq k '?)(format t "0 1 2 3 4 5~%") 0)
-	((and k (symbolp k))(--rd-cym-map (keynum k)))
-	(t 0)))
-
-(constant +rocket-drums-tom1-keynums+ (range-between 48 73))
-(constant +rocket-drums-tom2-keynums+ (range-between 72 123))
-
-(defun --rd-tom1-map (k)
-  (cond ((numberp k)
-	 (cnth (truncate k) +rocket-drums-tom1-keynums+))
-	((eq k '?)
-	 (format t "0 - ~A~%" (length +rocket-drums-tom1-keynums+)) 0)
-	((and k (symbolp k))(--rd-tom1-map (keynum k)))
-	(t 0)))
-
-(defun --rd-tom2-map (k)
-  (cond ((numberp k)
-	 (cnth (truncate k) +rocket-drums-tom2-keynums+))
-	((eq k '?)
-	 (format t "0 - ~A~%" (length +rocket-drums-tom2-keynums+)) 0)
-	((and k (symbolp k))(--rd-tom2-map (keynum k)))
-	(t 0)))
-
-(param rocket-drums nil)
-
-(defun rocket-drums (&optional (parent pro3))
-  (remove-children parent)
-  (set-value parent :program (procussion-program-map 'rocket-drums))
-  (let* ((rd (instrument :rocket-drums
-			 :parent parent))
-	 (kk (instrument :rd-kick
-			 :parent rd
-			 :keymap #'--rd-kick-map))
-	 (sn (instrument :rd-snare
-			 :parent rd
-			 :keymap #'--rd-snare-map))
-	 (cy (instrument :rd-cymbal
-			 :parent rd
-			 :keymap #'--rd-cym-map))
-	 (tm (instrument :rd-tomic
-			 :parent rd
-			 :keymap #'--rd-tom1-map))
-	 (rt (instrument :rd-roto
-			 :parent rd
-			 :keymap #'--rd-tom2-map)))
-    (setf rocket-drums rd)
-    (param rd-kick kk)
-    (param rd-snare sn)
-    (param rd-cymbal cy)
-    (param rd-tomic tm)
-    (param rd-roto rt)
-    rd))
+  (defun rocket-drums (&key (parent pro3))
+    (setf rocket-drums (create-instrument 'rocket-drums
+					  :parent parent
+					  :transient t
+					  :program-change-hook
+					  (constant-program-hook
+					   'rocket-drums program-number)))
+    (param rocket-kick (create-instrument 'rocket-kick
+					  :parent rocket-drums
+					  :keynumber-map kick-map))
+    (param rocket-snare (create-instrument 'rocket-snare
+					   :parent rocket-drums
+					   :keynumber-map snare-map))
+    (param rocket-cym (create-instrument 'rocket-cym
+					 :parent rocket-drums
+					 :keynumber-map cym-map))
+    (param rocket-tom1 (create-instrument 'rocket-tom1
+					  :parent rocket-drums
+					  :keynumber-map tom1-map))
+    (param rocket-tom2 (create-instrument 'rocket-tom2
+					  :parent rocket-drums
+					  :keynumber-map tom2-map))
+    rocket-drums))

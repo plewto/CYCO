@@ -8,84 +8,78 @@
 
 (in-package :cyco)
 
-(defun default-keymap (n)
-  "The default keymap maps a keynumber to itself."
-  (cond ((eq n :?)
-	 (progn 
-	   (format t "default keymap [0 : 127]~%")
-	   +REST+))
-	((keynumber-p n)(keynumber n))
-	(t 
-	 +REST+)))
+(defun default-keymap (name &key (no-warn t))
+  #'(lambda (kn)
+      (cond ((numberp kn)
+	     (if (minusp kn)
+		 +REST+
+	       (logand kn 127)))
+	    ((eq kn :?)
+	     (format t "Default keymap for ~A~%" name)
+	     +REST+)
+	    (t
+	     (if no-warn
+		 kn
+	       (cyco-warning (format nil "~A is not a valid ~A keynumber!"
+				     kn name)))))))
 
-(defmacro defkeymap (name alist)
-  "Creates keymap function with symbolic mapping useful for percussion 
-   instruments.
+(param default-keymap (default-keymap 'default :no-warn t))
 
-   name - the instrument name (used for help text)
-   alist - An assoc list of the form ((symbol1 . (keynumber remarks))
-                                     (symbol2 . (keynumber remarks))
-                                      .............................)
-   The remarks are optional but they appear in the help text."
-  `(let ((acc '()))
-     (dolist (a ,alist)
-       (push (cons (car a)(->list (cdr a))) acc))
-     (setf acc (reverse acc))
-     (param ,name nil)
-     (setf (symbol-function ',name)
-	   #'(lambda (kn)
-	       (let ((aval (assoc kn acc)))
-		 (cond
-		  ((eq kn :?)
-		   (format t "~A keymap~%" (->string ',name))
-		   (dolist (a acc)
-		     (format t "    ~12A -> ~A~%" (car a)(cdr a)))
-		   (car (cdr (car acc))))
-		  (aval (car (cdr aval)))
-		  ((keynumber-p kn)
-		   (car (cdr (cnth (keynumber kn) acc))))
-		  (t (let ((frmt "~A is invalid ~A keynumber"))
-		       (cyco-warning (format nil frmt kn (->string ',name)))
-		       +REST+))))))))
-			  
-(defmacro circular-keymap (name keys)
-  "Creates keynumber map with circular assignments.   Any out of bound
-   argument is coerced to a proper value using REM.
-    
-   name - instrument name (only used for help text)
-   keys - list of key numbers."
-  `(let ((count (length ,keys)))
-     (param ,name nil)
-     (setf (symbol-function ',name)
-	   #'(lambda (kn)
-	       (if (eq kn :?)
-		   (progn 
-		     (format t "~A circular keymap~%" (->string ',name))
-		     (format t "    [  0] -> ~A~%" (car ,keys))
-		     (format t "    [~3D] -> ~A~%" count (car (reverse ,keys)))
-		     (car ,keys))
-		 (cnth (keynumber kn) ,keys))))))
-		     
-(defmacro reduced-keymap (name lower upper)
-  "Creates keynumber map with restricted range. Out of bounds arguments
-   are transposed by octaves until they are in bounds.
+(defun keymap (name alist &key (no-warn t))
+  #'(lambda (kn)
+      (let ((aval (assoc kn alist)))
+	(cond (aval
+	       (car (cdr aval)))
+	      ((numberp kn)
+	       (if (minusp kn)
+		   +REST+
+		 (car (cdr (cnth (truncate kn) alist)))))
+	      ((eq kn :?)
+	       (format t "~A keymap~%" name)
+	       (dolist (a alist)
+		 (format t "  ~12A -> ~A~%" (car a)(cdr a)))
+	       +REST+)
+	      (no-warn
+	       kn)
+	      (t
+	       (cyco-warning (format nil "~A is not a valid ~A keynumber!"
+				     kn name))
+	       +REST+)))))
 
-   name - instrument name
-   lower - MIDI key number
-   upper - MIDI key number."
-  `(progn 
-     (param ,name nil)
-     (setf (symbol-function ',name)
-  	   #'(lambda (kn)
-  	       (if (eq kn :?)
-  		   (progn
-  		    (format t "~A reduced-range keymap [~A ~A]~%"
-  			    ,name ,lower ,upper)
-  		    ,lower)
-  		 (let ((kn (keynumber kn)))
-  		   (while (< kn ,lower)
-  		     (setf kn (+ 12 kn)))
-  		   (while (> kn ,upper)
-  		     (setf kn (- kn 12)))
-  		   kn))))))
+(defun circular-keymap (name keys &key (no-warn t))
+  #'(lambda (kn)
+      (cond ((numberp kn)
+	     (if (minusp kn)
+		 +REST+
+	       (cnth kn keys)))
+	    ((eq kn :?)
+	     (format t "~A circular-keymap: ~A~%"
+		     name keys))
+	    (no-warn
+	     kn)
+	    (t
+	     (cyco-warning (format nil "~A is not a valid ~A keynumber!"
+				   kn name))
+	     +REST+))))
+
+(defun reduced-keymap (name lower upper &key (no-warn t))
+  #'(lambda (kn)
+      (cond ((numberp kn)
+	     (if (minusp kn)
+		 +REST+
+	       (progn 
+		 (while (< kn lower)(setf kn (+ kn 12)))
+		 (while (> kn upper)(setf kn (- kn 12)))
+		 kn)))
+	    ((eq kn :?)
+	     (format t "Reduced keymap for ~A:  [~A..~A]~%"
+		     name lower upper)
+	     +REST+)
+	    (no-warn
+	     kn)
+	    (t
+	     (cyco-warning (format nil "~A is not a valid ~A keynumber!"
+				   kn name))
+	     +REST+))))
+	     
 

@@ -23,8 +23,7 @@
 	       :parent yamaha
 	       :transient nil
 	       :channel :MU100R
-	       :program-change-hook #'--mu100r-program-hook
-	       ))
+	       :program-change-hook #'--mu100r-program-hook))
 
 (defmacro mu100r (name program bank &key
 		       (channel nil)

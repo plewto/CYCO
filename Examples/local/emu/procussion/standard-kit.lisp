@@ -76,171 +76,168 @@
 ;;;;  069 - Z23  HH 2/3 Open
 ;;;;  070 - Z24  HH Open
 ;;;;  071 - Z24  HH Open
-;;;;  072 - Z14  Toned Tom Bass Or Other 
-;;;;  073 - Z14  Toned Tom Bass Or Other 
-;;;;  074 - Z14  Toned Tom Bass Or Other
-;;;;  075 - Z14  Toned Tom Bass Or Other
-;;;;  076 - Z14  Toned Tom Bass Or Other
-;;;;  077 - Z14  Toned Tom Bass Or Other
-;;;;  078 - Z14  Toned Tom Bass Or Other
-;;;;  079 - Z14  Toned Tom Bass Or Other
-;;;;  080 - Z14  Toned Tom Bass Or Other
-;;;;  081 - Z14  Toned Tom Bass Or Other
-;;;;  082 - Z14  Toned Tom Bass Or Other
-;;;;  083 - Z14  Toned Tom Bass Or Other
-;;;;  084 - Z14  Toned Tom Bass Or Other
-;;;;  085 - Z14  Toned Tom Bass Or Other
-;;;;  086 - Z14  Toned Tom Bass Or Other
-;;;;  087 - Z14  Toned Tom Bass Or Other
-;;;;  088 - Z14  Toned Tom Bass Or Other
-;;;;  089 - Z14  Toned Tom Bass Or Other
-;;;;  090 - Z14  Toned Tom Bass Or Other
-;;;;  091 - Z14  Toned Tom Bass Or Other
-;;;;  092 - Z14  Toned Tom Bass Or Other
-;;;;  093 - Z14  Toned Tom Bass Or Other
-;;;;  094 - Z14  Toned Tom Bass Or Other
-;;;;  095 - Z14  Toned Tom Bass Or Other
-;;;;  096 - Z14  Toned Tom Bass Or Other
-;;;;  097 - Z14  Toned Tom Bass Or Other
-;;;;  098 - Z14  Toned Tom Bass Or Other
-
+;;;;  072 - Z14  Tuned tom, bass or other 
+;;;;  073 - Z14  Tuned tom, bass or other 
+;;;;  074 - Z14  Tuned tom, bass or other
+;;;;  075 - Z14  Tuned tom, bass or other
+;;;;  076 - Z14  Tuned tom, bass or other
+;;;;  077 - Z14  Tuned tom, bass or other
+;;;;  078 - Z14  Tuned tom, bass or other
+;;;;  079 - Z14  Tuned tom, bass or other
+;;;;  080 - Z14  Tuned tom, bass or other
+;;;;  081 - Z14  Tuned tom, bass or other
+;;;;  082 - Z14  Tuned tom, bass or other
+;;;;  083 - Z14  Tuned tom, bass or other
+;;;;  084 - Z14  Tuned tom, bass or other
+;;;;  085 - Z14  Tuned tom, bass or other
+;;;;  086 - Z14  Tuned tom, bass or other
+;;;;  087 - Z14  Tuned tom, bass or other
+;;;;  088 - Z14  Tuned tom, bass or other
+;;;;  089 - Z14  Tuned tom, bass or other
+;;;;  090 - Z14  Tuned tom, bass or other
+;;;;  091 - Z14  Tuned tom, bass or other
+;;;;  092 - Z14  Tuned tom, bass or other
+;;;;  093 - Z14  Tuned tom, bass or other
+;;;;  094 - Z14  Tuned tom, bass or other
+;;;;  095 - Z14  Tuned tom, bass or other
+;;;;  096 - Z14  Tuned tom, bass or other
+;;;;  097 - Z14  Tuned tom, bass or other
+;;;;  098 - Z14  Tuned tom, bass or other
 
 (in-package :cyco)
 
-(defkeymap --pro-sk-kick-map '((A . 34)
-			       (B . 33)
-			       (C . 35)
-			       (D . 36)))
+(let ((kick-map
+       (keymap 'pkick 
+	       '((A  34)
+		 (B  33)
+		 (C  35)
+		 (D  36))))
+      (snare-map
+       (keymap 'psnare 
+	       '((A       (38 "Main Snare"))
+		 (B       (37 "Alternate Snare 1"))
+		 (C       (39 "Alternate Snare 2"))
+		 (D       (46 "Percussion"))
+		 (X       (38 "MOR2 Compatibility --> A"))
+		 (RIM     (46 "MOR2 Compatibility --> D")) 
+		 (CRACK   (46 "MOR2 Compatibility --> D"))
+		 (EDGE    (37 "MOR2 Compatibility --> B"))
+		 (BOUNCE  (39 "MOR2 Compatibility --> C"))
+		 (FLAM    (39 "MOR2 Compatibility --> C"))
+		 (ROLL    (39 "MOR2 Compatibility --> C"))
+		 (X2      (38 "MOR2 Compatibility --> A"))
+		 (RIM2    (46 "MOR2 Compatibility --> D"))
+		 (CRACK2  (46 "MOR2 Compatibility --> D"))
+		 (EDGE2   (37 "MOR2 Compatibility --> B")))))
+       (tom-map
+	(keymap 'ptom
+		'((A  (40 "Low tom"))
+		  (B  41)
+		  (C  43)
+		  (D  45)
+		  (E  (47 "High tom"))
+		  (F  (47 "MOR2 Compatibility --> E"))
+		  (A-FLAM  (40 "MOR2 Compatibility"))
+		  (B-FLAM  (41 "MOR2 Compatibility"))
+		  (C-FLAM  (43 "MOR2 Compatibility"))
+		  (D-FLAM  (45 "MOR2 Compatibility"))
+		  (E-FLAM  (47 "MOR2 Compatibility"))
+		  (F-FLAM  (47 "MOR2 Compatibility"))
+		  (A-BOUNCE  (40 "MOR2 Compatibility"))
+		  (B-BOUNCE  (41 "MOR2 Compatibility"))
+		  (C-BOUNCE  (43 "MOR2 Compatibility"))
+		  (D-BOUNCE  (45 "MOR2 Compatibility"))
+		  (E-BOUNCE  (47 "MOR2 Compatibility"))
+		  (F-BOUNCE  (47 "MOR2 Compatibility")))))
+       (hat-map
+	(keymap 'phat
+		'((X        42)
+		  (OPEN     44)
+		  (STOMP    65)
+		  (SHUT     67)
+		  (OPN      (68 "2/3 open"))
+		  (STACK    (52 "Mod wheel controlled?"))
+		  (STOMP2   66)
+		  (OPN2     69) 
+		  (OPEN2    70)
+		  (OPEN3    71))))
+       (cym-map
+	(keymap 'pcym
+		'((RIDE   50)
+		  (A      49)
+		  (B      51)
+		  (C      (48 "Sometimes choke")))))
+       (tuned-map 
+	(reduced-keymap 'ptuned 72 89)))
 
-(defkeymap --pro-sk-snare-map '((A      . (38 "Main Snare"))
-				(B      . (37 "Alternate Snare 1"))
-				(C      . (39 "Alternate Snare 2"))
-				(D      . (46 "Percussion"))
-				(X      . (38 "MOR2 Compatibility --> A"))
-				(RIM    . (46 "MOR2 Compatibility --> D")) 
-				(CRACK  . (46 "MOR2 Compatibility --> D"))
-				(EDGE   . (37 "MOR2 Compatibility --> B"))
-				(BOUNCE . (39 "MOR2 Compatibility --> C"))
-				(FLAM   . (39 "MOR2 Compatibility --> C"))
-				(ROLL   . (39 "MOR2 Compatibility --> C"))
-				(X2     . (38 "MOR2 Compatibility --> A"))
-				(RIM2   . (46 "MOR2 Compatibility --> D"))
-				(CRACK2 . (46 "MOR2 Compatibility --> D"))
-				(EDGE2  . (37 "MOR2 Compatibility --> B"))))
+  (param standard-procussion-kit
+	 (create-instrument 'standard-procussion-kit
+			    :parent pro1
+			    :transient nil
+			    :program-number 0))
 
-(defkeymap --pro-sk-tom-map '((A . (40 "Low tom"))
-			      (B . 41)
-			      (C . 43)
-			      (D . 45)
-			      (E . (47 "High tom"))
-			      (F . (47 "MOR2 Compatibility --> E"))
-			      (A-FLAM . (40 "MOR2 Compatibility"))
-			      (B-FLAM . (41 "MOR2 Compatibility"))
-			      (C-FLAM . (43 "MOR2 Compatibility"))
-			      (D-FLAM . (45 "MOR2 Compatibility"))
-			      (E-FLAM . (47 "MOR2 Compatibility"))
-			      (F-FLAM . (47 "MOR2 Compatibility"))
-			      (A-BOUNCE . (40 "MOR2 Compatibility"))
-			      (B-BOUNCE . (41 "MOR2 Compatibility"))
-			      (C-BOUNCE . (43 "MOR2 Compatibility"))
-			      (D-BOUNCE . (45 "MOR2 Compatibility"))
-			      (E-BOUNCE . (47 "MOR2 Compatibility"))
-			      (F-BOUNCE . (47 "MOR2 Compatibility"))))
+  (param pkick (create-instrument 'pkick
+				  :parent standard-procussion-kit
+				  :transient nil
+				  :keynumber-map kick-map))
 
-(defkeymap --pro-sk-hat-map '((X       . 42)
-			      (OPEN    . 44)
-			      (STOMP   . 65)
-			      (SHUT    . 67)
-			      (OPN     . (68 "2/3 open"))
-			      (STACK   . (52 "Mod wheel controlled?"))
-			      (STOMP2  . 66)
-			      (OPN2    . 69) 
-			      (OPEN2   . 70)
-			      (OPEN3   . 71)))
-
-(defkeymap --pro-sk-cym-map '((RIDE  . 50)
-			      (A     . 49)
-			      (B     . 51)
-			      (CHOKE . 48)))
-
-(defun --pro-sk-tuned-map (kn)
-  (if (eq kn :?)
-      (progn 
-	(format t "Standard Procussion kit tuned instrument (72..98)~%")
-	72)
-    (let* ((range (- 98 72))
-	   (k (rem (keynumber kn) range)))
-      (+ 72 k))))
-
-
-(param standard-procussion-kit
-       (create-instrument 'standard-procussion-kit
-			:parent pro1
-			:transient nil
-			:program-number 0))
-
-(param pkick (create-instrument 'pkick
-			      :parent standard-procussion-kit
-			      :transient nil
-			      :keynumber-map #'--pro-sk-kick-map))
-
-(param psnare (create-instrument 'psnare
-			      :parent standard-procussion-kit
-			      :transient nil
-			      :keynumber-map #'--pro-sk-snare-map))
-
-(param ptom (create-instrument 'ptom
-			      :parent standard-procussion-kit
-			      :transient nil
-			      :keynumber-map #'--pro-sk-tom-map))
-
-(param phat (create-instrument 'phat
-			      :parent standard-procussion-kit
-			      :transient nil
-			      :keynumber-map #'--pro-sk-hat-map))
-
-(param pcym (create-instrument 'pcym
-			      :parent standard-procussion-kit
-			      :transient nil
-			      :keynumber-map #'--pro-sk-cym-map))
-
-(param ptuned (create-instrument 'ptuned
-			       :parent standard-procussion-kit
-			       :transient nil
-			       :keynumber-map #'--pro-sk-tuned-map))
-
-(defun standard-procussion-kit (kit-name)
-  (let ((spec (cdr (assoc kit-name +PROCUSSION-PROGRAMS+))))
-    (if (not (eq (second spec) 'standard))
-	(let ((msg "~A is not a standard Procussion kit (using program 0)"))
-	  (cyco-warning (format nil msg kit-name))
-	  (setf spec '(0 NON-STANDARD))))
-    (property! standard-procussion-kit :program-number (car spec))
-    (format t "Using Standard Procussion kit '~A', program ~A~%"
-	    kit-name (car spec))))
-
-(defun ampitheater ()(standard-procussion-kit 'ampitheater))
-(defun mega-drums ()(standard-procussion-kit 'mega-drums))
-(defun rock-n-roll ()(standard-procussion-kit 'rock-n-roll))
-(defun palladium ()(standard-procussion-kit 'palladium))
-(defun jazz-drums ()(standard-procussion-kit 'jazz-drums))
-(defun metal-drums ()(standard-procussion-kit 'metal-drums))
-(defun rap-session ()(standard-procussion-kit 'rap-session))
-(defun ambient-rock ()(standard-procussion-kit 'ambient-rock))
-(defun acoustic-kit ()(standard-procussion-kit 'acoustic-kit))
-(defun rock-drums ()(standard-procussion-kit 'rock-drums))
-(defun house-machine ()(standard-procussion-kit 'house-machine))
-(defun fusion-stix ()(standard-procussion-kit 'fusion-stix))
-(defun space-drums ()(standard-procussion-kit 'space-drums))
-(defun hard-rock ()(standard-procussion-kit 'hard-rock))
-(defun stadium-rox ()(standard-procussion-kit 'stadium-rox))
-(defun dance-2000 ()(standard-procussion-kit 'dance-2000))
-(defun heavy-metal ()(standard-procussion-kit 'heavy-metal))
-(defun hip-hop ()(standard-procussion-kit 'hip-hop))
-(defun sluggo-drums ()(standard-procussion-kit 'sluggo-drums))
-(defun huge-room ()(standard-procussion-kit 'huge-room))
-(defun drum-dance ()(standard-procussion-kit 'drum-dance))
-(defun heavyosity ()(standard-procussion-kit 'heavyosity))
-(defun dance-club ()(standard-procussion-kit 'dance-club))
-(defun country-kit ()(standard-procussion-kit 'country-kit))
-(defun rockabilly ()(standard-procussion-kit 'rockabilly))
+  (param psnare (create-instrument 'psnare
+				   :parent standard-procussion-kit
+				   :transient nil
+				   :keynumber-map snare-map))
+  
+  (param ptom (create-instrument 'ptom
+				 :parent standard-procussion-kit
+				 :transient nil
+				 :keynumber-map tom-map))
+  
+  (param phat (create-instrument 'phat
+				 :parent standard-procussion-kit
+				 :transient nil
+				 :keynumber-map hat-map))
+  
+  (param pcym (create-instrument 'pcym
+				 :parent standard-procussion-kit
+				 :transient nil
+				 :keynumber-map cym-map))
+  
+  (param ptuned (create-instrument 'ptuned
+				   :parent standard-procussion-kit
+				   :transient nil
+				   :keynumber-map tuned-map))
+  
+  (defun standard-procussion-kit (kit-name)
+    (let ((spec (cdr (assoc kit-name +PROCUSSION-PROGRAMS+))))
+      (if (not (eq (second spec) 'standard))
+	  (let ((msg "~A is not a standard Procussion kit (using program 0)"))
+	    (cyco-warning (format nil msg kit-name))
+	    (setf spec '(0 NON-STANDARD))))
+      (property! standard-procussion-kit :program-number (car spec))
+      (format t "Using Standard Procussion kit '~A', program ~A~%"
+	      kit-name (car spec))))
+  
+  (defun ampitheater ()(standard-procussion-kit 'ampitheater))
+  (defun mega-drums ()(standard-procussion-kit 'mega-drums))
+  (defun rock-n-roll ()(standard-procussion-kit 'rock-n-roll))
+  (defun palladium ()(standard-procussion-kit 'palladium))
+  (defun jazz-drums ()(standard-procussion-kit 'jazz-drums))
+  (defun metal-drums ()(standard-procussion-kit 'metal-drums))
+  (defun rap-session ()(standard-procussion-kit 'rap-session))
+  (defun ambient-rock ()(standard-procussion-kit 'ambient-rock))
+  (defun acoustic-kit ()(standard-procussion-kit 'acoustic-kit))
+  (defun rock-drums ()(standard-procussion-kit 'rock-drums))
+  (defun house-machine ()(standard-procussion-kit 'house-machine))
+  (defun fusion-stix ()(standard-procussion-kit 'fusion-stix))
+  (defun space-drums ()(standard-procussion-kit 'space-drums))
+  (defun hard-rock ()(standard-procussion-kit 'hard-rock))
+  (defun stadium-rox ()(standard-procussion-kit 'stadium-rox))
+  (defun dance-2000 ()(standard-procussion-kit 'dance-2000))
+  (defun heavy-metal ()(standard-procussion-kit 'heavy-metal))
+  (defun hip-hop ()(standard-procussion-kit 'hip-hop))
+  (defun sluggo-drums ()(standard-procussion-kit 'sluggo-drums))
+  (defun huge-room ()(standard-procussion-kit 'huge-room))
+  (defun drum-dance ()(standard-procussion-kit 'drum-dance))
+  (defun heavyosity ()(standard-procussion-kit 'heavyosity))
+  (defun dance-club ()(standard-procussion-kit 'dance-club))
+  (defun country-kit ()(standard-procussion-kit 'country-kit))
+  (defun rockabilly ()(standard-procussion-kit 'rockabilly)) ) 
