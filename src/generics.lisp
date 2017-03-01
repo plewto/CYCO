@@ -45,7 +45,10 @@
 (defpredicate timesig-event-p)
 (defpredicate transposable-p)
 
+(defgeneric ? (obj))
 
+(defmethod ? ((obj t))
+  (describe obj))
 
 (defgeneric ->midi (obj &key filename offset repeat pad-end)
   (:documentation

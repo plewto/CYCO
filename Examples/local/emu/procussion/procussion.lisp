@@ -44,7 +44,7 @@
             (malletbells     . (037 tuned))    ; *               
             (hip-house       . (038 ))         ; * 
             (latin-layers    . (039 ))         ; *         
-            ;(big-band        . (040 ))
+            (big-band        . (040 not-defined))
             (multi-fx        . (041 ))         ; *         
             (heavyosity      . (042 standard)) ; *
             (ritual-night    . (043 tuned2))   ; *               
@@ -58,7 +58,7 @@
             (mystic-land     . (051 tuned))    ; *               
             (beach-party     . (052 ))
             (intervallix     . (053 tuned2))   ; *               
-            ;(jazzy-traps     . (054 ))
+            (jazzy-traps     . (054 not-defined))
             (clavarimba      . (055 tuned))    ; *               
             (rockabilly      . (056 standard)) ; *
             (control-snares  . (057 ))         ; *
@@ -71,7 +71,7 @@
 	    (all-cymbals     . (064))          ; *
 	    (redsky          . (065))          ; *
 	    (cymbals2        . (066))          ; *
-	    ;(snare-eater     . (067))
+	    (snare-eater     . (067 not-defined))
 	    (proshake        . (068))          ;*
             (metronome       . (127))))    
 
@@ -148,3 +148,10 @@
 (load-local "emu/procussion/redsky")
 (load-local "emu/procussion/cymbals2")
 (load-local "emu/procussion/proshake")
+
+(let ((acc (format  nil "Available Procussion Instruments:~%")))
+  (dolist (i +PROCUSSION-PROGRAMS+)
+    (setf acc (str+ acc (format nil "    [~3d] ~16A ~A~%"
+				(second i)(car i)(or (third i) "")))))
+  (remarks! procussion acc))
+  

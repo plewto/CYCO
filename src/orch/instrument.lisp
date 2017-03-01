@@ -98,6 +98,33 @@
     (add-child! parent inst)
     inst))
 
+;; (defmethod ? ((obj instrument))
+;;   (format t "Instrument ~A  channel ~A~%" (name obj)(channel obj))
+;;   (format t "    parent ~A~%" (name (parent obj)))
+;;   (format t "    children:~%")
+;;   (dolist (c (children obj))
+;;     (format t "        ~A~%" (name c)))
+;;   (format t "    remarks:~%")
+;;   (format t "~A~%" (property obj :remarks))
+;;   nil)
+
+(defmethod ? ((obj instrument))
+  (let ((clist (children obj))
+	(rem (property obj :remarks :default nil)))
+    (format t "Instrument ~A  channel ~A~%" (name obj)(channel obj))
+    (format t "    Parent ~A~%" (name (parent obj)))
+    (if clist
+	(progn 
+	  (format t "    Children:~%")
+	  (dolist (c clist)
+	    (format t "        ~A~%" (name c))))
+      (format t "    Children: NIL~%"))
+    (if rem
+	(progn
+	  (format t "    Remarks:~%")
+	  (format t "~A~%" rem)))
+    nil))
+
 (setf *root-instrument*
       (create-instrument 
        :root
