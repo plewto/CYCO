@@ -39,7 +39,6 @@
 			   (midi-program-change cindex
 						(+ (1- prognum)
 						   bnk-offset))))))))
-  
   (param r3 (create-instrument
 	     'r3
 	     :parent korg

@@ -15,7 +15,6 @@
 	      :channel :llia2
 	      :transient nil))
 
-
 (defmacro llia (name program &key
 		     (parent llia)
 		     (channel nil)

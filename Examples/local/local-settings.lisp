@@ -41,13 +41,13 @@
 (load-local "yamaha/yamaha")
 (load-local "emu/emu")
 ;; (load-local "quantumleap/quantumleap")
-;; (load-local "korg/korg")
-;; (load-local "oberheim/oberheim")
-;; (load-local "llia/llia")
+(load-local "korg/korg")
+(load-local "oberheim/oberheim")
+(load-local "llia/llia")
 
 
-;; (setf *metronome-instrument* (metronome-instrument
-;; 			      :channel :beep
-;; 			      :beep   '(0 ff)
-;; 			      :accent '(1 fff)
-;; 			      :phrase '(2 fff)))
+(setf *metronome-instrument* (metronome-instrument
+			      :channel :beep
+			      :beep   '(0 ff)
+			      :accent '(1 fff)
+			      :phrase '(2 fff)))
