@@ -66,12 +66,12 @@
               defaults to nil (*GLOBAL-CONTROLLER-ASSIGNMENTS* from parent)
    keynumber-map - 
               A single argument function (lambda k) -> k'
-              which interprests keynumbers for the instrument.
-              The special value :? shold display help text and return +REST+
+              which interprets keynumbers for the instrument.
+              The special value :? should display help text and return +REST+
               For any non-recognized argument the function should do one or 
               more of the following, depending on application:
               1) - Display warning message.
-              2) - Return resoanable default (such as default drum sound).
+              2) - Return reasonable default (such as default drum sound).
               3) - Return +REST+
    duration-map - defaults to nil (DEFAULT-DURATION-MAP from parent)
    amplitude-map - defaults to nil (DEFAULT-AMPLITUDE-MAP from parent)
@@ -98,16 +98,6 @@
     (add-child! parent inst)
     inst))
 
-;; (defmethod ? ((obj instrument))
-;;   (format t "Instrument ~A  channel ~A~%" (name obj)(channel obj))
-;;   (format t "    parent ~A~%" (name (parent obj)))
-;;   (format t "    children:~%")
-;;   (dolist (c (children obj))
-;;     (format t "        ~A~%" (name c)))
-;;   (format t "    remarks:~%")
-;;   (format t "~A~%" (property obj :remarks))
-;;   nil)
-
 (defmethod ? ((obj instrument))
   (let ((clist (children obj))
 	(rem (property obj :remarks :default nil)))
@@ -119,6 +109,8 @@
 	  (dolist (c clist)
 	    (format t "        ~A~%" (name c))))
       (format t "    Children: NIL~%"))
+    (funcall (property obj :keynumber-map) :?)
+    (funcall (property obj :program-change-hook) nil nil :? nil)
     (if rem
 	(progn
 	  (format t "    Remarks:~%")
