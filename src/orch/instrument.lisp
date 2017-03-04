@@ -125,7 +125,7 @@
        :controller-assignments *global-controller-assignments*
        :parent nil
        :channel 1
-       :keynumber-map #'default-keymap
+       :keynumber-map (default-keymap 'default-keynumber-map)
        :duration-map #'default-duration-map
        :amplitude-map #'default-amplitude-map
        :program-change-hook #'default-program-change-hook))
@@ -150,8 +150,9 @@
   (property! inst :channel c))
 
 (defmethod instrument-keynumber ((inst instrument)(keynum t))
-  (let ((kmap (property inst :keynumber-map)))
-    (funcall kmap (keynumber keynum))))
+  (let* ((kmap (property inst :keynumber-map))
+	 (rs (funcall kmap keynum)))
+    rs))
 
 (defmethod instrument-keynumber ((inst instrument)(lst list))
   (let ((kmap (property inst :keynumber-map)))
