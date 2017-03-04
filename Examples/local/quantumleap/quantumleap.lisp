@@ -38,13 +38,8 @@
 	    :transient nil
 	    :channel :QL5))
 
-
 (load-local "quantumleap/mor2-drums")
 (load-local "quantumleap/mor2-bass")
 (load-local "quantumleap/mor2-guitar")
 (load-local "quantumleap/vop")
 (load-local "quantumleap/gypsy")
-(load-local "quantumleap/gypsy-accordians")
-(load-local "quantumleap/gypsy-guitars")
-
-

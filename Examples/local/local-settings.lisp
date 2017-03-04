@@ -40,7 +40,7 @@
 (free-orchestra!)
 (load-local "yamaha/yamaha")
 (load-local "emu/emu")
-;; (load-local "quantumleap/quantumleap")
+(load-local "quantumleap/quantumleap")
 (load-local "korg/korg")
 (load-local "oberheim/oberheim")
 (load-local "llia/llia")

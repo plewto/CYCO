@@ -110,7 +110,7 @@
 	    (format t "        ~A~%" (name c))))
       (format t "    Children: NIL~%"))
     (funcall (property obj :keynumber-map) :?)
-    (funcall (property obj :program-change-hook) nil nil :? nil)
+    (funcall (property obj :program-change-hook) 0 0 :? 0)
     (if rem
 	(progn
 	  (format t "    Remarks:~%")
