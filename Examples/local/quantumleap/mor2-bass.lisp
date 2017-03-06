@@ -6,123 +6,155 @@
 
 (let ((jazzman-keyswitch
        (keyswitch 'jazzman
-		  '((sus      C1  "Sustain"         :range (d1 ds4))
-		    (vib      CS1 "Sustain vibrato" :range (d1 ds4))
-		    (slide    D1  "Staccato"        :range (d1 ds4))
-		    (slide2   DS1 "Slide up slow"   :range (d1 ds4))
-		    (slide3   E1  "Slide up medium" :range (d1 cs4))
-		    (slide4   G1  "Slide up fast"   :range (d1 d4))
-		    (slide5   GS1 "Slide down"      :range (d1 ds4))
-		    (slide6   A1  "Slide up octave" :range (d1 ds3))
-		    (hammer   AS1 "Hammer"          :range (d1 ds3))
-		    (hammer2  B1  "Hammer 2"        :range (d1 a3)))))
+		  '((SUS     C2    "Sustain")
+		    (VIB     CS2   "Sustain strong vibrato")
+		    (STAC    D2    "Staccato")
+		    (SLIDE   DS2   "Slide up Sustain slow")
+		    (SLIDE2  E2    "Slide up sustain medium")
+		    (SLIDE3  F2    "Slide up slow")
+		    (SLIDE4  FS2   "Slide up medium")
+		    (SLIDE5  G2    "Slide up fast")
+		    (SLIDE-  GS2   "Slide down")
+		    (SLIDE8  A2    "Slide up octave")
+		    (HARM1   AS2   "Harmonics 1")
+		    (HARM2   B2    "Harmonics 2")
+		    (FX      C3    "Effects"))))
+      
       (gibson-eb2-keyswitch
        (keyswitch 'gibson-eb2
-		  '((sus      C1  "Open sustain RR"  :range (d1 ds4))
-		    (mute     CS1 "Mute RR"          :range (d1 e4))
-		    (slide    D1  "Slide up sustain" :range (d1 ds4))
-		    (slide2   E1  "Slide up"         :range (d1 ds4))
-		    (bend     DS1 "Bend up"          :range (d1 ds4))
-		    (trem     F1  "Tremolo"          :range (d1 ds4))
-		    (noise    FS1 "Noise"            :range (d1 ds4)))))
+		  '((SUS     C2    "Sustain open RR")
+		    (MUTE    CS2   "Mute RR")
+		    (SLIDE   D2    "Slide up sustain")
+		    (BEND    DS2   "Bend up sustain")
+		    (SLIDE2  E2    "Slide up")
+		    (TREM    F2    "Tremolo")
+		    (NOISE   FS2   "Noises")
+		    (NOISE2  G2    "Noises"))))
+      
       (hofner-keyswitch
        (keyswitch 'hofner
-		  '((sus      C1  "Sustain RR"  :range (d1 f4))
-		    (slide    CS1 "Slide up"    :range (d1 f4))
-		    (noise    D1  "Noise"       :range (d1 b2)))))
+		  '((SUS    C2  "Sustain")
+		    (SLIDE  CS2 "Slide up")
+		    (TREM   D2  "Tremolo")
+		    (NOISE  DS2 "Noise"))))
+      
       (hofner-fingered-keyswitch
-       (keyswitch 'hofner-fingered
-		  '((sus      C1  "Sustain"     :range (d1 f4))
-		    (slide    CS1 "Slide up"    :range (d1 f4))
-		    (trem     D1  "Tremolo"     :range (d1 cs4))
-		    (noise    DS1 "Noise"       :range (d1 g3)))))
+       (keyswitch 'hofner-fingerd
+		  '((SUS    C2  "Sustain")
+		    (SLIDE  CS2 "Slide up sustain")
+		    (NOISE  D2  "Noise"))))
+
       (lakland-keyswitch
        (keyswitch 'lakland
-		  '((open     A1  "Open down"          :range (b0 f4))
-		    (open2    AS1 "Open up & down split range" :range (b0 as2 b3 b6))
-		    (legato   B1  "Legato"             :range (b0 f4))
-		    (slide    C2  "Slide down"         :range (b0 f4))
-		    (slide2   CS2 "Slide down fast"    :range (b0 f4))
-		    (slide3   E2  "Slide up sustain"   :range (b0 f4))
-		    (brrr     FS2 "Brrr"               :range (b0 d4))
-		    (mute     G2  "Mute down"          :range (b0 f4))
-		    (mute2    GS2 "Mute up & down split range" :range (b0 as2 b3 b6)))))
+		  '((OPEN     A1  "Open down")
+      		    (OPEN2    AS1 "Open up/down (dual range)")
+      		    (LEG      B1  "Legatto")
+      		    (SLIDE    C2  "Open slide down")
+      		    (SLIDE2   CS2 "Open slide down fast")
+		    (SLIDE3   D2  "Open slide up")
+		    (SLIDE4   DS2 "Open slide up fast")
+		    (SLIDE5   E2  "Open slide up sustain")
+		    (OCTAVE   F2  "Octave")
+		    (BRRR     FS2 "Burr")
+		    (MUTE     G2  "Mute down")
+		    (MUTE2    GS2 "Mute Up/Down (dual range)")
+		    (MUTE3    A2  "Mute slide down")
+		    (MUTE4    AS2 "Mute slide up"))))
+
       (lakland-fingered-keyswitch
-       (keyswitch 'lakland-fingerd
-		  '((sus      C1  "Open sustain"       :range (b0 f4))
-		    (legato   CS1 "Legato"             :range (b0 f4))
-		    (slide    D1  "Slide down"         :range (b0 f4))
-		    (slide2   E1  "Slide up sustain"   :range (b0 f4))
-		    (brrr     FS1 "Brrr"               :range (b0 d4)))))
+       (keyswitch 'laklad
+		  '((OPEN    C2  "Open sustain")
+		    (LEG     CS2 "Legatto")
+		    (SLIDE   D2  "Slide down")
+		    (SLIDE2  DS2 "Slide up")
+		    (SLIDE3  E2  "Slide up sustain")
+		    (OCTAVE  F2  "Octave")
+		    (BRRR    FS2 "Burr"))))
+      
       (musicman-keyswitch
        (keyswitch 'musicman
-		  '((sus      A0  "Sustain RR"         :range (b0 b4))
-		    (open     AS0 "Open down"          :range (b0 f4))
-		    (legato   B0  "Legato"             :range (b0 f4))
-		    (slide    CS1 "Slide down fast"    :range (b0 f4))
-		    (slide2   E1  "Slide up sustain"   :range (b0 f4))
-		    (slide3   A1  "Slide down mute"    :range (b0 f4))
-		    (brrr     FS1 "Brrr"               :range (b0 ds4))
-		    (mute     G1  "Mute down"          :range (b0 f4))
-		    (mute2    GS1 "Mute RR"            :range (b0 as4)))))
-      (rickenbacker-keyswitch 
+		  '((SUS    A1  "Sustain RR")
+		    (OPEN   AS1 "Open down")
+		    (LEG    B1  "Leggato")
+		    (SLIDE  C2  "Open slide down")
+		    (SLIDE2 CS2 "Open slide down fast")
+		    (SLIDE3 D2  "Open slide up")
+		    (SLIDE4 DS2 "Open slide up fast")
+		    (SLIDE5 E2  "Open slide up sustain")
+		    (OCTAVE F2  "Octave")
+		    (BRRR   FS2 "BRRR")
+		    (MUTE   G2  "Mute down")
+		    (MUTERR GS2 "Mute RR")
+		    (MUTE2  A2  "Mute slide down")
+		    (MUTE3  AS2 "Mute slide up"))))
+
+      (rickenbacker-keyswitch
        (keyswitch 'rickenbacker
-		  '((sus      C1  "Sustain RR"  :range (d1 ds4))
-		    (slide    CS1 "Slide up"    :range (d1 ds4))
-		    (noise    D1  "Noise"       :range (d1 c3)))))
-      (silvertone-keyswitch 
-       (keyswitch 'mor2-silvertone
-		  '((sus      C1  "Sustain RR"  :range (d1 g4))
-		    (legato   CS1 "Legato"      :range (d1 g4))
-		    (slide    D1  "Slide up"    :range (d1 g4))
-		    (slide2   DS1 "Slide down"  :range (d1 g4))
-		    (noise    E1  "Noise"       :range (d1 cs4)))))
-      (silvertone-fingered-keyswitch 
-       (keyswitch 'mor2-silvertone-fingered
-		  '((sus      C1  "Sustain"     :range (d1 d4))
-		    (slide    CS1 "Slide up"    :range (d1 d4))
-		    (slide2   DS1 "Slide down"  :range (d1 d4))
-		    (bend     D1  "Bend up"     :range (d1 d4))
-		    (noise    E1  "Noise"       :range (d1 a3)))))
-      (stingray-keyswitch 
-       (keyswitch 'mor2-stingray
-		  '((long     A0  "Long RR"            :range (a0 ds4))
-		    (short    AS0 "Short RR"           :range (a0 ds4))
-		    (mute     B0  "Mute RR"            :range (a0 ds4))
-		    (hammer   C1  "Hammer-n-pull (linked)" :range (a0 ds4))
-		    (slide    CS1 "Slide (linked)"     :range (a0 ds4))
-		    (fall     D1  "Fall"               :range (b0 ds4))
-		    (bend     E1  "Bend up & down"     :range (a0 ds4))
-		    (rep      F1  "Fast rep RR"        :range (a0 ds4))
-		    (perf     FS1 "Performance fast"   :range (a0 ds4))
-		    (hammer2  G1  "Hammer-n-pull short" :range (a0 ds4)))))
-      (stingray-fingered-keyswitch 
-       (keyswitch 'mor2-stingray-fingered
-		  '((long     A0  "Long RR"            :range (a0 ds4))
-		    (short    AS0 "Short RR"          :range (a0 ds4))
-		    (mute     B0  "Mute RR"            :range (a0 ds4))
-		    (hammer   C1  "Hammer-n-pull (linked)" :range (b0 ds4))
-		    (slide    CS1 "Slide (linked)"     :range (a0 ds4))
-		    (fall     D1  "Fall"               :range (b0 ds4))
-		    (bend     E1  "Bend up"            :range (b0 ds4)))))
+		  '((SUS    C2  "Sustain RR")
+		    (SLIDE  CS2 "Slide up sus")
+		    (NOISE  D2  "Noise")
+		    (NOISE2 DS2 "Noise"))))
+
+      (silvertone-keyswitch
+       (keyswitch 'silvertone
+		  '((SUS    C2  "Sustain RR")
+		    (LEG    CS2 "Leggato")
+		    (SLIDE  D2  "Slide up sustain")
+		    (SLIDE2 DS2 "Slide down")
+		    (NOISE  E0  "Noise"))))
+
+      (silvertone-fingered-keyswitch
+       (keyswitch 'silvertone-fingered
+		  '((SUS    C2  "Sustained")
+		    (SLIDE  CS2 "Slide up")
+		    (BEND   D2  "Bend up")
+		    (SLIDE2 DS2 "Slide down")
+		    (NOISE  E2  "Noise"))))
+
+      (stingray-keyswitch
+       (keyswitch 'stingray
+		  '((LONG   A1  "Sustain long RR")
+		    (SHORT  AS1 "Sustain short RR")
+		    (MUTE   B1  "Sustain mute RR")
+		    (SUS+HAMMER  C2 "Sustain (link slide)")
+		    (SLIDE       CS2 "Slide up & Down (link sus+hammer)")
+		    (FALL   D2  "")
+		    (DOIT   DS2 "")
+		    (BEND   E2  "Bend up/down")
+		    (REP    F2  "Fast rep RR")
+		    (REP2   FS2 "Fast rep perf")
+		    (HAMMER G2  "Hammer on/off (link sus+hammer)")
+		    (NOISE  GS2 ""))))
+      
+      (stingray-fingered-keyswitch
+       (keyswitch 'stingray-fingered
+		  '((LONG    A1  "Sustain long RR")
+		    (SHORT   AS1 "Sustain short RR")
+		    (MUTE    B1  "Sustain mute RR")
+		    (HAMMER  C2  "Hammer on/pull off (link slide)")
+		    (SLIDE   CS2 "Slide up/down (link hammer)")
+		    (FALL    D2  "")
+		    (DOIT    DS2 "")
+		    (BEND    E2  "Bend up/down")
+		    (NOISE   F2 ""))))
+      
       (remtext (str+ (format nil "Ministry Of Rook II Basses:~%")
-		     (format nil "    Jazzman fretless~%")
-		     (format nil "    Gibson EB2~%")
-		     (format nil "    Hofner~%")
-		     (format nil "    Hofner Fingered~%")
-		     (format nil "    Lakland~%")
-		     (format nil "    Lakland fingered~%")
-		     (format nil "    Musicman~%")
-		     (format nil "    Silvertone~%")
-		     (format nil "    Silvertone Fingered~%")
-		     (format nil "    Stingray 5-string~%")
-		     (format nil "    Stingray 5-string Fingered"))))
+      		     (format nil "    Jazzman fretless~%")
+      		     (format nil "    Gibson EB2~%")
+      		     (format nil "    Hofner~%")
+      		     (format nil "    Hofner Fingered~%")
+      		     (format nil "    Lakland~%")
+      		     (format nil "    Lakland fingered~%")
+      		     (format nil "    Musicman~%")
+      		     (format nil "    Silvertone~%")
+      		     (format nil "    Silvertone Fingered~%")
+      		     (format nil "    Stingray 5-string~%")
+		  		     (format nil "    Stingray 5-string Fingered"))))
 
   (param mor2-bass (create-instrument 'mor2-bass
 				      :parent ql1
 				      :transient nil
 				      :remarks remtext))
-
 	 
   (param jazzman nil)
   (param gibson-eb2 nil)
