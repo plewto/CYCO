@@ -131,9 +131,9 @@
                   be created by settintg all in the list to the same value.
          :DUR   - optional note duration, defaults to previous value.
          :AMP   - optional amplitude, defaults to previous value.
-         :STRUM - optional list (rate [pattern...]). Where rate is 
-                  time in seconds between notes.
-                  pattern is an arbitrary number of symbols which specifies
+         :STRUM - optional :strum rate    or  :strum (rate (pattern...))
+                  Where rate is float or metric symbol and pattern 
+                  is an arbitrary number of symbols which specifies
                   the direction the chord is played.  possible values are
                     :up      - play backwards
                     :down    - play forward
@@ -269,19 +269,19 @@
 	 ;;              :down    - use notes in order
 	 ;;              :random  - pick up or down at random
 	 ;;              :permute - permute note list
-	 ;;
-	 ;; return cons (rate . pattern)
 	 ;; 
+	 ;; return cons (rate . pattern)
+	 ;;
 	 (parse-chord-strum (evn)
 			    (let ((spec (cdr (assoc :strum evn))))
 			      (if spec
-				  (let ((rate (float (car spec)))
-					(pat (cycle :of (reverse (cdr spec)))))
+				  (let* ((cspec (fill-list (->list spec) '(0.01 (:down))))
+					 (rate (metric (car cspec)))
+					 (pat (cycle :of (reverse (car (cdr cspec))))))
 				    (setf default-strum-rate rate
 					  default-strum-pattern pat)))
 			      (cons default-strum-rate
 				    default-strum-pattern)))
-	 
 	 (parse-duration (prt evn)
 	 		 (let ((dspec (cdr (assoc :dur evn))))
 	 		   (if dspec
@@ -310,7 +310,6 @@
     					     :inversion (first inv)
     					     :octave (second inv)
     					     :copies (third inv)))
-    	   			 ;(--strum (parse-chord-strum evn)) 
     	   			 (strum-rate default-strum-rate)
     	   			 (strum-pattern default-strum-pattern)
     	   			 (strum-direction (next strum-pattern))
