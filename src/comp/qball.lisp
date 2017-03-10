@@ -181,7 +181,6 @@
       (invert! (key-pattern qb) pivot :range range))
   qb)
 
-
 (defmethod dump ((prt qball) &key (depth 0)(max-depth 10))
   (if (< depth max-depth)
       (if (mute? prt)
@@ -214,7 +213,7 @@
 		 (ilist (->list (next-1 (instruments prt)))))
 	    (dolist (inst ilist)
 	      (let* ((cindex (1- (channel inst :resolve t)))
-		     (k2 (instrument-keynumber inst k))
+		     (k2 (keynumber (instrument-keynumber inst k)))
 		     (d2 (* dscale (instrument-duration inst d)))
 		     (a2 (instrument-amplitude inst a))
 		     (velocity (truncate (* 127 a2)))
