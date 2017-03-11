@@ -109,6 +109,8 @@
 (ld "src/comp/metronome")
 (ld "src/comp/qlist")
 (ld "src/comp/controlball")
+(ld "src/comp/gtrchords")
+
 (format t "~%")
 (ld "src/local")
 
