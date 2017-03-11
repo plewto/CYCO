@@ -362,7 +362,16 @@
     (pitch-class 60)  -> 0
     (pitch-class 'g2) -> 7
     (pitch-class '(10 11 12 13)) -> (10 11 0 1)."))
-  
+
+(defgeneric pitch-class-name (obj)
+  (:documentation
+   "Returns symbolid name for pitch class.
+    Defined for fixnum, symbol and list.
+    (pitch-class-name 60)   -> 'C'
+    (pitch-class-name 'cs4) -> 'CS'
+    (pitch-class-name '(10 11 12)) -> ('AS' 'B' 'C')"))
+
+
 (defgeneric phrase-duration (obj)
   (:documentation
    "Returns phrase duration of obj in seconds.

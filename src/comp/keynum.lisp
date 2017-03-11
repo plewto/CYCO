@@ -18,6 +18,8 @@
 
 (in-package :cyco)
 
+(constant +PITCH-CLASSES+ #(C CS D DS E F FS G GS A AS B))
+
 (constant +KEY-NUMBERS+
 	  (flet ((make-sym (a b)
 			   (intern (format nil "~A~A" a b))))
@@ -99,6 +101,15 @@
   (let ((acc '()))
     (dolist (e lst)
       (push (pitch-class e) acc))
+    (reverse acc)))
+
+(defmethod pitch-class-name ((n t))
+  (aref +PITCH-CLASSES+ (pitch-class n)))
+
+(defmethod pitch-class-name ((lst list))
+  (let ((acc '()))
+    (dolist (pc lst)
+      (push (pitch-class-name pc) acc))
     (reverse acc)))
 
 (defmethod octave ((n number))
