@@ -1314,22 +1314,20 @@
    RETURNS list (NIL if family is invalid)"
     (cdr (assoc family (aref +GTR-CHORDS+ (pitch-class pc)))))
 
-(defun gtrchord (pc &optional (family :maj)(position 0))
-  "Returns selected guitar chord.
+(defun gtrchord (kn family)
+  "Returns selected chord.
    ARGS:
-     pc       - Pitch class
-     family   - Keyword, one of +GTR-CHORD-FAMILIES+
-     position - fixnum, chord variation.  In general higher values
-                are located higher on the neck.
-    RETURNS list of keynumbers.
-       If family or position are invalid, displays warning and returns
-       single note chord."
-  (or
-   (nth position (cdr (gtrchord-family pc family)))
-   (progn
-     (cyco-warning (format nil "GTRCHORD ~a ~a ~a does not exists."
-			   pc family position))
-     (list pc))))
+     kn     - Keynumber.
+              Pitch class selects chord root.
+              Octave selects variation, higher octaves have higher
+              neck positions.
+     family - Keyword, one of +GTR-CHORD-FAMILIES+
+    RETURNS chord as list of key numbers."
+  (let* ((pc (pitch-class kn))
+	 (chords (cdr (gtrchord-family pc family)))
+	 (pos (min (octave kn)(1- (length chords)))))
+    (nth pos chords)))
+
 
 (defun gtrchord-variations (pc family)
   "Returns number of variations for selected chord.
