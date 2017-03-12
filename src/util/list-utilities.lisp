@@ -260,7 +260,19 @@
       (setf (nth i lst)(nth i acc)))
     lst))
 	
-  
+(defun ->alist (lst)
+  (let* ((acc '())
+	 (bcc (->vector lst))
+	 (i 0)
+	 (limit (length bcc)))
+    (if (not (evenp (length lst)))
+	(error (format nil "Expexcted even number of list elements for ->alist, encountered ~A"
+		       lst)))
+    (while (< i limit)
+      (push (cons (aref bcc i)(aref bcc (1+ i))) acc)
+      (setf i (+ 2 i)))
+    acc))
+
 ;;; ---------------------------------------------------------------------- 
 ;;;				  Vectors
 

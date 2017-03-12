@@ -189,16 +189,16 @@
       (default-step-count 100)
       (msg1 "Expected even number of elements in epart events list!"))
 
-  (flet ((->alist (lst)
-	 	  (let ((bcc '())
-	 		(i 0))
-	 	    (if (not (evenp (length lst)))
-			(error msg1))
-	 	    (while (< i (length lst))
-	 	      (push (cons (nth i lst)(nth (1+ i) lst)) bcc)
-	 	      (setf i (+ i 2)))
-	 	    bcc))
-
+  (flet (
+	 ;; (->alist (lst)
+	 ;; 	  (let ((bcc '())
+	 ;; 		(i 0))
+	 ;; 	    (if (not (evenp (length lst)))
+	 ;; 		(error msg1))
+	 ;; 	    (while (< i (length lst))
+	 ;; 	      (push (cons (nth i lst)(nth (1+ i) lst)) bcc)
+	 ;; 	      (setf i (+ i 2)))
+	 ;; 	    bcc))
 	 (reset-params ()
 	 	       (setf default-time 0.0
 	 		     default-keynumber 60
