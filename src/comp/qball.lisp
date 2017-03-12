@@ -44,6 +44,7 @@
 		      (key-map #'identity)
 		      (dur-map #'identity)
 		      (amp-map #'identity)
+		      (reset-on-repeat t)
 		      (project *project*)
 		      (section nil))
   "TODO: add docs for transposable
@@ -112,6 +113,11 @@
                  to the instruments.   The function form is (lambda (a)) -> a'
                  Any unrecognized values should be returned as is without
                  producing an error.
+   :reset-on-repeat - boolean,  If true all internal patterns are reset
+                      by render-once method and each iteration will have
+                      the same combination of values.  If nil patterns 
+                      are not reset, each iteration may produce different
+                      parameter combinations.  Default t.
    :project    - Default *PROJECT*
    :section    - Default current section of project."
   `(progn
@@ -136,6 +142,7 @@
        (property! prt :duration-map ,dur-map)
        (property! prt :amplitude-map ,amp-map)
        (property! prt :transposable ,transposable)
+       (property! prt :reset-on-repeat ,reset-on-repeat)
        (param ,name prt)
        (part-banner sec prt)
        prt)))
@@ -196,7 +203,8 @@
   nil)
 
 (defmethod render-once ((prt qball) &key (offset 0))
-  (reset prt)
+  (if (property prt :reset-on-repeat :default nil)
+      (reset prt))
   (if (not (mute? prt))
       (let ((acc '())
 	    (kmap (property prt :keynumber-map))
