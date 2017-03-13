@@ -194,3 +194,27 @@
 (defmethod ->pattern ((lst list)) (cycle :of lst))
 
 (defmethod ->pattern ((obj t)) (cycle :of (->list obj)))
+
+
+(defmethod ->cycle ((p pattern))
+  (cycle :of (elements p)))
+
+(defmethod ->cycle ((c cycle)) c)
+
+(defmethod ->cycle ((lst list))
+  (cycle :of lst))
+
+(defmethod ->cycle ((obj t))
+  (->cycle (->list obj)))
+
+(defmethod ->line ((p pattern))
+  (line :of (elements p)))
+
+(defmethod ->line ((obj line)) obj)
+
+(defmethod ->line ((lst list))
+  (line :of lst))
+
+(defmethod ->line ((obj t))
+  (->line (->list obj)))
+  

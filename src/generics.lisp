@@ -72,6 +72,10 @@
     If obj is a list, the result is (cycle :of ibj)
     Otherwise the result is (cycle :of (->list obj))"))
 
+(defgeneric ->cycle (obj))
+
+(defgeneric ->line (obj))
+
 (defgeneric ->string (obj)
   (:documentation
    "Return string representation of an object.  If the obj is a string
