@@ -87,10 +87,16 @@
   "Returns +n with probability 0.5, -n otherwise."
   (* n (coin p 1 -1)))
 
+;; (defun approx (n &key (scale 0.1)(min -1e6)(max 1e6))
+;;   "Returns a value approximately the same as n.
+;;    scale - maximum ratio of result relative to n.
+;;    min   - Lower limit of result
+;;    max   - Upper limit of result."
+;;   (let* ((v (rnd-sign 0.5 (random (* n (float scale))))))
+;;     (limit (+ n v) min max)))
+
 (defun approx (n &key (scale 0.1)(min -1e6)(max 1e6))
-  "Returns a value approximately the same as n.
-   scale - maximum ratio of result relative to n.
-   min   - Lower limit of result
-   max   - Upper limit of result."
-  (let* ((v (rnd-sign 0.5 (random (* n scale)))))
-    (limit (+ n v) min max)))
+  (if (zerop scale)
+      n
+    (let ((v (rnd-sign 0.5 (random (* n (float scale))))))
+      (limit (+ n v) min max))))

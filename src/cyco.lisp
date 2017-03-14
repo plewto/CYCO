@@ -36,6 +36,13 @@
   `(setf (symbol-function ',a)
 	 (symbol-function ',b)))
 
+(defmacro set-if (location value)
+  "Change value of location if value is non nil.
+   Returns value of location."
+  `(progn
+     (if ,value (setf ,location ,value))
+     ,location))
+
 (defun tab (&optional (n 1))
   (let ((frmt (format nil "~~~DA" (* 4 n))))
     (format nil frmt "")))
@@ -110,6 +117,7 @@
 (ld "src/comp/qlist")
 (ld "src/comp/controlball")
 (ld "src/comp/gtrchords")
+(ld "src/comp/strummer")
 
 (format t "~%")
 (ld "src/local")
@@ -186,22 +194,23 @@
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 ;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
 
-;; (project 'abc)
-;; (section s)
-;; (epart ep txa
-;;        :events '((:time (1 1 1) :program 1 :bank B)
-;; 		 (:time (1 2 1) :to (2 2 1) :pressure :start 0.0 :end 1.0 :steps 4)
-;; 		 (:time (1 3 1) :to (2 3 1) :bend :start -1.0 :end 1.0 :steps 4)
-;; 		 (:time (1 4 1) :to (2 4 1) :cc 1 :start 0.0 :end 1.0 :steps 4)
-;; 		 (:time (2 1 1) :key 60 :dur q :amp ff)
-;; 		 (:time (2 2 1) :key 60 :chord [maj])))
-;;
-;; (fixed-part fp :events '((time (1 1 1) :channel 1 :key 60)
-;; 			 (time (1 2 1) :cc 1 :value 0.5)))
-;;
-;; (qball qb txa
-;;        :cue '((1 1 1)(1 2 1)(1 3 1)(1 4 1))
-;;        :key (cycle :of (list 60 61 (line :of '(62 63)))))
-;;
-;;
-;; (?p 4)
+(project 'foo)
+(txa piano 1)
+(section s
+	 :bars 16)
+
+(strummer q piano
+	  :events '((:time (1 1 1) :key c0 :chord :maj
+			   :strum 0.1
+			   :end-together t
+			   :dur (q 0)
+			   :amp (fff 1 0.1)
+			   )
+		    (:time (4) :cc :wheel :value 0.1)
+		    (:time (5) :bend -1)
+		    (:time (6) :program 3)
+		    ))
+
+(dump-events (render-once q))
+
+

@@ -52,14 +52,14 @@
   (>= n 0))
 
 (defmethod metric ((n number))
-  (max n 0))
+  (float (max n 0)))
 
 ;; (defmethod metric ((s symbol))
 ;;   (or (gethash s +METRIC-UNITS+)
 ;;       (error (format nil "~A is not a valid metric value." s))))
 
 (defmethod metric ((s symbol))
-  (or (gethash s +METRIC-UNITS+) s))
+  (or (float (gethash s +METRIC-UNITS+)) s))
 
 (defmethod metric ((s string))
   (metric (intern (string-upcase s) :cyco)))
