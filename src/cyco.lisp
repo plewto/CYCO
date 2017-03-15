@@ -185,32 +185,3 @@
 	    (format t "~12A -> ~A~%" (car c)(cdr c)))
 	  nil)
       acc)))
-    
-      
-		 
-
-
-;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-;;; TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-
-(project 'foo)
-(txa piano 1)
-(section s
-	 :bars 16)
-
-(strummer q piano
-	  :events '((:time (1 1 1) :key c0 :chord :maj
-			   :strum 0.1
-			   :end-together t
-			   :dur (q 0)
-			   :amp (fff 1 0.1)
-			   )
-		    (:time (4) :cc :wheel :value 0.1)
-		    (:time (5) :bend -1)
-		    (:time (6) :program 3)
-		    ))
-
-(dump-events (render-once q))
-
-
