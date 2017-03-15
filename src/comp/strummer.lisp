@@ -116,7 +116,7 @@
                        :up
                        :down
                        :coin (select up or down randomly)
-                       :permute (select notes in random order)
+                       :random (select notes in random order)
                   
                    :direction :up
 
@@ -166,7 +166,6 @@
        prt)))
 
 (defmethod render-once ((prt strummer) &key (offset 0.0))
-  (trace-marker (format nil "STRUMMER render-once  offset= ~A" offset))
   (let* ((instrument (car (instruments prt)))
 	 (channel-index (1- (channel instrument)))
 	 (cc-map (property instrument :controller-assignments))
@@ -309,8 +308,8 @@
 						    ((eq dir :coin)
 						     (coin 0.5 chord-keylist 
 							   (reverse chord-keylist)))
-						    ((eq dir :randome)
-						     (permute chord-keylist))
+						    ((eq dir :random)
+						     (permutation chord-keylist))
 						    (t
 						     (cyco-warning
 						      (format nil msg2 dir))
