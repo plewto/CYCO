@@ -166,6 +166,7 @@
        prt)))
 
 (defmethod render-once ((prt strummer) &key (offset 0.0))
+  (trace-marker (format nil "STRUMMER render-once  offset= ~A" offset))
   (let* ((instrument (car (instruments prt)))
 	 (channel-index (1- (channel instrument)))
 	 (cc-map (property instrument :controller-assignments))
@@ -189,7 +190,7 @@
     (flet ((parse-time (evn)
 		       ;; :time (x x x)
 		       (let ((spec (cdr (assoc :time evn))))
-		       	 (set-if time (apply qfn spec))))
+		       	 (set-if time (+ offset (apply qfn spec)))))
 	   (parse-keynum (evn)
 			 ;; :key kn
 			 (let ((spec (cdr (assoc :key evn))))
