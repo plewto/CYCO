@@ -82,11 +82,11 @@
 
                    :strum (delay scale)
 
-                   Where scale is a float scaling factor applied to delay time.
+                   Where scale is an accelration factor.
 
                        note 0  <-  time
-                       note 1  <-  time + delay
-                       note 2  <-  time + (delay * scale)
+                       note 1  <-  time + (delay * scale^0)
+                       note 2  <-  time + (delay * scale^1)
                        note 3  <-  time + (delay * scale^2)
    :dur          - Note duration either as a float or a metric symbol.
                   
