@@ -39,7 +39,7 @@
 	      acc)))
 
 (constant +REVERSE-KEY-NUMBERS+
-	  (let* ((symlist #(C CS D DS E F FS G FS A AS B))
+	  (let* ((symlist #(C CS D DS E F FS G GS A AS B))
 		 (ary (make-array 128 :element-type 'symbol :initial-element nil)))
 	    (dotimes (keynum 128)
 	      (let* ((pclass (rem keynum 12))
