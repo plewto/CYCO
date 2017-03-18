@@ -78,5 +78,7 @@
     (dolist (b data)
       (write-byte b strm))
     (close strm)
-    (setf (filename obj) filename)
-    ))
+    (setf (filename obj) filename)))
+
+(defmethod dump-events ((smf smf) &key (filter nil)(time (cons 0 1e6)))
+  (dump-events (car (smf-tracks smf)) :filter filter :time time))

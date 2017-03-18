@@ -157,3 +157,7 @@
 	(format t "~A------~%" pad)
 	(if verbose
 	    (xdump ary (+ offset 8) :pad pad))))))
+
+(defmethod dump-events ((trk smf-track) &key (filter nil)(time (cons 0 1e6)))
+  (--sort-smf-track! trk)
+  (dump-events (track-events trk) :filter filter :time time))

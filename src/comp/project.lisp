@@ -272,6 +272,6 @@
 	  (dump s :depth (1+ depth) :max-depth max-depth))))
   nil)
 
-(defmethod dump-events ((p project) &key (filter '())(time (cons 0 1e6)))
-  (let ((elst (render-project p :write-midi-file nil)))
-    (dump-events elst)))
+(defmethod dump-events ((p project) &key (filter nil)(time (cons 0 1e6)))
+  (let ((smf (render-project :project p :write-midi-file nil)))
+    (dump-events smf :filter filter :time time)))
