@@ -108,113 +108,113 @@
 
 (let ((kick-map
        (keymap 'pkick 
-	       '((A  34)
-		 (B  33)
-		 (C  35)
-		 (D  36))))
+               '((A  34)
+                 (B  33)
+                 (C  35)
+                 (D  36))))
       (snare-map
        (keymap 'psnare 
-	       '((A       (38 "Main Snare"))
-		 (B       (37 "Alternate Snare 1"))
-		 (C       (39 "Alternate Snare 2"))
-		 (D       (46 "Percussion"))
-		 (X       (38 "MOR2 Compatibility --> A"))
-		 (RIM     (46 "MOR2 Compatibility --> D")) 
-		 (CRACK   (46 "MOR2 Compatibility --> D"))
-		 (EDGE    (37 "MOR2 Compatibility --> B"))
-		 (BOUNCE  (39 "MOR2 Compatibility --> C"))
-		 (FLAM    (39 "MOR2 Compatibility --> C"))
-		 (ROLL    (39 "MOR2 Compatibility --> C"))
-		 (X2      (38 "MOR2 Compatibility --> A"))
-		 (RIM2    (46 "MOR2 Compatibility --> D"))
-		 (CRACK2  (46 "MOR2 Compatibility --> D"))
-		 (EDGE2   (37 "MOR2 Compatibility --> B")))))
+               '((A       38 "Main Snare")
+                 (B       37 "Alternate Snare 1")
+                 (C       39 "Alternate Snare 2")
+                 (D       46 "Percussion")
+                 (X       38 "MOR2 Compatibility --> A")
+                 (RIM     46 "MOR2 Compatibility --> D") 
+                 (CRACK   46 "MOR2 Compatibility --> D")
+                 (EDGE    37 "MOR2 Compatibility --> B")
+                 (BOUNCE  39 "MOR2 Compatibility --> C")
+                 (FLAM    39 "MOR2 Compatibility --> C")
+                 (ROLL    39 "MOR2 Compatibility --> C")
+                 (X2      38 "MOR2 Compatibility --> A")
+                 (RIM2    46 "MOR2 Compatibility --> D")
+                 (CRACK2  46 "MOR2 Compatibility --> D")
+                 (EDGE2   37 "MOR2 Compatibility --> B"))))
        (tom-map
-	(keymap 'ptom
-		'((A  (40 "Low tom"))
-		  (B  41)
-		  (C  43)
-		  (D  45)
-		  (E  (47 "High tom"))
-		  (F  (47 "MOR2 Compatibility --> E"))
-		  (A-FLAM  (40 "MOR2 Compatibility"))
-		  (B-FLAM  (41 "MOR2 Compatibility"))
-		  (C-FLAM  (43 "MOR2 Compatibility"))
-		  (D-FLAM  (45 "MOR2 Compatibility"))
-		  (E-FLAM  (47 "MOR2 Compatibility"))
-		  (F-FLAM  (47 "MOR2 Compatibility"))
-		  (A-BOUNCE  (40 "MOR2 Compatibility"))
-		  (B-BOUNCE  (41 "MOR2 Compatibility"))
-		  (C-BOUNCE  (43 "MOR2 Compatibility"))
-		  (D-BOUNCE  (45 "MOR2 Compatibility"))
-		  (E-BOUNCE  (47 "MOR2 Compatibility"))
-		  (F-BOUNCE  (47 "MOR2 Compatibility")))))
+        (keymap 'ptom
+                '((A  40 "Low tom")
+                  (B  41)
+                  (C  43)
+                  (D  45)
+                  (E  47 High tom")
+                  (F  47 MOR2 Compatibility --> E")
+                  (A-FLAM     40 "MOR2 Compatibility")
+                  (B-FLAM     41 "MOR2 Compatibility")
+                  (C-FLAM     43 "MOR2 Compatibility")
+                  (D-FLAM     45 "MOR2 Compatibility")
+                  (E-FLAM     47 "MOR2 Compatibility")
+                  (F-FLAM     47 "MOR2 Compatibility")
+                  (A-BOUNCE   40 "MOR2 Compatibility")
+                  (B-BOUNCE   41 "MOR2 Compatibility")
+                  (C-BOUNCE   43 "MOR2 Compatibility")
+                  (D-BOUNCE   45 "MOR2 Compatibility")
+                  (E-BOUNCE   47 "MOR2 Compatibility")
+                  (F-BOUNCE   47 "MOR2 Compatibility"))))
        (hat-map
-	(keymap 'phat
-		'((X        42)
-		  (OPEN     44)
-		  (STOMP    65)
-		  (SHUT     67)
-		  (OPN      (68 "2/3 open"))
-		  (STACK    (52 "Mod wheel controlled?"))
-		  (STOMP2   66)
-		  (OPN2     69) 
-		  (OPEN2    70)
-		  (OPEN3    71))))
+        (keymap 'phat
+                '((X        42)
+                  (OPEN     44)
+                  (STOMP    65)
+                  (SHUT     67)
+                  (OPN      68 "2/3 open")
+                  (STACK    52 "Mod wheel controlled?")
+                  (STOMP2   66)
+                  (OPN2     69) 
+                  (OPEN2    70)
+                  (OPEN3    71))))
        (cym-map
-	(keymap 'pcym
-		'((RIDE   50)
-		  (A      49)
-		  (B      51)
-		  (C      (48 "Sometimes choke")))))
+        (keymap 'pcym
+                '((RIDE   50)
+                  (A      49)
+                  (B      51)
+                  (C      (48 "Sometimes choke")))))
        (tuned-map 
-	(reduced-keymap 'ptuned 72 89)))
+        (reduced-keymap 'ptuned 72 89)))
 
   (param standard-procussion-kit
-	 (create-instrument 'standard-procussion-kit
-			    :parent pro1
-			    :transient nil
-			    :program-number 0))
+         (create-instrument 'standard-procussion-kit
+                            :parent pro1
+                            :transient nil
+                            :program-number 0))
 
   (param pkick (create-instrument 'pkick
-				  :parent standard-procussion-kit
-				  :transient nil
-				  :keynumber-map kick-map))
+                                  :parent standard-procussion-kit
+                                  :transient nil
+                                  :keynumber-map kick-map))
 
   (param psnare (create-instrument 'psnare
-				   :parent standard-procussion-kit
-				   :transient nil
-				   :keynumber-map snare-map))
+                                   :parent standard-procussion-kit
+                                   :transient nil
+                                   :keynumber-map snare-map))
   
   (param ptom (create-instrument 'ptom
-				 :parent standard-procussion-kit
-				 :transient nil
-				 :keynumber-map tom-map))
+                                 :parent standard-procussion-kit
+                                 :transient nil
+                                 :keynumber-map tom-map))
   
   (param phat (create-instrument 'phat
-				 :parent standard-procussion-kit
-				 :transient nil
-				 :keynumber-map hat-map))
+                                 :parent standard-procussion-kit
+                                 :transient nil
+                                 :keynumber-map hat-map))
   
   (param pcym (create-instrument 'pcym
-				 :parent standard-procussion-kit
-				 :transient nil
-				 :keynumber-map cym-map))
+                                 :parent standard-procussion-kit
+                                 :transient nil
+                                 :keynumber-map cym-map))
   
   (param ptuned (create-instrument 'ptuned
-				   :parent standard-procussion-kit
-				   :transient nil
-				   :keynumber-map tuned-map))
+                                   :parent standard-procussion-kit
+                                   :transient nil
+                                   :keynumber-map tuned-map))
   
   (defun standard-procussion-kit (kit-name)
     (let ((spec (cdr (assoc kit-name +PROCUSSION-PROGRAMS+))))
       (if (not (eq (second spec) 'standard))
-	  (let ((msg "~A is not a standard Procussion kit (using program 0)"))
-	    (cyco-warning (format nil msg kit-name))
-	    (setf spec '(0 NON-STANDARD))))
+          (let ((msg "~A is not a standard Procussion kit (using program 0)"))
+            (cyco-warning (format nil msg kit-name))
+            (setf spec '(0 NON-STANDARD))))
       (property! standard-procussion-kit :program-number (car spec))
       (format t "Using Standard Procussion kit '~A', program ~A~%"
-	      kit-name (car spec))))
+              kit-name (car spec))))
   
   (defun ampitheater ()(standard-procussion-kit 'ampitheater))
   (defun mega-drums ()(standard-procussion-kit 'mega-drums))
