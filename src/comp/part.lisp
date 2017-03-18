@@ -17,10 +17,12 @@
 ;;;;  |    +-- metronome (not an actual subclass of QBALL)
 ;;;;  |
 ;;;;  +-- CONTROLBALL
-;;;;       |
-;;;;       +-- PRESSUREBALL
-;;;;       +-- BENDBALL
-;;;;
+;;;;  |    |
+;;;;  |    +-- PRESSUREBALL
+;;;;  |    +-- BENDBALL
+;;;;  |
+;;;;  +-- MARKER
+;;;;  
 
 (in-package :cyco)
 
