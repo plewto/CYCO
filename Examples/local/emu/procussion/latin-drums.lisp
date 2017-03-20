@@ -14,6 +14,8 @@
 
 (in-package :cyco)
 
+(param latin-drums nil)
+
 (let ((timbale1-map (keymap 'timbale1
 			    '((A      39)
 			      (B      42)
@@ -92,7 +94,7 @@
 			       (TIP    69  quinto tip)
 			       (HEEL   72  QUINTO HEEL))))
       (program-number (car (cdr (assoc 'latin-drums +PROCUSSION-PROGRAMS+)))) ) 
-  (param latin-drums nil)
+  (setf latin-drums nil)
 
   (defun latin-drums (&key (parent pro3))
     (setf latin-drums (create-instrument

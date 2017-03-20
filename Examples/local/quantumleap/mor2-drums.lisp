@@ -17,6 +17,16 @@
 
 (in-package :cyco)
 
+
+(param m2-cow nil)
+(param m2-cym nil)
+(param m2-drums nil)
+(param m2-hat nil)
+(param m2-kick nil)
+(param m2-ride nil)
+(param m2-snare nil)
+(param m2-tom nil)
+
 (let* ((kick-map (keymap 'm2-kick '((A 35)
 				    (B 36)
 				    (C 59)

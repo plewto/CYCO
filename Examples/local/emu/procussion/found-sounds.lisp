@@ -28,7 +28,7 @@
 
 (in-package :cyco)
 
-
+(param found-sounds nil)
 (let ((pang-map (circular-keymap 'fs-pang '(36 37 38 39 40 41 42 43 44)))
       (noise-map (circular-keymap 'fs-noise '(45 53 46 54 47 55 56 57)))
       (thwak-map (circular-keymap 'fs-thwak '(48 49 50 51 52)))
@@ -40,7 +40,6 @@
       (lazer-map (circular-keymap 'fs-lazer '(88 89 90 91 92)))
       (cheer-map (circular-keymap 'fs-cheer '(98)))
       (program-number (car (cdr (assoc 'found-sounds +PROCUSSION-PROGRAMS+)))))
-  (param found-sounds nil)
 
   (defun found-sounds (&key (parent pro3))
     (setf found-sounds (create-instrument 'found-sounds

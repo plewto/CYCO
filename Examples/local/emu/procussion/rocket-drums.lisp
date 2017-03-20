@@ -36,13 +36,13 @@
 
 (in-package :cyco)
 
+(param rocket-drums nil)
 (let ((kick-map (keymap 'rocket-kick '((A 35)(B 36)(C 38))))
       (snare-map (keymap 'rocket-snare '((A 40)(B 41)(C 43)(D 45))))
       (cym-map (circular-keymap 'rocket-cymbals '(37 39 42 44 46 47)))
       (tom1-map (circular-keymap 'rocket-toms1 (range 48 73)))
       (tom2-map (circular-keymap 'rocket-toms2 (range 72 123)))
       (program-number (car (cdr (assoc 'latin-drums +PROCUSSION-PROGRAMS+)))) )
-  (param rocket-drums)
 
   (defun rocket-drums (&key (parent pro3))
     (setf rocket-drums (create-instrument 'rocket-drums

@@ -48,102 +48,9 @@
 ;;;;     01234567890123456789012345678901234567890123456789012345678901234567890
 ;;;;     3         4         5         6         7         8         9         0         
 
-;; (defun --hh-kick-map (k)
-;;   (cond ((eq k 'r) 0)
-;; 	((eq k '?) (format t "36~%") 0)
-;; 	(t 36)))
-
-;; (defmap --hh-snare-map '((dance . 038)
-;; 			 (tambo . 037)
-;; 			 (mod   . 040)
-;; 			 (clap  . 039)
-;; 			 (rim1  . 053)
-;; 			 (rim2  . 054)
-;; 			 (rim3  . 055)
-;; 			 (rim4  . 056)
-;; 			 (bkwr1 . 047)
-;; 			 (bkwr2 . 048)
-;; 			 (bkwr3 . 050)
-;; 			 (bkwr4 . 052)))
-
-;; (defmap --hh-hat-map '((x     . 042)
-;; 		       (op    . 044)
-;; 		       (ped   . 046)
-;; 		       (horn1 .  066)
-;; 		       (horn2 .  067)
-;; 		       (horn3 .  068)
-;; 		       (horn4 .  069)
-;; 		       (horn5 .  070)
-;; 		       (horn6 .  071)))
-
-;; (defmap --hh-cow-map '((A     .  041)
-;; 		       (B     .  043)
-;; 		       (C     .  045)))
-
-;; (defmap --hh-noise-map '((red      . 049)
-;; 			 (night    . 051)
-;; 			 (scratch1 . 057)
-;; 			 (scratch2 . 058)
-;; 			 (scrstch3 . 059)))
-
-;; (defun --hh-bongo1-map (k)
-;;   (cond ((eq k 'r) 0)
-;; 	((eq k '?)(format t "0 - 5~%") 0)
-;; 	((numberp k)
-;; 	 (+ 60 (rem (truncate k) 5)))
-;; 	((and k (symbolp k))(--hh-bongo1-map (keynum k)))
-;; 	(t 0)))
-
-;; (defun --hh-bongo2-map (k)
-;;   (cond ((eq k 'r) 0)
-;; 	((eq k '?)(format t "0 - 30~%") 0)
-;; 	((numberp k)
-;; 	 (+ 97 (rem (truncate k) 30)))
-;; 	((and k (symbolp k))(--hh-bongo2-map (keynum k)))
-;; 	(t 0)))
-
-;; (defun --hh-sawbass-map (k)
-;;   (cond ((eq k 'r) 0)
-;; 	((eq k '?) (format t "036 - 060~%") 0)
-;; 	((and (numberp k)(>= k 36)(< k 61)) (truncate k))
-;; 	((and k (symbolp k))(--hh-sawbass-map (keynum k)))
-;; 	(t 0)))
-
-;; (param hip-house nil)
-
-;; (defun hip-house (&optional (parent pro4))
-;;   (remove-children pro4)
-;;   (set-value parent :program (procussion-program-map 'hip-house))
-;;   (let* ((hh (instrument :hip-house
-;; 			 :parent parent)))
-;;     (setf hip-house hh)
-;;     (param hh-kick (instrument :hh-kick
-;; 			       :parent hh
-;; 			       :keymap #'--hh-kick-map))
-;;     (param hh-snare (instrument :hh-snare
-;; 				:parent hh
-;; 				:keymap #'--hh-snare-map))
-;;     (param hh-hat (instrument :hh-hat
-;; 			      :parent hh
-;; 			      :keymap #'--hh-hat-map))
-;;     (param hh-cow (instrument :hh-cow
-;; 			      :parent hh
-;; 			      :keymap #'--hh-cow-map))
-;;     (param hh-noise (instrument :hh-noise
-;; 				:parent hh
-;; 				:keymap #'--hh-noise-map))
-;;     (param hh-bongo1 (instrument :hh-bongo1
-;; 			       (param hip-house-parent hh (create-instrument 'hip=house-parent hh
-;; 				 :keymap #'--hh-bongo1-map))
-;;     (param hh-bongo2 (instrument :hh-bongo2
-;; 				 :parent hh
-;; 				 :keymap #'--hh-bongo2-map))
-;;     (param hh-sawbass (instrument :hh-sawbass
-;; 				  :parent hh
-;; 				  :keymap #'--hh-sawbass-map))
-;;     hh))
-
 (in-package :cyco)
+
+(param hip-house nil)
 
 (let ((kick-map (keymap 'hip-house-kick '((A 36))))
       (snare-map (keymap 'hip-house-snare  '((dance   038)
@@ -180,7 +87,6 @@
       (scratch-map (circular-keymap 'hip-house-scratch '(57 58 59)))
       (bass-map (reduced-keymap 'hiphose-bass 72 96))
       (program-number (car (cdr (assoc 'latin-drums +PROCUSSION-PROGRAMS+)))) )
-  (param hip-house nil)
 
   (defun hip-house (&key (parent pro3))
     (setf hip-house (create-instrument 'hip-house
@@ -195,6 +101,9 @@
     (param hip-house-snare (create-instrument 'hip-house-snare
 					      :parent hip-house
 					      :keynumber-map snare-map))
+    (param hip-house-hat (create-instrument 'hip-house-hat
+					    :parent hip-house
+					    :keynumber-map hat-map))
     (param hip-house-cow (create-instrument 'hip-house-cow
 					    :parent hip-house
 					    :keynumber-map cow-map))

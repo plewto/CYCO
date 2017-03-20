@@ -46,6 +46,8 @@
 
 (in-package :cyco)
 
+(param toolkit nil)
+
 (let ((plank-map (keymap 'plank '((A 039)
 				  (A2 040)
 				  (A3 041)
@@ -117,7 +119,7 @@
 			      (A3 104))))
       (program-number (car (cdr (assoc 'toolkit +PROCUSSION-PROGRAMS+)))) )
 
-  (param toolkit nil)
+  (setf toolkit nil)
 
   (defun toolkit (&key (parent pro3))
     (setf toolkit (create-instrument 'toolkit

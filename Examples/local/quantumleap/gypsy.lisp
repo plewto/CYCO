@@ -6,6 +6,26 @@
 
 (in-package :cyco)
 
+(param cimbalon nil)
+(param gypsy nil)
+(param gypsy-castanets nil)
+(param gypsy-dancer nil)
+(param gypsy-percussion nil)
+(param trombone nil)
+(param violin nil)
+(param gypsy-guitar nil)
+(param gypsy-accordian nil)
+(param bandoneon nil)
+(param campana nil)
+(param excelsior nil)
+(param silvestri nil)
+(param classical-guitar nil)
+(param django-chords-guitar nil)
+(param django-guitar nil)
+(param flamenco-chords-guitar nil)
+(param flamenco-guitar nil)
+(param spanish-guitar nil)
+
 (let ((cimbalon-keyswitch
        (keyswitch 'cimbalon
 		  '((sus     C2  "Sustain")
@@ -67,16 +87,16 @@
 		      (format nil "    trombone~%")
 		      (format nil "    violin~%"))))
       
-      (param gypsy (create-instrument 'gypsy
+      (setf gypsy (create-instrument 'gypsy
 				      :parent ql3
 				      :transient nil
 				      :remarks remtext))
-      (param gypsy-guitar (create-instrument 'gypsy-guitar
+      (setf gypsy-guitar (create-instrument 'gypsy-guitar
 					     :parent ql2
 					     :transient nil
 					     :remarks remtext))
       (defun gypsy-castanets (&key (parent gypsy))
-	(param gypsy-castanets (create-instrument
+	(setf gypsy-castanets (create-instrument
 				'gypsy-castanets
 				:parent parent
 				:transient t
@@ -84,7 +104,7 @@
 	gypsy-castanets)
 
       (defun gypsy-dancer (&key (parent gypsy))
-	(param gypsy-dancer (create-instrument
+	(setf gypsy-dancer (create-instrument
 			     'gypsy-dancer
 			     :parent parent
 			     :transient t
@@ -92,7 +112,7 @@
 	gypsy-dancer)
 
       (defun gypsy-percussion (&key (parent gypsy))
-	(param gypsy-percussion (create-instrument
+	(setf gypsy-percussion (create-instrument
 				 'gypsy-percussion
 				 :parent parent
 				 :transient t
@@ -101,7 +121,7 @@
 
       
       (defun cimbalon (&key (parent gypsy))
-	(param cimbalon (create-instrument
+	(setf cimbalon (create-instrument
 			 'cimbalon
 			 :parent parent
 			 :transient t
@@ -110,7 +130,7 @@
 	cimbalon)
 
       (defun trombone (&key (parent gypsy))
-	(param trombone (create-instrument
+	(setf trombone (create-instrument
 			 'trombone
 			 :parent parent
 			 :transient t
@@ -119,7 +139,7 @@
 	trombone)
 
       (defun violin (&key (parent gypsy))
-	(param violin (create-instrument
+	(setf violin (create-instrument
 		       'violin
 		       :parent parent
 		       :transient t
@@ -177,12 +197,13 @@
 		      (format nil "    Excelsior~%")
 		      (format nil "    Silvestri~%"))))
 
-  (param gypsy-accordian (create-instrument 'gypsy-accordian
+  (dismiss remtext)
+  (setf gypsy-accordian (create-instrument 'gypsy-accordian
 					    :parent gypsy
 					    :transient nil))
   
   (defun bandoneon (&key (parent gypsy-accordian))
-    (param bandoneon (create-instrument 
+    (setf bandoneon (create-instrument 
 		      'bandoneon
 		      :parent parent
 		      :transient t
@@ -191,7 +212,7 @@
     bandoneon)
 
   (defun campana (&key (parent gypsy-accordian))
-    (param campana (create-instrument 
+    (setf campana (create-instrument 
 		    'campana
 		    :parent parent
 		    :transient t
@@ -200,7 +221,7 @@
     campana)
 
   (defun excelsior (&key (parent gypsy-accordian))
-    (param excelsior (create-instrument 
+    (setf excelsior (create-instrument 
 		      'excelsior
 		      :parent parent
 		      :transient t
@@ -209,7 +230,7 @@
     excelsior)
 
   (defun silvestri (&key (parent gypsy-accordian))
-    (param silvestri (create-instrument 
+    (setf silvestri (create-instrument 
 		      'silvestri
 		      :parent parent
 		      :transient t
@@ -288,7 +309,7 @@
 		    (taps              D3  "taps")))))
 
   (defun classical-guitar (&key (parent gypsy-guitar))
-    (param classical-guitar (create-instrument
+    (setf classical-guitar (create-instrument
 			     'classical-guitar
 			     :parent parent
 			     :transient t
@@ -297,7 +318,7 @@
     classical-guitar)
 
   (defun django-guitar (&key (parent gypsy-guitar))
-    (param django-guitar (create-instrument
+    (setf django-guitar (create-instrument
 			  'django-guitar
 			  :parent parent
 			  :transient t
@@ -306,7 +327,7 @@
     django-guitar)
 
   (defun django-chords-guitar (&key (parent gypsy-guitar))
-    (param django-chords-guitar (create-instrument
+    (setf django-chords-guitar (create-instrument
 				 'django-chords-guitar
 				 :parent parent
 				 :transient t
@@ -315,7 +336,7 @@
     django-chords-guitar)
 
   (defun flamenco-guitar (&key (parent gypsy-guitar))
-    (param flamenco-guitar (create-instrument
+    (setf flamenco-guitar (create-instrument
 			    'flamenco-guitar
 			    :parent parent
 			    :transient t
@@ -324,7 +345,7 @@
     flamenco-guitar)
 
   (defun flamenco-chords-guitar (&key (parent gypsy-guitar))
-    (param flamenco-chords-guitar (create-instrument
+    (setf flamenco-chords-guitar (create-instrument
 				   'flamenco-chords-guitar
 				   :parent parent
 				   :transient t
@@ -334,7 +355,7 @@
 
   
   (defun spanish-guitar (&key (parent gypsy-guitar))
-    (param spanish-guitar (create-instrument
+    (setf spanish-guitar (create-instrument
 			   'spanish-guitar
 			   :parent parent
 			   :transient t

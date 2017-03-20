@@ -18,6 +18,20 @@
 
 (in-package :cyco)
 
+(param vop nil)
+(param vop2 nil)
+(param vop-american nil)
+(param vop-american-oo nil)
+(param vop-bulgarian nil)
+(param vop-bulgarian-breath nil)
+(param vop-bulgarian-deeper nil)
+(param vop-indian nil)
+(param vop-syrian nil)
+(param vop-welsh nil)
+(param vop-welsh-ah nil)
+(param vop-welsh-oh nil)
+(param vop-welsh-words nil)
+
 (let ((american-keyswitch 
        (keyswitch 'american
 		  '((ah          C2      "Ah"             :range (c0 c9))
@@ -162,31 +176,31 @@
 		     (format nil "    VOP-Welsh-ah~%")
 		     (format nil "    VOP-Welsh-oh~%")
 		     (format nil "    VOP-Welsh-words~%"))))
-  (param vop (create-instrument 'vop
+  (setf vop (create-instrument 'vop
 				:parent ql4
 				:transient nil
 				:remarks remtext))
-  (param vop2 (create-instrument 'vop2
+  (setf vop2 (create-instrument 'vop2
 				 :parent quantumleap
 				 :channel :vop2
 				 :transient nil
 				 :remarks remtext))
 
   (defun vop-american (&key (parent vop))
-    (param vop-american (create-instrument 'vop-american
+    (setf vop-american (create-instrument 'vop-american
 					   :parent parent
 					   :remarks ""
 					   :program-change-hook american-keyswitch))
     vop-american)
 
   (defun vop-american-oo (&key (parent vop))
-    (param vop-american-oo (create-instrument 'vop-american-oo
+    (setf vop-american-oo (create-instrument 'vop-american-oo
 					      :remarks ""
 					      :parent parent))
     vop-american-oo)
 
   (defun vop-bulgarian (&key (parent vop))
-    (param vop-bulgarian (create-instrument
+    (setf vop-bulgarian (create-instrument
 			  'vop-bulgarian
 			  :parent parent
 			  :remarks ""
@@ -194,72 +208,56 @@
     vop-bulgarian)
   
   (defun vop-bulgarian-breath (&key (parent vop))
-    (param vop-bulgarian-breath (create-instrument
+    (setf vop-bulgarian-breath (create-instrument
 				 'vop-bulgarian-breath
 				 :remarks ""
 				 :parent parent))
     vop-bulgarian-breath)
 
   (defun vop-bulgarian-deeper (&key (parent vop))
-    (param vop-bulgarian-deeper
+    (setf vop-bulgarian-deeper
 	   (create-instrument 'vop-bulgarian-deeper
 			      :remarks ""
 			      :parent parent))
     vop-bulgarian-deeper)
 
   (defun vop-indian (&key (parent vop))
-    (param vop-indian (create-instrument 'vop-indian
+    (setf vop-indian (create-instrument 'vop-indian
 					 :remarks ""
 					 :parent parent
 					 :program-change-hook indian-keyswitch))
     vop-indian)
   
   (defun vop-syrian (&key (parent vop))
-    (param vop-syrian (create-instrument 'vop-syrian
+    (setf vop-syrian (create-instrument 'vop-syrian
 					 :remarks ""
 					 :parent parent
 					 :program-change-hook syrian-keyswitch))
     vop-syrian)
   
   (defun vop-welsh (&key (parent vop))
-    (param vop-welsh (create-instrument 'vop-welsh
+    (setf vop-welsh (create-instrument 'vop-welsh
 					:remarks ""
 					:parent parent
 					:program-change-hook welsh-keyswitch))
     vop-welsh)
   
   (defun vop-welsh-ah (&key (parent vop))
-    (param vop-welsh-ah (create-instrument 'vop-welsh-ah
+    (setf vop-welsh-ah (create-instrument 'vop-welsh-ah
 					   :remarks ""
 					   :parent parent))
     vop-welsh-ah)
 
   (defun vop-welsh-oh (&key (parent vop))
-    (param vop-welsh-oh (create-instrument 'vop-welsh-oh
+    (setf vop-welsh-oh (create-instrument 'vop-welsh-oh
 					   :remarks ""
 					   :parent parent))
     vop-welsh-oh)
 
   (defun vop-welsh-words (&key (parent vop))
-    (param vop-welsh-words (create-instrument
+    (setf vop-welsh-words (create-instrument
 			    'vop-welsh-words
 			    :remarks ""
 			    :parent parent
 			    :program-change-hook welsh-words-keyswitch))
     vop-welsh-words)) 
-  
-  
-
-  
-  
-  
-  
-		       
-  
-  
-  
-  
-		       
-		       
-			       
-  

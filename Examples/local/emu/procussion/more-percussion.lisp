@@ -27,8 +27,9 @@
 ;;;; 24                   :                      
 ;;;;
 
+(in-package :cyco)
+(param more-percussion nil)
 (let ((program-number (car (cdr (assoc 'more-percussion +PROCUSSION-PROGRAMS+)))))
-  (param more-percussion nil)
   (defun more-percussion (&key (parent pro3))
     (setf more-percussion (create-instrument 'more-percussion
 					 :parent parent

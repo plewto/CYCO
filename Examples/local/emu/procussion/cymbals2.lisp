@@ -38,7 +38,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param cymbals2 nil)
 (let*((program-number (car (cdr (assoc 'cymbals2 +PROCUSSION-PROGRAMS+))))
       (hat-map (keymap 'c3-hats '((x      26)
 				  (stomp  24)
@@ -93,7 +93,6 @@
 					   (roll3  82  "MalletRoll")
 					   (mal3   86  "MalCymbal")
 					   (malt3  95  "StereoMalt")))))
-  (param cymbals2 nil)
   (defun cymbals2 (&key (parent pro2))
     (setf cymbals2 (create-instrument 'cymbals2
 					 :parent parent

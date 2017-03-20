@@ -187,7 +187,8 @@
       (default-strum-pattern (cycle :of '(:up :down)))  ;; :up :down :random
       (default-controller-number 1)
       (default-step-count 100)
-      (msg1 "Expected even number of elements in epart events list!"))
+      ;(msg1 "Expected even number of elements in epart events list!")
+      )
 
   (flet (
 	 ;; (->alist (lst)

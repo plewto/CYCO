@@ -28,16 +28,19 @@
 ;;;;
 
 (in-package :cyco)
-
-(let ((program-number (car (cdr (assoc 'percussives +PROCUSSION-PROGRAMS+)))))
+(param percussives nil)
+(let ((program-number (car (cdr (assoc 'percussives 
+				       +PROCUSSION-PROGRAMS+)))))
   (param percussives nil)
   (defun percussives (&key (parent pro3))
-    (setf percussives (create-instrument 'percussives
-					  :parent parent
-					  :transient t
-					  :program-change-hook
-					  (constant-program-hook
-					   'percussives program-number)
-					  :keynumber-map (circular-keymap 'percussives
-					   				  (cons (range 36 96) '(98)))))
+    (setf percussives (create-instrument 
+		       'percussives
+		       :parent parent
+		       :transient t
+		       :program-change-hook
+		       (constant-program-hook
+			'percussives program-number)
+		       :keynumber-map (circular-keymap 
+				       'percussives
+				       (cons (range 36 96) '(98)))))
     percussives))

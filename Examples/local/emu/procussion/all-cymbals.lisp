@@ -38,7 +38,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param all-cymbals nil)
 (let*((program-number (car (cdr (assoc 'all-cymbals +PROCUSSION-PROGRAMS+))))
       (hata-map (keymap 'hatA '((X      44 "HihatA stomp")
 				(op     38 "HihatA 1/3")
@@ -97,8 +97,7 @@
 			      (ice    79 "IceMissile")
 			      (ice2   80 "IceMissile")
 			      (ice3   81 "IceMissile")))))
- 
-  (param all-cymbals nil)
+
   (defun all-cymbals (&key (parent pro2))
     (setf all-cymbals (create-instrument 'all-cymbals
 					 :parent parent

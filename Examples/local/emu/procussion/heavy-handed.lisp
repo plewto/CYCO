@@ -28,7 +28,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param heavy-handed nil)
 (let ((kick-map (keymap 'kick '((A 36))))
       (snare-map (keymap 'snare '((A 38 "Smack")
 				  (B 40 "Dans")
@@ -50,9 +50,6 @@
 					      (C 50))))
       (epic-tom-map (circular-keymap 'epic-tom (range 55 96)))
       (program-number (car (cdr (assoc 'heavy-handed +PROCUSSION-PROGRAMS+)))) )
-					  
-  (param heavy-handed nil)
-
   (defun heavy-handed (&key (parent pro3))
     (setf heavy-handed (create-instrument 'heavy-handed
 					  :parent parent

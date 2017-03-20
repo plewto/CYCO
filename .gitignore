@@ -7,4 +7,5 @@
 .\#*
 
 # Compile Lisp files
-*.abcl   
+*.abcl
+*.fasl

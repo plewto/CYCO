@@ -40,6 +40,8 @@
 ;;;; 23 359 Raspiness     : 124 126
 ;;;; 24 318 Hypereal      : 012 023
 
+(in-package :cyco)
+(param redsky nil)
 (let* ((program-number (car (cdr (assoc 'redsky +PROCUSSION-PROGRAMS+))))
        (hypereal-map (reduced-keymap 'hypereal 12 23))
        (surf-map (reduced-keymap 'surfin 24 35))
@@ -67,7 +69,7 @@
        (pit-map (circular-keymap 'pit-o-doom (range 116 119)))
        (tom-map (circular-keymap 'power-toms (range 120 123)))
        (brash-map (circular-keymap 'brash (range 124 125))))
-  (param redsky nil)
+
   (defun redsky (&key (parent pro3))
     (setf redsky (create-instrument 'redsky
 				      :parent parent

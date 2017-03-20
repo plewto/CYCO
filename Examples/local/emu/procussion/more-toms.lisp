@@ -28,7 +28,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param more-toms nil)
 (let*((program-number (car (cdr (assoc 'more-toms +PROCUSSION-PROGRAMS+))))
       (acc '())
       (bcc '()))
@@ -58,7 +58,7 @@
 	    (value (+ counter (second spec))))
 	(push (list name value (third spec)) bcc))))
   (setf acc (append (reverse acc)(reverse bcc)))
-  (param more-toms nil)
+
   (defun more-toms (&key (parent pro3))
     (setf more-toms (create-instrument 'more-toms
 					 :parent parent

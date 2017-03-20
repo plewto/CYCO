@@ -4,6 +4,21 @@
 
 (in-package :cyco)
 
+(param mor2-bass nil)
+(param gibson-eb2 nil)
+(param hofner nil)
+(param hofner-fingered nil)
+(param jazzman nil)
+(param lakland nil)
+(param lakland-fingered nil)
+(param musicman nil)
+(param rickenbacker nil)
+(param silvertone nil)
+(param silvertone-fingered nil)
+(param stingray nil)
+(param stingray-fingered nil)
+
+
 (let ((jazzman-keyswitch
        (keyswitch 'jazzman
 		  '((SUS     C2    "Sustain")
@@ -155,19 +170,6 @@
 				      :parent ql1
 				      :transient nil
 				      :remarks remtext))
-	 
-  (param jazzman nil)
-  (param gibson-eb2 nil)
-  (param hofner nil)
-  (param hofner-fingered nil)
-  (param lakland nil)
-  (param lakland-fingered nil)
-  (param musicman nil)
-  (param rickenbacker nil)
-  (param silvertone nil)
-  (param silvertone-fingered nil)
-  (param stingray nil)
-  (param stingray-fingered nil)
 
   (defun jazzman (&key (parent mor2-bass))
     (setf jazzman (create-instrument 'jazzman
@@ -210,13 +212,13 @@
 				       :remarks ""))
       lakland)
 
-    (defun lakland-fingereed (&key (parent mor2-bass))
-      (setf lakland-fingereed (create-instrument 'lakland-fingereed
+    (defun lakland-fingered (&key (parent mor2-bass))
+      (setf lakland-fingered (create-instrument 'lakland-fingered
 						 :parent parent
 						 :transient t
-						 :program-change-hook lakland-fingereed-keyswitch
+						 :program-change-hook lakland-fingered-keyswitch
 						 :remarks ""))
-      lakland-fingereed)
+      lakland-fingered)
 
     (defun musicman (&key (parent mor2-bass))
       (setf musicman (create-instrument 'musicman

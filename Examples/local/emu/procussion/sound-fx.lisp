@@ -40,6 +40,8 @@
 ;;;; 24 :449 VoxFreak 1  : 102 104
 ;;;;
 
+(param sound-fx nil)
+
 (let ((attack-rocket-map (circular-keymap 'attack-rocket '(036 051 037 052 038 053)))
       (ufo-map (circular-keymap 'ufo  '(039 045 090 040 046 091 041 047 092)))
       (derfish-map (circular-keymap 'derfish  '(066 069 067 070 068 071)))
@@ -52,7 +54,7 @@
       (mutantmal-map (circular-keymap 'mutantmal  '(096 063 097 064 098 065)))
       (voxfreak-map (circular-keymap 'voxfreak '(102 093 103 094 104 095)))
       (program-number (car (cdr (assoc 'latin-drums +PROCUSSION-PROGRAMS+)))) )
-  (param sound-fx nil)
+  (setf sound-fx nil)
 
   (defun sound-fx (&key (parent pro3))
     (setf sound-fx (create-instrument 'sound-fx

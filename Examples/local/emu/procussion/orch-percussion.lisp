@@ -28,6 +28,7 @@
 
 (in-package :cyco)
 
+(param orch-percussion nil)
 (let ((timpani-map (circular-keymap 'timpani (range 53 72)))
       (bass-map (circular-keymap 'bass '(36)))
       (snare-map (keymap 'snare '((brush-a 40)(brush-b 41)(brush-c 43)
@@ -37,8 +38,6 @@
       (tambourine-map (circular-keymap 'tambourine '((37))))
       (triangle-map (circular-keymap 'triangle (range 73 84)))
       (program-number (car (cdr (assoc 'orch-percussion +PROCUSSION-PROGRAMS+)))) )
-  (param orch-percussion nil)
-
   (defun orch-percussion (&key (parent pro3))
     (setf orch-percussion (create-instrument 'orch-percussion
 					     :parent parent

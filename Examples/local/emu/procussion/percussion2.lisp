@@ -63,6 +63,8 @@
 ;;;;
 ;;;; AMAZON  85 86 84 87
 
+(param percussion2 nil)
+
 (let ((drum-map (keymap 'drum '((conga     36)
 				(conga2    61)
 				(conga3    37)
@@ -147,8 +149,7 @@
 				    (x3   84)
 				    (x4   87))))
       (program-number 
-       (car (cdr (assoc 'percussion3 +PROCUSSION-PROGRAMS+)))) )
-  (param percussion2 nil)
+       (car (cdr (assoc 'percussion2 +PROCUSSION-PROGRAMS+)))) )
 
   (defun percussion2 (&key (parent pro3))
     (setf percussion2 (create-instrument
@@ -161,7 +162,7 @@
 				      :parent percussion2
 				      :keynumber-map drum-map))
     (param p2-shaker (create-instrument 'p2-shaker 
-					:parent percussion3
+					:parent percussion2
 					:keynumber-map shaker-map))
     (param p2-cow (create-instrument 'p2-cow 
 				     :parent percussion2

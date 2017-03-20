@@ -40,6 +40,7 @@
 
 (in-package :cyco)
 
+(param percussion3 nil)
 (let ((drum-map (keymap 'p3-drum '((rdrum    . 36)
 				   (tdrum    . 38)
 				   (hand     . 40)
@@ -64,7 +65,7 @@
       (shaker-drum-map (circular-keymap 'p3-shaker-drum (range 57 71)))
       (shaker-bell-map (circular-keymap 'p3-shakerbell (range 72 96)))
       (program-number (car (cdr (assoc 'percussion3 +PROCUSSION-PROGRAMS+)))) )
-  (param percussion3 nil)
+  (setf percussion3 nil)
 
   (defun percussion3 (&key (parent pro3))
     (setf percussion3 (create-instrument 'percussion3
@@ -84,6 +85,9 @@
   (param p3-shaker-bell (create-instrument 'p3-shaker-bell
 					   :parent percussion3
 					   :keynumber-map shaker-bell-map))
+  (param p3-bell (create-instrument 'p3-bell
+				    :parent percussion3
+				    :keynumber-map bell-map))
   percussion3))
 
 	

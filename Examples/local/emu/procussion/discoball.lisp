@@ -36,6 +36,8 @@
 
 (in-package :cyco)
 
+(param discoball nil)
+
 (let ((kick-map (keymap 'disco-kick '((BIG   . 036)
 				      (CYM   . 037)
 				      (TRASH . 047)
@@ -76,7 +78,7 @@
 				    (scratch2 . 100))))
       (bass-map (reduced-keymap 'disco-bass 72 96))
       (program-number (car (cdr (assoc 'discoball +PROCUSSION-PROGRAMS+)))) )
-  (param discoball nil)
+  (setf discoball nil)
 
   (defun discoball (&key (parent pro3))
     (setf discoball (create-instrument 'discoball

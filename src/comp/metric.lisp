@@ -97,6 +97,8 @@
   5 dotted qurter notes  5*q+e  or 5*q.
   A double dotted quarter note  q+e+s"))
 
+(defgeneric parse-metric-expression (s))
+
 (defmethod parse-metric-expression ((s string))
   (let* ((foo (split-string s #\*))
 	 (mult 1)

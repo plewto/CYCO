@@ -41,6 +41,8 @@
 
 (in-package :cyco)
 
+(param percussion1 nil)
+
 (let ((woodblock-map (keymap 'p1-woodblock '((A    36)
 					     (A2   37)
 					     (A3   38)
@@ -105,7 +107,7 @@
 					     (BACK3   92)
 					     (FRNT3   95))))
       (program-number (car (cdr (assoc 'percussion1 +PROCUSSION-PROGRAMS+)))))
-  (param procussion1 nil)
+  (setf percussion1 nil)
   
   (defun percussion1 (&key (parent pro3))
     (setf percussion1 (create-instrument

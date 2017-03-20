@@ -28,7 +28,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param lotsa-kicks nil)
 (let*((program-number (car (cdr (assoc 'lotsa-kicks +PROCUSSION-PROGRAMS+))))
       (acc '()))
   (dotimes (counter 3)
@@ -57,7 +57,6 @@
 		    (intern (str+ (car spec) counter))))
 	    (value (+ counter (second spec))))
 	(push (list name value (third spec)) acc))))
-  (param lotsa-kicks nil)
   (defun lotsa-kicks (&key (parent pro3))
     (setf lotsa-kicks (create-instrument 'lotsa-kicks
 					 :parent parent

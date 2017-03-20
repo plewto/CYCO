@@ -40,7 +40,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param proshake nil)
 (let* ((program-number (car (cdr (assoc 'proshake +PROCUSSION-PROGRAMS+))))
        (tam-map (keymap 'tambourine '((x      24 "Tambourine")
 				      (shake  27 "Shakatam")
@@ -101,7 +101,6 @@
        (circle-noys-map (circular-keymap 'circle-noys (range 87 95)))
        (castanet-map (circular-keymap 'castanet (range 45 47)))
        (surfinusa-map (reduced-keymap 'surfinusa 96 127)))
-  (param proshake nil)
 
   (defun proshake (&key (parent pro3))
     (setf proshake (create-instrument 'proshake

@@ -5,9 +5,15 @@
 
 (defun cue-list (timesig &key
 			 (use-tsubbeats nil)
-			 (bars #'(lambda (br) t))
-			 (beats #'(lambda (br bt) t))
-			 (subbeats #'(lambda (br bt su) t)))
+			 (bars #'(lambda (br)
+				   (dismiss br)
+				   t))
+			 (beats #'(lambda (br bt)
+				    (dismiss br bt)
+				    t))
+			 (subbeats #'(lambda (br bt su)
+				       (dismiss br bt su)
+				       t)))
   "Creates time cue-list. 
    Each possible combination of bar/beat/(t)subbeat is tested against the 
    three predicate functions bars, beats and subbeats.  If all three 

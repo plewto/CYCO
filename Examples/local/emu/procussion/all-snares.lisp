@@ -28,7 +28,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param all-snares nil)
 (let*((program-number (car (cdr (assoc 'all-snares +PROCUSSION-PROGRAMS+))))
       (acc '()))
   (dotimes (counter 4)
@@ -52,7 +52,6 @@
 		    (intern (str+ (car spec) counter))))
 	    (value (+ counter (second spec))))
 	(push (list name value (third spec)) acc))))
-  (param all-snares nil)
   (defun all-snares (&key (parent pro3))
     (setf all-snares (create-instrument 'all-snares
 					 :parent parent

@@ -26,21 +26,23 @@
 ;;;; 23                   :                                              
 ;;;; 24                   :                                          
 
-(let ((rasparity-map (circular-keymap 'rasparity (zip (range 36 40)(range 62 64))))
-      (efx-map (keymap 'efx '((QOOL-KLANG 41)
-			      (FINGER-SYM 42)
-			      (HALLOWELL 43)
-			      (STARTREE 44)
-			      (WARBLE 45)
-			      (GANGA 46))))
+(in-package :cyco)
+
+(param multi-fx nil)
+(let (
+      ;; (rasparity-map (circular-keymap 'rasparity (zip (range 36 40)(range 62 64))))
+      ;; (efx-map (keymap 'efx '((QOOL-KLANG 41)
+      ;; 			      (FINGER-SYM 42)
+      ;; 			      (HALLOWELL 43)
+      ;; 			      (STARTREE 44)
+      ;; 			      (WARBLE 45)
+      ;; 			      (GANGA 46))))
       (thundadome-map (circular-keymap 'thundadome (zip (range 47 52)(range 72 83))))
       (noise-map (circular-keymap 'noise (range 53 55)))
       (tine-map (circular-keymap 'tinkeltine (range 65 71)))
       (bell-map (circular-keymap 'bell (range 56 61)))
       (bellhause-map (reduced-keymap 'bellhause 84 96))
       (program-number (car (cdr (assoc 'multi-fx +PROCUSSION-PROGRAMS+)))) )
-  (param multi-fx nil)
-
   (defun multi-fx (&key (parent pro3))
     (setf multi-fx (create-instrument 'multi-fx
 				      :parent parent

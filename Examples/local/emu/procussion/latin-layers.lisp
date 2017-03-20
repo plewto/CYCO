@@ -28,6 +28,7 @@
 
 (in-package :cyco)
 
+(param latin-layers nil)
 (let ((timbale-map (circular-keymap 'timbale (range 36 47)))
       (tambourine-map (circular-keymap 'tambourine (range 36 53)))
       (hand-drum-map (circular-keymap 'hand-drum (range 48 59)))
@@ -42,7 +43,6 @@
       (macho-map (keymap 'macho '((a 87)(b 90)(c 100)(d 101)(a2 88)(b2 91)(a3 89)(b3 92))))
       (hat-map (circular-keymap 'hat '(98 62 103)))
       (program-number (car (cdr (assoc 'latin-layers +PROCUSSION-PROGRAMS+)))) )
-  (param latin-layer nil)
   (defun latin-layers (&key (parent pro3))
     (setf latin-layers (create-instrument 'latin-layers
 					  :parent parent

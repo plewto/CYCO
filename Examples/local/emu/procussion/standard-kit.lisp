@@ -106,6 +106,8 @@
 
 (in-package :cyco)
 
+(param standard-procussion-kit nil)
+
 (let ((kick-map
        (keymap 'pkick 
                '((A  34)
@@ -170,7 +172,7 @@
        (tuned-map 
         (reduced-keymap 'ptuned 72 89)))
 
-  (param standard-procussion-kit
+  (setf standard-procussion-kit
          (create-instrument 'standard-procussion-kit
                             :parent pro1
                             :transient nil

@@ -37,7 +37,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param control-snares nil)
 (let*((program-number (car (cdr (assoc 'control-snares +PROCUSSION-PROGRAMS+))))
       ;; A garbage : 36 37 38 39 40
       ;; B house   : 41 42 43 44 45
@@ -70,7 +70,8 @@
       (let ((name (if (zerop counter)
 		      (car spec)
 		    (intern (str+ (car spec) counter))))
-	    (value (+ counter (car (cdr spec)))))
+	    ;;(value (+ counter (car (cdr spec))))
+	    )
 	(push (list name (cdr spec)) acc))))
   (setf acc (reverse acc))
 	  
@@ -89,12 +90,11 @@
       (let ((name (if (zerop counter)
 		      (car spec)
 		    (intern (str+ (car spec) counter))))
-	    (value (+ counter (car (cdr spec)))))
+	    ;;(value (+ counter (car (cdr spec))))
+	    )
 	(push (list name (cdr spec)) bcc))))
   (setf bcc (reverse bcc))
-  
-  
-  (param control-snares nil)
+
   (defun control-snares (&key (parent pro3))
     (setf control-snares (create-instrument 'control-snares
 					  :parent parent

@@ -3,6 +3,16 @@
 
 (in-package :cyco)
 
+(param mor2-guitar nil)
+(param baritone nil)
+(param baritone-rhythm-keyswith nil)
+(param carvin-bridge nil)
+(param carvin-neck nil)
+(param jaguar nil)
+(param lespaul nil)
+(param schecter nil)
+(param thinline nil)
+
 (let ((baritone-keyswitch
        (keyswitch 'baritone
 		  '((sus         c2  "Sustain down/up RR")
@@ -243,24 +253,16 @@
 		     (format nil "   Schecter (7 string)~%")
 		     (format nil "   Schecter Rhythm (7 string)~%")
 		     (format nil "   Thinline (Telecaster hollow body)~%")
-		     (format nil "   Thinline Rhythm (Telecaster hollow body~%"))))
+		     (format nil "   Thinline Rhythm (Telecaster hollow body~%"))) )
 
-  (param mor2-guitar (create-instrument 'mor2-guitar
+  (setf mor2-guitar (create-instrument 'mor2-guitar
 					:parent ql2
 					:transient nil
 					:remarks remtext))
-  
-  (param baritone nil)
-  (param carvin-bridge nil)
-  (param carvin-neck nil)
-  (param jaguar nil)
-  (param lespaul nil)
-  (param schecter nil)
-  (param thinline nil)
 
   (defun baritone (&key (parent mor2-guitar)(rhythm nil))
     (let ((name (if rhythm 'baritone-rhythm 'baritone))
-	  (map (if rhythm baritone-rhythm-keyswith baritone-keyswitch)))
+	  (map (if rhythm baritone-rhythm-keyswitch baritone-keyswitch)))
       (setf baritone (create-instrument name
 					:parent parent
 					:transient t

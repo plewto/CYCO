@@ -36,7 +36,7 @@
 ;;;;
 
 (in-package :cyco)
-
+(param more-cymbals nil)
 (let*((program-number (car (cdr (assoc 'more-cymbals +PROCUSSION-PROGRAMS+))))
       (hats-list '())
       (beasty-list '())
@@ -70,7 +70,6 @@
   (push (list 'CRASH5 91 "Dubl Crash") cymb-list)
   (push (list 'SFX 98 "SFX 2") cymb-list)
   
-  (param more-cymbals nil)
   (defun more-cymbals (&key (parent pro2))
     (setf more-cymbals (create-instrument 'more-cymbals
 					 :parent parent

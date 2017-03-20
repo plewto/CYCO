@@ -66,6 +66,8 @@
 
 (in-package :cyco)
 
+(param beatbox nil)
+
 (let ((kick-map (keymap 'bbox-kick '((X . 036))))
       (snare-map (keymap 'bbox-snamre '((WET    . 034)
 					(ANALOG . 038)
@@ -74,16 +76,16 @@
 					(SNAP2  . 054)
 					(SNAP3  . 055)
 					(SNAP4  . 056))))
-      (ido-map (keymap 'bbox-ido '((CLAVE   . 037)
-				   (COW     . 046)
-				   (CABASA  . 048)
-				   (CABASA2 . 049)
-				   (ANALOG  . 057))))
+      ;; (ido-map (keymap 'bbox-ido '((CLAVE   . 037)
+      ;; 				   (COW     . 046)
+      ;; 				   (CABASA  . 048)
+      ;; 				   (CABASA2 . 049)
+      ;; 				   (ANALOG  . 057))))
       (tom-map (circular-keymap 'bbox-tom '(40 41 43 45 47 58)))
       (hat-map (circular-keymap 'bbox-hat '(42 44 50 51 52)))
       (tuned-map (reduced-keymap 'bbox-tuned 60 96))
       (program-number (car (cdr (assoc 'beatbox +PROCUSSION-PROGRAMS+)))))
-  (param beatbox nil)
+  (setf beatbox nil)
 
   (defun beatbox (&key (parent pro3))
     (setf beatbox (create-instrument 'beatbox
