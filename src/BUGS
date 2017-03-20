@@ -1,0 +1,5 @@
+**************** BUG 0000 OPEN
+BUG 0000 2017.03.20
+status OPEN
+stack overflow with project dump-event method.
+Works for very small projects, dies on anything bigger.
