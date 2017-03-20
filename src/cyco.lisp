@@ -114,7 +114,7 @@
 	 "src/comp/epart"
 	 "src/comp/qball"
 	 "src/comp/metronome"
-	 "src/comp/marker"
+	 "src/comp/metatext"
 	 "src/comp/qlist"
 	 "src/comp/controlball"
 	 "src/comp/gtrchords"

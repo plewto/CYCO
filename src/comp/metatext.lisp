@@ -1,4 +1,4 @@
-;;;; cyco comp marker
+;;;; cyco comp.metatext
 ;;;;
 ;;;; A MARKER is a PART which wraps a single MIDI meta marker event.
 ;;;;
