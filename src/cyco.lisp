@@ -76,49 +76,97 @@
     "Reloads all CYCO source files."
     (rl t)))
 
+(param src-manifest
+       '("src/constants"
+	 "src/globals"
+	 "src/generics"
+	 "src/util/utilities"
+	 "src/util/string-utilities"
+	 "src/util/list-utilities"
+	 "src/util/debug"
+	 "src/notification"
+	 "src/util/os"
+	 "src/midi/midi-util" 
+	 "src/midi/event"
+	 "src/midi/syscommon"
+	 "src/midi/meta"
+	 "src/midi/smf-header"
+	 "src/midi/smf-track"
+	 "src/midi/smf"
+	 "src/node"
+	 "src/patterns/pattern"
+	 "src/comp/amplitude" 
+	 "src/comp/chords"
+	 "src/comp/keynum"
+	 "src/comp/metric"
+	 "src/orch/channel"
+	 "src/orch/controller"
+	 "src/orch/keymaps"
+	 "src/orch/progmap"
+	 "src/orch/instrument"
+	 "src/orch/metronome"
+	 "src/comp/timesig" 
+	 "src/comp/project"
+	 "src/comp/section"
+	 "src/comp/group"
+	 "src/comp/part"
+	 "src/comp/fixed-part"
+	 "src/comp/epart"
+	 "src/comp/qball"
+	 "src/comp/metronome"
+	 "src/comp/marker"
+	 "src/comp/qlist"
+	 "src/comp/controlball"
+	 "src/comp/gtrchords"
+	 "src/comp/strummer"))
+	 
+
 (format t "Loading cyco...~%")
-(ld "src/constants")
-(ld "src/globals")
-(ld "src/generics")
-(ld "src/util/utilities")
-(ld "src/util/string-utilities")
-(ld "src/util/list-utilities")
-(ld "src/util/debug")
-(ld "src/notification")
-(ld "src/util/os")
-(ld "src/midi/midi-util" )
-(ld "src/midi/event")
-(ld "src/midi/syscommon")
-(ld "src/midi/meta")
-(ld "src/midi/smf-header")
-(ld "src/midi/smf-track")
-(ld "src/midi/smf")
-(ld "src/node")
-(ld "src/patterns/pattern")
-(ld "src/comp/amplitude" )
-(ld "src/comp/chords")
-(ld "src/comp/keynum")
-(ld "src/comp/metric")
-(ld "src/orch/channel")
-(ld "src/orch/controller")
-(ld "src/orch/keymaps")
-(ld "src/orch/progmap")
-(ld "src/orch/instrument")
-(ld "src/orch/metronome")
-(ld "src/comp/timesig" )
-(ld "src/comp/project")
-(ld "src/comp/section")
-(ld "src/comp/group")
-(ld "src/comp/part")
-(ld "src/comp/fixed-part")
-(ld "src/comp/epart")
-(ld "src/comp/qball")
-(ld "src/comp/metronome")
-(ld "src/comp/marker")
-(ld "src/comp/qlist")
-(ld "src/comp/controlball")
-(ld "src/comp/gtrchords")
-(ld "src/comp/strummer")
+;; (ld "src/constants")
+;; (ld "src/globals")
+;; (ld "src/generics")
+;; (ld "src/util/utilities")
+;; (ld "src/util/string-utilities")
+;; (ld "src/util/list-utilities")
+;; (ld "src/util/debug")
+;; (ld "src/notification")
+;; (ld "src/util/os")
+;; (ld "src/midi/midi-util" )
+;; (ld "src/midi/event")
+;; (ld "src/midi/syscommon")
+;; (ld "src/midi/meta")
+;; (ld "src/midi/smf-header")
+;; (ld "src/midi/smf-track")
+;; (ld "src/midi/smf")
+;; (ld "src/node")
+;; (ld "src/patterns/pattern")
+;; (ld "src/comp/amplitude" )
+;; (ld "src/comp/chords")
+;; (ld "src/comp/keynum")
+;; (ld "src/comp/metric")
+;; (ld "src/orch/channel")
+;; (ld "src/orch/controller")
+;; (ld "src/orch/keymaps")
+;; (ld "src/orch/progmap")
+;; (ld "src/orch/instrument")
+;; (ld "src/orch/metronome")
+;; (ld "src/comp/timesig" )
+;; (ld "src/comp/project")
+;; (ld "src/comp/section")
+;; (ld "src/comp/group")
+;; (ld "src/comp/part")
+;; (ld "src/comp/fixed-part")
+;; (ld "src/comp/epart")
+;; (ld "src/comp/qball")
+;; (ld "src/comp/metronome")
+;; (ld "src/comp/marker")
+;; (ld "src/comp/qlist")
+;; (ld "src/comp/controlball")
+;; (ld "src/comp/gtrchords")
+;; (ld "src/comp/strummer")
+
+(dolist (s src-manifest)
+  (ld s))
 
 (format t "~%")
 (ld "src/local")
@@ -126,6 +174,11 @@
 (format t "~A~%" +BANNER+)
 (format t "CYCO version ~A~%~%" +CYCO-VERSION+)
 
+(defun compile-cyco nil
+  (dolist (s src-manifest)
+    (format t "Compiling ~A~%" s)
+    (compile-file s)))
+    
 
 ;;; Convenience functions
 
