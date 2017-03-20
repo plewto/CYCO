@@ -313,7 +313,17 @@
   (:documentation
    "Returns metric values of object, or list of objects"))
 
-(defgeneric mute (obj flag))
+(defgeneric mute (obj flag)
+  (:documentation
+   "Sets mute status of object to flag.
+    For groups the status is only changed if flag is True (use unmute)"))
+
+(defgeneric unmute (obj)
+  (:documentation
+   "Sets mute status of obj to nil."))
+
+(defmethod unmute ((obj t))
+  (mute obj nil))
 
 (defgeneric next-1 (obj)
   (:documentation

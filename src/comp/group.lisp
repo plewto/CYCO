@@ -73,10 +73,17 @@
     acc))
 
 (defmethod mute ((grp group)(flag t))
-  "Set mute status of all PARTs in the GROUP to flag."
-  (setf (group-state grp) (and flag :mute))
+  "Set mute status of all PARTs in the GROUP.
+   If flag is flase no changes are made.  Use unmute."
+  (if flag
+      (setf (group-state grp) (and flag :mute))
+    (dolist (prt (members grp))
+      (mute prt flag))))
+
+(defmethod unmute ((grp group))
+  (setf (group-state grp) nil)
   (dolist (prt (members grp))
-    (mute prt flag)))
+    (mute prt nil)))
 
 (defmethod solo ((grp group))
   "Unmute all PARTs in the GROUP and simultaneously mute all other groups.
