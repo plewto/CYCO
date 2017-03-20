@@ -130,6 +130,8 @@
 ;;; Convenience functions
 
 
+(setfn ?a apropos)
+
 (defun ?o (&optional (node *root-instrument*))
   "Display orchestra tree for current project."
   (dump node))
