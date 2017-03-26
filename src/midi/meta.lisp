@@ -42,6 +42,9 @@
 (defmethod ->string ((obj meta-event))
   (format nil "META ~9A " (gethash (meta-type obj) +MNEMONICS+)))
 
+
+    
+
 ;;; ---------------------------------------------------------------------- 
 ;;;			     Meta text events
 
@@ -98,10 +101,17 @@
 			       :meta-type (meta-type obj)
 			       :text (->string (text obj)))))
 
+;; (defmethod ->string ((obj meta-text-event))
+;;   (str+
+;;    (call-next-method)
+;;    (format nil "'~A'" (text obj))))
+
 (defmethod ->string ((obj meta-text-event))
-  (str+
-   (call-next-method)
-   (format nil "'~A'" (text obj))))
+  (let* ((mtype (meta-type obj))
+	 (mn (gethash mtype +MNEMONICS+))
+	 (tx (text obj)))
+    (format t "DEBUG mtype = ~A   mn = ~A    tx = ~A~%" mtype mn tx)
+    (format nil "META ~9a  '~a'" mn tx)))
 
 (defmethod text! ((obj meta-text-event)(new-text t))
   (setf (slot-value obj 'text)(->string new-text)))

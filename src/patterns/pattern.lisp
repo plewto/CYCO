@@ -171,7 +171,7 @@
 ;;;				  Wrapper
 ;;;
 ;;; WRAPPER is a PATTERN which calls a function.
-;;; The function shuld take no arguments and has no defined reteurn type
+;;; The function shuld take no arguments and has no defined return type
 ;;; The NEXT-1 method calls the function and returns the results.
 
 (defclass wrapper (pattern)

@@ -51,10 +51,7 @@
    	     (s (make-instance 'section
 			       :parent ,parent
 			       :transient t
-			       :name ',name))
-	     (marker (make-instance 'marker
-				    :time '(1)
-				    :text (format nil "START SECTION ~s" ',name))))
+			       :name ',name)))
 	 (add-child! ,parent s)
 	 (property! s :unit (or ,unit (unit tsig)))
 	 (property! s :bars (or ,bars (bar-count tsig)))
@@ -64,10 +61,13 @@
 	 (property! s :count-ticks (property tsig :count-ticks))
 	 (property! s :transposable t)
 	 (tempo! s (or ,tempo (tempo tsig)))
-	 (property! marker :qfn #'(lambda (_) -0.0001))
-	 (setf (period marker)(duration s))
-	 (add-child! s marker)
 	 (setf (current-section ,parent) s)
+	 (marker (format nil "START SECTION ~a" ',name
+	 		 :time 0
+	 		 :qfn #'(lambda (_) -0.0001)
+	 		 :period (duration s)
+	 		 :project ,parent
+	 		 :section s))
 	 (param ,name s)
 	 (section-banner s)
 	 s)

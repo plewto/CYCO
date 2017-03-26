@@ -5,49 +5,117 @@
 
 (in-package :cyco)
 
-(defclass marker (part)
-  ((qfn
-    :type function
-    :accessor qfn
-    :initform #'bar
-    :initarg :qfn)
+(defclass text-part (part)
+  ((meta-type
+    :type keyword
+    :accessor meta-type
+    :initform :text  ;; :text :copyright :lyric :marker :cue
+    :initarg :type)
    (time
     :type t
-    :accessor marker-time
+    :accessor event-time
     :initform '(1 1 1)
     :initarg :time)
    (text
-    :type t
-    :accessor marker-text
-    :initform "MARKER"
+    :type string
+    :accessor text
+    :initform ""
     :initarg :text)))
 
-(defun marker (text &key
-		    (qfn #'bar)
-		    (time '(1 1 1))
-		    (period nil)
-		    (project *project*)
-		    (section nil))
-  (validate-part-parents project section)
-  (let* ((sec (or section (current-section project)))
-	 (prt (make-instance 'marker
-			     :time time
-			     :name (format nil "MARKER-~A" text)
-			     :period (or period (duration sec))
-			     :text (->string text))))
-    (add-child! sec prt)
-    (property! prt :qfn qfn)
-    prt))
-
-(defmethod render-once ((prt marker) &key (offset 0))
+(defmethod render-once ((prt text-part) &key (offset 0))
   (if (not (mute? prt))
       (let ((time (+ offset (apply (property prt :qfn)
-				   (marker-time prt))))
-	    (text (marker-text prt)))
-	(list (cons time (marker-event text))))
-    nil))
-			       
+				   (event-time prt))))
+	    (text (text prt))
+	    (mtype (meta-type prt)))
+	(cond ((eq mtype :text)
+	       (list (cons time (text-event text))))
+	      ((eq mtype :copyright)
+	       (list (cons time (copyright-event text))))
+	      ((eq mtype :lyric)
+	       (list (cons time (lyric-event text)))
+	      ((eq mtype :marker)
+	       (list (cons time (marker-event text))))
+	      ((eq mtype :cue)
+	       (list (cons time (cue-event text))))
+	      (t
+	       (let ((msg (format nil "~A is not a valid META text type" mtype)))
+		 (cyco-warning msg)
+		 nil)))))
+	nil))
+
+(flet ((--text-event (text &key
+			   (type :text)
+			   (qfn #'bar)
+			   (time '(1 1 1))
+			   (period nil)
+			   (project *project*)
+			   (section nil))
+		     (validate-part-parents project section)
+		     (let* ((mtype (cond ((eq type :text) +TEXT-EVENT+)
+					 ((eq type :copyright) +COPYRIGHT+)
+					 ((eq type :lyric) +LYRIC-TEXT+)
+					 ((eq type :marker) +MARKER-TEXT+)
+					 ((eq type :cue) +CUE-POINT+)
+					 (t +TEXT-EVENT+)))
+			    (sec (or section (current-section project)))
+			    (prt (make-instance 'text-part
+						:time time
+						:name (format nil "META ~A" type)
+						:period (or period (duration sec))
+						:text (->string text))))
+		       (add-child! sec prt)
+		       (property! prt :qfn qfn)
+		       prt)))
+
+  (defun marker (text &key
+		      (qfn #'bar)
+		      (time '(1 1 1))
+		      (period nil)
+		      (project *project*)
+		      (section nil))
+    (--text-event text
+		  :type :marker
+		  :qfn qfn
+		  :period period
+		  :project *project*
+		  :section section))
   
-    
-		  
-   
+  (defun copyright (text &key
+			 (qfn #'bar)
+			 (time '(1 1 1))
+			 (period nil)
+			 (project *project*)
+			 (section nil))
+    (--text-event text
+		  :type :copyright
+		  :qfn qfn
+		  :period period
+		  :project *project*
+		  :section section))
+  
+  (defun lyric (text &key
+		     (qfn #'bar)
+		     (time '(1 1 1))
+		     (period nil)
+		     (project *project*)
+		     (section nil))
+    (--text-event text
+		  :type :lyric
+		  :qfn qfn
+		  :period period
+		  :project *project*
+		  :section section))
+  
+  (defun cue (text &key
+		   (qfn #'bar)
+		   (time '(1 1 1))
+		   (period nil)
+		   (project *project*)
+		   (section nil))
+    (--text-event text
+		  :type :cue
+		  :qfn qfn
+		  :period period
+		  :project *project*
+		  :section section)) )
