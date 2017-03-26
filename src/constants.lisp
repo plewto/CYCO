@@ -5,7 +5,7 @@
 
 (in-package :cyco)
 
-(constant +CYCO-VERSION+  (list 0 3 0))
+(constant +CYCO-VERSION+  (list 0 3 1))
 
 (constant +BANNER+
 	  (let ((a0 (format nil "  ___  _  _  ___  _____ ~%"))
