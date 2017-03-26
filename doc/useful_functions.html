@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Useful Functions">
+    <meta name="keywords" content="CYCO  LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Useful Functions</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION useful_functions **** -->
+        <a id="useful_functions"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Useful Functions</h1>
+    <a class="navigation" href="controllers.html">Previous(&nbsp;MIDI Controllers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            The functions listed below, in no particular order, are useful for gaining 
+            information about the current state of CYCO.  The names of many of these 
+            functions start with a question mark for 'query'.</p>
+            
+            <pre class="code">
+            
+            (?a symbol)
+            
+            An alias for apropos.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (?o &optional node)
+            
+            Display current project orchestra tree.  The node argument
+            indicates where to begin.  By default node is *ROOT-INSTRUMENT*
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (?p &optional depth)
+            
+            Display current project tree.  Depth sets verbosity.
+                1 -&gt; project, sections (default)
+                2 -&gt; project, sections, parts
+                3 -&gt; project, sections, parts, part-events
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (?km instrument)
+            
+            Display information about the keymap of instrument.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (?i instrument)
+            
+            Display information about the instrument.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (?chords &optional (silent nil))
+            
+            Display chords defined in the chord-dictionary of the current project.
+            NOTE: ?chords does not include "guitar" chord types used by STRUMMER.
+            
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (? object)
+            
+            A generalized 'query' function.  Returns information about object.
+            If object does not specialize the ? method then call standard LISP 
+            describe function.
+            </pre>
+            
+            <hr class="section-head" />
+            <p class="section-body">
+            
+            Some defined predicates.  Each of these functions takes a single argument
+            and returns true if the object meets specific criteria.</p>
+            
+            
+            <ul>
+              <li>amplitude-p</li>
+              <li>instrument-p</li>
+              <li>keynumber-p</li>
+              <li>metric-p</li>
+              <li>part-p</li>
+              <li>pattern-p</li>
+              <li>project-p</li>
+              <li>root-p</li>
+              <li>section-p</li>
+            </ul>
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (-&gt;midi obj :key filename offset repeat pad-end)
+            
+            Render object to MIDI file. 
+            ARGS:
+               obj - Project, Section or Part.
+               :filename - optional filename, default is to use name of obj.
+               :offset   - float, time in seconds added to all event times. Default 0.
+               :repeat   - fixnum, number of times to repeat. Default 1 (ignored if obj is a PROJECT).
+               :pad-end  - float, number of seconds to add after the final event.
+                           pad-end is used to prevent cutting off final decay tails.
+                           Default 2.0
+             The resulting file is saved to the MIDI directory in the project folder.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (-&gt;pattern obj)
+            
+            Wrap object into a <a href="pattern.html">PATTERN</a>.
+               If (pattern-p obj) is true, return obj.
+               If obj is a list return (cycle :of obj)
+               Otherwise return (cycle :of (list obj))
+            
+            
+            (-&gt;cycle obj)
+            (-&gt;line  obj)
+            
+            These two functions are like -&gt;pattern except they return 
+            the indicated pattern type.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (-&gt;string obj)
+            
+            Return string representation of object.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (-&gt;symbol obj)
+            
+            Creates symbol using name of object.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (-&gt;list obj)
+            
+            Coerce object to list.
+              If (list-p obj) is true, return obj.
+              If obj is a vector, convert to list and return.
+              Otherwise return (list obj)
+            
+            (-&gt;vector obj)
+            
+            Like -&gt;list except returns a vector.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (name obj)
+             
+            Return object's name.
+            
+            (name! obj new-name)
+            
+            Change name of object.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (butfinal seq)
+            
+            Returns new object with the same type as obj but with the 
+            final element removed.
+            
+            (butfinal '(A B C))  -&gt; (A B)
+            (butfinal #(Q R S))  -&gt; (Q R)
+            (butfinal "WXY")     -&gt; "WX" 
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (cardinality obj)
+            
+            Returns number of elements in object.
+            (setf q (cycle :of '(A B C))
+            (cardinality q) -&gt; 3
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (channel obj)
+            (channel-index obj)
+            
+            Returns MIDI channel and channel-index of object respectively.
+            See <a href="channel.html">channel</a>
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (clone obj &key newname parent hook)
+            
+            Return new object which is identical to obj 
+            
+            ARGS:
+               obj     - The source object.
+               newname - For objects which are nameable specifies the name of the 
+                         cloned copy.   newname is passed as a format string 
+                         to the format function.  A format ~A clause may be used
+                         to insert the name of the source object.
+                         Default "~A-clone"
+               parent  - For objects which have parents, specify if the clone 
+                         is to have the same parent as the original or a new parent.
+               hook    - A function applied to the cloned object before it is 
+                         returned.  hook should take a single argument of the 
+                         expected type and return an object of the same type.
+                         Default #'identity.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (dump obj &key depth max-depth)
+            
+            Produce a diagnostic dump of the object.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (dump-events obj &key filter time)
+            
+            "Produce diagnostic dump of MIDI events.
+            
+            ARGS:
+               obj     - list, Project, Section or part.
+               :filter - list of MIDI commands to exclude. 
+               :time   - cons (low, high), Only events in time range
+                         are included.
+            </pre>
+            
+            <p class="footnote">At the time of this writing there is a bug in dump-events.
+            If there are too many events dump-events overflows the stack.</p>
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (duration obj)
+            
+            Returns the duration of obj in seconds.
+            Duration is defined for Timesig, Project and Section.  If a section
+            is marked as skipped it's duration is 0.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (final obj)
+            
+            Returns final element of seq.
+            
+            (final '(A B C)) -&gt; C
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (property! obj key value)
+            (property  obj key &key default)
+            
+            
+            Set/Return property value of object.
+            
+            (section a)
+            (property! a :foo 3.14)
+            (property a :foo)  -&gt; 3.14)
+            (property a :ape :default :pig)  -&gt; :pig
+            
+            If an object does not have the target property try finding it 
+            in the object's parent.  If the object and none of it's ancestors have
+            the defined property, return value of :default.  If :default is :ERROR
+            produce an error.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (property-keys obj &optional local-only)
+            
+            Returns a list of all defined property keys for object. If local-only 
+            is true exclude properties defined in ancestors of object.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (render-once  obj &key offset)
+            (render obj &key repeat offset)
+            
+            Render object to list of MIDI events.
+            ARGS:
+               obj    - Project, Section or Part.
+               repeat - FIXNUM, number of times to repeat. (ignored by Project)
+               offset - float, time in seconds added to each event.
+            RETURNS: Nested list of MIDI events sorted by time.
+                ((time-1 . event-1)
+                 (time-2 . event-2)
+                  ................
+                 (time-n .event-n))
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (tempo obj)
+            
+            Return tempo of object in BPM.  Defined for Timesig, Project, 
+            Section and Part.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (limit x mn mx)
+            
+            Limit value of x to range (mn mx)
+            
+            (limit x mn mx)  -&gt;    mn &lt;= x &lt; mx
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (rnd)
+            
+            Returns random float between 0.0 and 1.0
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (coin &optional p heads tails)
+            
+            Select heads or tails at random.
+            ARGS:
+               p - probability of a head, default 0.5
+               heads - value for a head.  If heads is a function
+                       return the result of calling it. Default t 
+               tails - value for a tail.  If tails is a function
+                       return the result of calling it.
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (rnd-sign &optional p n)
+            
+            Return +n or -n.
+            
+            ARGS:
+               p - probability of positive result, default 0.5
+               n - magnitude of result, default 1
+            </pre>
+            
+            <hr class="section-head" />
+            <pre class="code">
+            
+            (approx n &key scale min max)
+            
+            Return a value that is approximately equal to n.
+            ARGS:
+               n      - Number
+               :scale - Float, the maximum ratio between result and original value.
+                        Default 0.1 (10%)
+               :min   - Float, the minimum possible return value, default -1e6
+               :max   - Float, the maximum possible return value, default +1e6
+            </pre>
+            
+    <a class="navigation" href="controllers.html">Previous(&nbsp;MIDI Controllers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

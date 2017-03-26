@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Channel">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Channel</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION channel **** -->
+        <a id="channel"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO MIDI Channels</h1>
+    <a class="navigation" href="local.html">Previous(&nbsp;Local configuration&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="controllers.html">Next(&nbsp;MIDI Controllers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            Where possible CYCO uses standard MIDI channel numbers 1 through 16 inclusive. 
+            Some low-level functions however use the actual binary values between 0 and 15.  
+            To reduce ambiguity the unqualified term "channel" always refers to MIDI channel
+            numbers 1 through 16.   The term "channel-index" (or at times "cindex") indicates 
+            a binary value between 0 and 15.</p>
+            
+            <p class="section-body">
+            
+            CYCO channels may be assigned symbolic names using the <b>ASSIGN-CHANNEL!</b> 
+            function.  A symbolic channel name may refer to another symbolic name, as
+            long as circular assignments are avoided.  When CYCO encounters a symbolic 
+            channel name it looks up the names value recursively until it obtains an 
+            actual numeric channel.</p>
+            
+            <pre class="code">
+            (assign-channel!  alias  value)
+            </pre>
+            
+            <p class="section-body">
+            
+            The file Examples/local/local-settings.lisp  contains examples for using
+            assign-channel!.</p>
+            
+    <a class="navigation" href="local.html">Previous(&nbsp;Local configuration&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="controllers.html">Next(&nbsp;MIDI Controllers&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

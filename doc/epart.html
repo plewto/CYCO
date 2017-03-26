@@ -20,7 +20,7 @@
         <div class="section">
         <h1 class="banner">CYCO EPART</h1>
     <a class="navigation" href="fixedpart.html">Previous(&nbsp;Fixed Part&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="strummer.html">Next(&nbsp;Strummer&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -54,7 +54,7 @@
                             takes a single argument and returns an <a href="amplitude.html">amplitude</a>. 
                             If the argument can not be converted to an amplitude it should 
                             be passed as the return value without producing an error or 
-                            warning.
+                            warning.  This gives the instruments a chance to interpret the value.
             
                             (lambda (a)
                               (if (amplitude-p a)
@@ -100,8 +100,8 @@
                      generate program-change events by passing program p and bank b
                      to each instruments program-change-hook.  Note however the 
                      program-change-hook may ignore these arguments.  For that reason 
-                     the PROGRAM event is not too useful, particularly if more then one
-                     instrument is being used.
+                     the PROGRAM event is mostly useful for instruments that use
+                     keyswitching.
             </pre>
             
             <pre class="code">
@@ -111,7 +111,7 @@
                      Generate series of MIDI channel-pressure events starting at 
                      time :TIME and ending at time :TO.  The initial pressure value 
                      is :START s and the final value is :END e.  Pressure values are
-                     "normalized" to be between 0.0 and 1.0.  The number of events
+                     "normalized" between 0.0 and 1.0.  The number of events
                      generated is set by :STEPS stp (default 100).
                      TIME, TO, START, END and STEPS all default to their previous values.
             </pre>
@@ -151,12 +151,12 @@
             
             <b>:CHORD event  (:TIME (br bt sub) :KEY k :CHORD ch :DUR d :AMP a :INVERSION inv :STRUM strm)</b>
             
-                   Generate chord or arpeggio.
+                   Generate chord or arpeggio (See <a href="strummer.html">STRUMMER</a> as an alternative to chord).
                    :KEY :DUR and :AMP have the same usage as the :KEY event.
                    
                    :CHORD ch - specifies what chord to play.
                                There are two ways to do this.
-                               1. As a list of intervals   (0 4 7) for a major triad.
+                               1. As a list of intervals   (0 4 7) etc.
                                2. By name using the <a href="chords.html">chords dictionary</a>.
                                   By convention chord names are enclosed in square brackets     
                                   [maj] - a major chord.
@@ -197,9 +197,10 @@
                     A C-Major chord     (:time (1 1 1) :key c4 :chord (0 4 7))
                     Also a  C-Major     (:time (1 1 1) :key c4 :chord [maj])
                     C-Major arpeggio    (:time (1 1 1) :key c4 :chord [maj] :inversion (0 nil (0 12)) :strum (0.1))
+            
                     4-chords with       (:time (1 1 1) :key c4 :chord [maj] :strum (0.01 (:up :up :random :permute))) 
-                    alternating         (:time (1 1 2) :key a5 :chord [min])
-                    directions          (:time (1 1 3) :key g5 :chord [maj])
+                       alternating      (:time (1 1 2) :key a5 :chord [min])
+                       directions       (:time (1 1 3) :key g5 :chord [maj])
                                         (:time (1 1 4) :key f5 :chord [maj])
             </pre>
             
@@ -237,14 +238,8 @@
             (-&gt;midi verse)
             </pre>
             
-            <p class="section-body">
-            
-            The other major PART types are variations on <a href="qball.html">QBALL</a>  
-            Before looking at QBALL however we'll take a detour and look at 
-            <a href="pattern.html">Patterns</a></p>
-            
     <a class="navigation" href="fixedpart.html">Previous(&nbsp;Fixed Part&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="strummer.html">Next(&nbsp;Strummer&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;

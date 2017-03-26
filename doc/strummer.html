@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO strummer">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO strummer</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION strummer **** -->
+        <a id="strummer"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO STRUMMER</h1>
+    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            <b>STRUMMER</b> is similar to EPART except with more flexible control of
+            strummed chords.  As a trade off STRUMMER support for non-note events is
+            not as extensive as EPART.  Another major difference is that STRUMMER does
+            not use the general chord dictionary.  Instead it uses a specialized
+            structure which restricts chords to those possible with a guitar.</p>
+            
+            <pre class="code">
+            
+            (strummer  name instrument &key period qfn project section events)
+                
+               Creates new STRUMMER part and bind to symbol name.
+            
+               ARGS:
+                 name       - symbol (unquoted) 
+                 instrument - instance of Instrument
+                 :period    - float, defaults to duration of section.
+                 :qfn       - Function, time cuing function, default #'BAR
+                 :project   - Default *PROJECT*
+                 :section   - Default current section of project.
+                 :events    - Nested list of events.
+            </pre>
+            
+            
+            The events list has the same general form as with EPART.<br>
+            <pre>
+                ((event-1)
+                 (event-2)
+                 .........
+                 (event-n))
+            </pre>
+            <p class="section-body">
+            
+            Each event may have any of the following clauses.  Unspecified clauses
+            usually default to the previous value.</p>
+            
+            <pre class="code">
+            
+            :time         - Event time. Using default BAR cuing function time has the
+                            format :time (bar beat su). 
+            
+            :key          - Keynumber. The STRUMMER key number is not used in the typical 
+                            manner.  The pitch-class is used as normal, but the octave 
+                            number selects a chord variation. In general higher octave 
+                            numbers are located higher up the neck.  This is not absolutely 
+                            true, often higher octaves produce chord inversions while staying 
+                            more or less at the same neck position. 
+            
+                            Each key/chord combination has a different number of possible 
+                            alternates (there are more mays to play an E-major chord on a 
+                            guitar then there are mays to play a C-sharp major).  If the octave
+                            number exceeds the number of alternates available, the highest 
+                            possible alternative is produced.
+            
+            :chord        - Keyword, chord type selection.  +GTR-CHORD-FAMILIES+ is a list of
+                            valid chord types.   At the time of writing these are
+                            
+                            :SOLO  (single note)
+                            :MAJ :MAJ7 :DOM7 :MAJ9 :MAJ11
+                            :MIN :MIN7       :MIN9 :MIN11 :DIM
+                            :6TH :MIN6 :SUS4 :SUS2
+            
+            :strum        - Sets delay between individual chord notes.  The delay time may 
+                            be in seconds or a metric symbol (W H Q etc...)
+            
+                            :strum delay
+            
+                            An alternate form provides delay time acceleration.
+            
+                            :strum (delay scale)
+            
+                            Where scale is a numeric scaling factor applied to the time
+                            of each note.
+            
+                              note 0   &lt;-   time
+                              note 1   &lt;-   time + (delay * scale^0)
+                              note 2   &lt;-   time + (delay * scale^1)
+                              note 3   &lt;-   time + (delay * scale^2)
+            
+                            Positive scale values cause notes to speed up as the chord is 
+                            played.  Negative values slow the notes down.
+            
+            :dur          - Note duration, either as a float or metric symbol.
+            
+                            :dur d
+            
+                            An alternate form adds random variation to note duration.
+            
+                            :dur (d variance)
+            
+                            Where variance is the maximum ratio between the specified duration
+                            and the generated value.  See APPROX function in CYCO/src/util/utilities.lisp
+            
+                            0.0 &lt;= variance &lt;= 1.0
+             
+            :end-together - Flag indicating if all notes should end at the same time.  
+                            NOTE: the end-together flag does not apply to random variations added by 
+                            the :dur clause.
+            :amp          - Amplitude, either a float or amplitude symbol.
+                             
+                            :amp a
+            
+                            An alternate form allows random variations and progressive amplitude 
+                            values.
+            
+                            :amp (a scale variance)
+            
+            :direction    - Selects order in which notes are played.  Possible values are
+                            
+                               :up   (reverse order)
+                               :down (forward)
+                               :coin (select :up or :down randomly)
+                               :random (select notes in random order)
+            
+                           Unlike :strum, :dur and :amp, which are applied to individual chord notes.
+                           :direction is applied to a progression of chords.  An alternate form allows
+                           for a cycle of directions.
+            
+                           :direction (:up :up :down)
+            
+                           plays the first two chords in the up direction and the third chord in the 
+                           down direction. The cycle repeats every three chords.
+            
+            :cc           - Generates a single MIDI control change.
+            
+                            :cc ctrl :value v
+            
+                            Where ctrl is a controller number or name and value is between 0.0 and 1.0
+            
+            :bend         - Generate single MIDI bend event
+             
+                           :bend n
+            
+                           Where n is between -1.0 and +1.0
+            
+            :program      - Generate program change
+            
+                            :program number
+                       
+                            or
+            
+                            :program number :bank b
+            </pre>
+            
+            <p class="section-body">
+            Example producing I vi IV V chord pattern in E.</p>
+            
+            <pre class="code">
+            
+            (strummer guitar 
+                :period (bars 4)
+                :events '((:time (1 1 1) :key e3  :chord :maj :dur w :strum 0.05)
+                          (:time (2 1 1) :key cs3 :chord :min)
+                          (:time (3 1 1) :key a3  :chord :maj)
+                          (:time (4 1 1) :key b3  :chord :min)))
+            </pre>
+            
+            <p class="section-body">
+            Same chord progression but with optional parameters.</p>
+            
+            <pre class="code">
+            
+            (strummer guitar
+                :period (bars 4)
+                :events '((:strum (0.05 1.01)     ; Add acceleration to strum delay
+                           :amp (mf 0.95  0.02)   ; Velocities are greater for initial 
+                                                  ; notes.   Add 2% random variation.
+                           :dur (w 0.01)          ; Duration is whole note with 1% random   
+                                                  ; variation
+                           :direction (:up :down) ; Alternate strum direction
+                           :end-together t)       ; All notes end at same time 
+                                                  ; except for slight randomness applied to 
+                                                  ; duration. 
+                          (:time (1 1 1) :key e3  :chord :maj)
+                          (:time (2 1 1) :key cs3 :chord :min)
+                          (:time (3 1 1) :key a3  :chord :maj)
+                          (:time (4 1 1) :key b3  :chord :maj)))
+            </pre>
+            
+            <p class="section-body">
+            
+            The other major PART types are variations on <a href="qball.html">QBALL</a>  
+            Before looking at QBALL however it is best to understand 
+            <a href="pattern.html">Patterns</a></p>
+            
+            <hr class="section-head" />
+    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="pattern.html">Next(&nbsp;Patterns&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

@@ -20,16 +20,16 @@
         <div class="section">
         <h1 class="banner">CYCO Section</h1>
     <a class="navigation" href="project_orchestra.html">Previous(&nbsp;Project Orchestra&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="group.html">Next(&nbsp;Groups&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
             <p class="section-body">
             
             A Section corresponds to a major division of the composition and is typically defined in 
-            a section file within the project directory.   Just as there is a <em>current</em> project, 
+            a separate file within the project directory.   Just as there is a <em>current</em> project, 
             there is also a <em>current</em> section within the current project.  Many section related
-            functions use the current section of the current project by default.</p>
+            functions use the current section as a default.</p>
             
             <p class="section-body">
             
@@ -69,7 +69,7 @@
             
             A section by itself is not too useful until <a href="part.html">PARTS</a> are 
             created within it.  Skipping over details for creating parts, a typical 
-            section file will look something like this:</p>
+            section file looks something like this:</p>
             
             <pre class="code">
             
@@ -90,12 +90,12 @@
             014 : 
             015 : (group v1-percussion
             016 :        (list v1-kick
-            017 : 	     v1-snare
-            018 : 	     v1-hats))
+            017 : 	           v1-snare
+            018 : 	           v1-hats))
             019 : 
             020 : (group v1-instruments
             021 :        (list v1-bass
-            022 : 	     v1-piano))
+            022 : 	           v1-piano))
             023 : 
             024 : (mute v1-metronome     t)
             025 : (mute v1-percussion  nil)
@@ -150,18 +150,27 @@
             Returns the duration of n bars of the current section in seconds.</p>
             
             <p class="section-body">
-            <b>(BAR &optional (bar 1)(beat 1)(subbeat 1)(tick 0))</b><br>
-            Returns the relative time of bar beat subbeat in the current section.
-            The BAR function is the default time cuing function used for event 
-            specification in parts.  A cue value using bar is a list of the form 
-            (bar&nbsp;beat&nbsp;subbeat&nbsp;ticks) where all values are optional.
-            Thus (BAR), or equivalently (BAR&nbsp;1), returns the time of the first bar of 
-            the section. (BAR&nbsp;2) returns the start time for the second bar.  Individual 
-            beats are similarly specified (BAR&nbsp;1&nbsp;1) is the first beat of the first bar.
-            (BAR&nbsp;2&nbsp;3) is the third beat of the 2nd bar.  Assuming the default 4/4 time
-            with 4 subbeats to the quarter note, (BAR&nbsp;1&nbsp;1&nbsp;3) is the third sixteenth note
-            of the first beat of the first bar.  See <a href="timesig.html">timesig</a>.
-            </p>
+            
+            <b>(BAR &optional (bar 1)(beat 1)(sub 1)(tsub nil)(tick 0))</b><br>
+            Returns relative time of bar beat subbeat within the current section.  
+            BAR is the default cuing function for event time specifications.
+            See <a href="timesig.html">timesig</a></p>
+            
+            <pre class="code">
+            
+                ARGS:
+                  bar     - bar number (1,2,3,...)
+                  beat    - beat number within bar.  Using 4/4 time these are (1,2,3,4).
+                  subbeat - sub-beat within beat. Using 4/4 time with 4 subbeats per beat,
+                            the subbeat corresponds to sixteenth notes (1,2,3,4).  
+                  tsub    - Boolean selects if the subbeat value should be treated as 
+                            "tsubeats" instead of regular subbeats.  tsubbeats usually
+                            specify the number of sixteenth note triplets per beat.
+                  tick    - An additonal number of MIDI clock ticks added to result.
+                            ticks may be negative or positive to advance are retard an event.  
+                            See constant +TICKS-PER-QUARTER-NOTE+
+                 RETURNS: float, time in seconds relative to start of current section.
+            </pre>
             
             <p class="section-body">
             <b>(TBAR &optional (bar 1)(beat 1)(tsubbeat 1)(tick 0))</b><br>
@@ -197,7 +206,8 @@
             <p class="section-body">
             <b>(-&gt;MIDI section &key filename (offset 0)(repeat 1)(pad-end 2))</b><br>
             Calls RENDER and saves result to MIDI file. The section name (lowercase) is 
-            used as the default filename.</p>
+            used as the default filename.  The pad-end value adds additional time to end of 
+            the sequence to allow for decay tails.</p>
             
             
             <a id="clone"></a>
@@ -236,7 +246,7 @@
             to be in range.  Returns section.</p>
             
     <a class="navigation" href="project_orchestra.html">Previous(&nbsp;Project Orchestra&nbsp;)</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="group.html">Next(&nbsp;Groups&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
     &nbsp;&nbsp;&nbsp;&nbsp;

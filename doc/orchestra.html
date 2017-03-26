@@ -37,8 +37,8 @@
             
             An instrument inherits properties from it's parent but may selectively override them.
             The motivation for doing it this way is that often an external synth module is 
-            treated as multiple instruments.   A drum machine is a prime example.  The 
-            MIDI channel and program number are defined for the parent drum machine, while 
+            treated as multiple instruments.   A drum machine being a prime example.  The 
+            MIDI channel and program number are defined for the parent instrument, while 
             individual child instruments, snare, kick, hihat etc, define responses to 
             specific keys.</p>
             
@@ -88,20 +88,19 @@
             <b class="arg">:parent</b> - Instrument, the parent instrument.</p>
             
             <p class="section-body">
-            <b class="arg">:transient</b> - Boolean, Instruments are either transient or permanent.<br>
+            <b class="arg">:transient</b> - Boolean<br>
+            Instruments are either transient or permanent.
             Permanent instruments are protected from being purged by the <b>FREE-ORCHESTRA!</b> function.
-            During development of a project it is not uncommon to reload all of the project files as 
-            part of the editing process.  Each time a project is loaded it typically creates an "orchestra"
-            of instruments specific to itself.  The <b>FREE-ORCHESTRA!</b> function is called first to 
-            purge the orchestra of all non-transient instruments, otherwise the orchestra will uselessly contain 
+            During project development it is common to reload all project files as 
+            part of the editing process.  When a project is loaded it typically creates an orchestra
+            of instruments.  <b>FREE-ORCHESTRA!</b> should be called to 
+            purge the orchestra of any existing  non-transient instruments, otherwise the orchestra will uselessly contain 
             duplicate instruments.</p>
             
             <p class="section-body">
-            Some instruments however should not be purged by <b>FREE-ORCHESTRA!</b>. These  
-            instruments are the ones created by the local configuration files and form a kind of 
-            "base-orchestra".  In short instruments defined by the CYCO configuration files should 
-            have transient NIL.  Instruments created by a project should have transient set to T.
-            The transient flag is true by default.</p>
+            Instruments defined by the <a href="local.html">local configuration</a> however, should 
+            not be purged.  In short instruments defined at the project level should have transient set to True 
+            (which is the default).  Instruments defined by the local configuration should have transient False.</p>
             
             <p class="section-body">
             <b class="arg">:channel</b> - <a href="channel.html">MIDI channel</a></p>
@@ -110,68 +109,74 @@
             <b class="arg">:keynumber-map</b> - Function, see <a href="keynumber.html">keynumbers</a>.<br>
             The keynumber-map is a function of one argument (lambda (k)) --&gt; k' used to customize 
             an instrument's key response. The argument k may be of any type but will typically be either
-            a FIXNUM or SYMBOL.  The result should be a MIDI key number (FIXNUM&nbsp;0&lt;=n&lt;=127).</p>
+            a FIXNUM or SYMBOL.  The result should be one of the following:</p>
+            
+            
+            <ul>
+               <li>FIXNUM MIDI key number.  0 &lt;= n &lt;= 127.</li>
+               <li>The value -1, indicating a rest.</li>
+            </ul>
+            <p class="section-body">
+            The keynumber-map should not fail if it's argument is invalid.  Instead it
+            should display a warning message and return -1</p>
             
             <p class="section-body">
-            The keynumber-map function should not fail if it's argument is invalid.  Instead it
-            should display a warning message and return a reasonable default, such as middle C.</p>
-            
-            <p class="section-body">
-            The function should display help text and return a reasonable default if it's
+            The function should display help text and return -1 if it's
             argument is the keyword&nbsp;:?</p>
             
             <p class="section-body">
-            The CYCO source file "comp/keymaps.lisp" defines several functions and macros for
+            The CYCO source file "orch/keymaps.lisp" defines several functions for
             creating common keynumber-maps.</p>
             
             
             <ul>
-               <li><b>DEFAULT-KEYMAP</b></li>
-               <li><b>(DEFKEYMAP name alist)</b><br>
-                   Macro, creates keynumber-map by <a href="https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node153.html">
-                   association list</a>, this is often useful for percussion instruments.
-                   <ul>
-                      <li>name - symbol, used for help text.</li>
-                      <li>alist - An association list mapping symbols to MIDI key numbers.</li>
-                    </ul>
+              <li>(DEFAULT-KEYMAP name &key (no-warn t))<br>
+                  Returns a default keymap.
+              </li>
+              <li>(KEYMAP name alist &key (no-warn t))<br>
+                  Returns keymap based on assoc list assignments.   This is often useful for 
+                  percussion instruments.<br>
+                  <pre>
+                     (keymap 'snare-keymap '((x 32)(rim 36)(roll 38)))
+                  </pre>
+               </li>
+               <li>(CIRCULAR-KEYMAP name keys &key (no-warn t))<br>
+                   Returns keymap which translates out of bounds keys to one of the defined values.<br>
+                   circular-keymap is also usefull for percussion instruments.<br>
+                   <pre>
+                      (circular-keymap 'cymbal-keymap '(43 44 60))
+                      The result of calling this map is to always return 43, 44, 60 or -1.
+                      (foo 0)  -&gt; 43
+                      (foo 1)  -&gt; 44
+                      (foo 2)  -&gt; 60
+                      (foo 3)  -&gt; 43
+                      (foo :?) -&gt; -1 (displays documentation)
+                   </pre>
+                </li> 
+                <li>(REDUCED-KEYMAP name lower upper &key (no-warn))<br>
+                    Creates keymap which transposes out of bounds keys by octaves such that 
+                    they are in bounds.<br>
                     <pre>
-                      (defkeymap 'snare '((hit . 36)(rim . 38)(flam . 39)))
+                       (reduced-keymap 'bass-keymap 36 60)
+                       (foo x)  -&gt; x for 36 &lt;= x &lt;= 60
+                       (foo y)  -&gt; y+(12*n) for y &lt; 36
+                       (foo z)  -&gt; z-(12*n) for 60 &lt; z
+                       (foo :?) -&gt; -1 (displays documentation)
                     </pre>
-                   </li>
-               <li><b>(CIRCULAR-KEYMAP name keys)</b><br>
-                   Macro, creates keynumber-map where out of bounds values are wrapped to be in range.<br>
-                   <pre>(param foo (circular-keymap 'foo '(10 20 30)))
-                        (funcall foo 0) --&gt; 10
-                        (funcall foo 1) --&gt; 20
-                        (funcall foo 2) --&gt; 30
-                        (funcall foo 3) --&gt; 10</pre>
-                   </li>
-               <li><b>(REDUCED-KEYMAP lower upper)</b><br>
-                   Macro, creates keynumber-map over limited key range.  Out of bounds values are transposed
-                   by octaves as needed to be in bounds.
-                   <pre>(param foo (reduced-keymap 48 72))
-                        (funcall foo 36) --&gt; 48
-                        (funcall foo 37) --&gt; 49
-                        (funcall foo 60) --&gt; 60
-                        (funcall foo 77) --&gt; 65</pre>
-                    </li>
+                </li>    
             </ul>
             <p class="section-body">
-            <b class="arg">:duration-map</b> - Function, see <a href="metric.html">metric values</a><br>
+            <b class="arg">:duration-map</b> - 
+            Function, see <a href="metric.html">metric values</a><br>
             A duration-map is a function (lambda (d)) --&gt;d' which alters an instrument's response to 
             note duration.  The function should take a single argument of any type (typically float or symbol) and
-            return a nonm-negative float.  The function should not fail for invalid input, instead on an error it should print a warning 
-            message and return a resoluble default.  The following duration map would cause an instrument to 
-            play staccato by scaling note duration by 50%.</p>
+            return a non-negative float.  The following map would cause an instrument to 
+            play staccato by scaling duration by 50%.</p>
             
             <pre class="code">
             
                 (lambda (d)
-                   (if (metric-p d)
-                      (* 0.5 (metric d))
-                    (progn 
-                      (cyco-warning (format nil "~A is an invalid metric value" d))
-                      1.0)))
+                    (* 0.5 (metric d)))
             </pre>
             
             <p class="section-body">
@@ -191,63 +196,68 @@
             </pre>
             
             <p class="section-body">
-            <b class="arg">:program-number</b> - Any type, for user's info only.  See program-change-hook</p>
+            <b class="arg">:program-number</b> See program-change-hook.</p>
             
             <p class="section-body">
-            <b class="arg">:program-bank</b> - Any type, for user's info only.  See program-change-hook</p>
+            <b class="arg">:program-bank</b> - See program-change-hook.</p>
             
             <p class="section-body">
             <b class="arg">:program-change-offset</b> - Float, a time offset in seconds added to program-change
             events.  Offset values may be negative.</p>
             
-            <p class="section-body">
-            <b class="arg">:program-change-hook</b> - a function which generates events in response
-            to a program change.  There are many variations on how synth modules organize program changes.  To 
-            respond to this diversity the program hook returns a list of MIDI events instead of just a 
-            simple program change.  Some of the program schemes are:</p>
             
+            <p><b>:PROGRAM-CHANGE-HOOK</b><br>
+            Program changes get complicated as multiple MIDI events may be required. <br> 
+            Worst is that at times MIDI key events are treated as program changes.  There are
+            at least three scenarios I am aware of:</p>
+            <ol>
+              <li>Simple program change - a single MIDI program-change event.</li>
             
-            <ul>
-              <li>Simple linear list, which may or may not begin with 0.</li>
-              <li>A linear list split into banks of n programs each.<br>
-                  The Korg R3 for example has 16 banks (A..P) of 8 programs each (1..8).</li>
-              <li>Actual banks where to reach a specific program,  first the bank is selected by<br>
-                  MIDI control change (either controller 0 or 32 or both) and
-                  then a MIDI program change.</li>
-              <li>"Keyswitching"  where specific MIDI note numbers imitate a program change.<br>
-                  The QuantumLeap sample libraries uses this scheme.</li>
-            </ul>
+              <li>Program change with bank selection - In addition to a 
+                  MIDI program-change event, MIDI controllers <br> 
+                  are used to select
+                  a bank.  Depending on the specific instrument either one or two 
+                  control changes are required.</li>
+            
+              <li>"Keyswitching" - where specific key events are used to alter an 
+                   instruments sound.<br>  
+                   In my opinion this is unfortunate as it
+                   mixes the semantics of playing notes with that of changing presets. <br>
+                   Problems occur when applying transformations, such as transpose, to 
+                   a sequence.  <br>
+                   If keyswitch events are present they must somehow be 
+                   protected from the transformation.</li>
+            </ol>
             <p class="section-body">
-            The program-change-hook function has the form</p>
+            
+            To deal with these possibilities each instrument provides a <b>program-change-hook</b> function.
+            The hook takes 4 arguments are returns a list of MIDI events.</p>
             
             <pre class="code">
             
-            (lambda (time cindex program bank)
+                (lambda time cindex prognum bank)  -&gt;  list
             
-            ;; time - event time.
-            ;; cindex - MIDI channel minus 1.
-            ;; program - MIDI program or a symbolic program name.
-            ;;           If program is :? the hook should display 
-            ;;           help text and return a reasonable default.
-            ;; bank - MIDI bank number or a symbolic bank name.
-            ;;
-            ;; Returns list of MIDI events.
+                ARGS:
+                   time    - float, the event time.  The value of :program-change-offset is added to time.
+                   cindex  - fixnum, The "raw" MIDI channel.   For the most part CYCO uses MIDI channel
+                             numbers as defined by the MIDI specifications (1,2,3,...,16).  The exception is
+                             with low-level events where the actual byte values (0,1,2,...,15) are used.
+                             These low-level channel values are always indicated by the word "index".
+                   prognum - The program number.   prognum may be an actual MIDI program number or the 
+                             the hook function may be defined to take symbolic values.  Typically 
+                             prognum is supplied by the :PROGRAM-NUMBER argument above.  The hook function
+                             however may be defined to ignore this value and use some internal value instead. 
+                   bank    - The program bank, as with prognum, bank is supplied by the :program-bank argument
+                             above.  The hook function should ignore this value if the instrument does 
+                             not support banks.
+                RETURNS:  nested list of MIDI events.
+            
+                    ((time1 . event1)(time2 . event2) ...)
+                              
+                    In the simplest case the result is 
+                    ((time+program-change-offset . midi-program-change))
             </pre>
             
-            <p class="section-body">
-            
-            The file orch/progmap.lisp contains several functions which create program-change-hooks.</p>
-            
-            
-            <ul>
-               <li><b>DEFAULT-PROGRAM-CHANGE-HOOK</b></li>
-               <li><b>PROGRAM-HOOK-WITH-BANK-SELECT</b><br>
-                  Returns hook which generates MIDI controller events for bank selection.</li>
-               <li><b>CONSTANT-PROGRAM-HOOK</b><br>
-                  Returns hook which generates a constant response.</li>
-               <li><b>KEYSWITCH</b><br>
-                  Returns hook which generates MIDI key events in response to a program change.</li>
-            </ul>
             <p class="section-body">
             
             <b class="arg">:remarks</b>  Adds remarks text to the instrument.  Remarks are solely 

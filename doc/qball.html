@@ -27,13 +27,13 @@
             <p class="section-body">
             
             A <b>QBALL</b> is a type of <a href="part.html">PART</a> which uses 
-            <a href="pattern.html">PATTERNS</a> to generate events.  The 
-            <a href="metronome.html">metronome</a> is actually a QBALL
-            and there are other closely related types:</p>
+            <a href="pattern.html">PATTERNS</a> to generate events.   
+            There are other closely related part types:</p>
             
             
             <ul>
-              <li>PRESSUREBALL  - MIDI channel events</li>
+              <li>METRONOME</li>
+              <li>PRESSUREBALL  - MIDI channel-pressure events</li>
               <li>CONTROLBALL - MIDI control change events</li>
               <li>BENDBALL - MIDI pitch bend events</li>
             </ul>
@@ -54,6 +54,7 @@
                         (key-map #'identity)
                         (dur-map #'identity)
                         (amp-map #'identity)
+                        (reset-on-repeat t)
                         (project *project*)
                         (section nil))</b>
             
@@ -74,14 +75,11 @@
                               #'BAR so cue points should have the form (bar beat subbeat).
               :transposable - Boolean, if true this part may be transposed or inverted.
               :key          - <a href="keynumber.html">Keynumber</a> pattern.  
-                              If a single key is supplied it is converted to a cycle.
-                              If a list is supplied it is converted to a cycle.
+                              Single values and list are converted to a CYCLE.
               :dur          - <a href="metric.html">duration</a> pattern.
-                              If a single value is supplied it is converted to a cycle.
-                              If a list is supplied it is converted to a cycle.
+                              Single values and list are converted to a CYCLE.
               :amp          - <a href="amplitude.html">amplitude</a> pattern.
-                              If a single value is supplied it is converted to a cycle.
-                              If a list is supplied it is converted to a cycle.
+                              Single values and list are converted to a CYCLE.
               :key-map      - Mapping function applied to keynumbers.  This function
                               is applied prior to any instrument keynumber-map. It
                               should take a single argument and return a keynumber.
@@ -105,6 +103,11 @@
                               take a single argument and return a float between 0.0 and 1.0.
                               If the argument can not be converted, it should be used as the
                               return value without warning or error.
+              :reset-on-repeat - Boolean.  If True all internal patterns are reset by the 
+                                 render-once method; each iteration will have the same 
+                                 combination of values.  If nil the internal patterns are 
+                                 not reset and each iteration may produce different parameter
+                                 combinations.  Default t.
               :project      - Defaults to *project*
               :section      - Defaults to current section of project.
             </pre>
@@ -146,7 +149,7 @@
             ;; (2 4 1) e4  e   ff
             ;;
             ;; Since a single instrument is supplied, it is used for all events.
-            ;; If two instruments were supplied as a list they are used alternately
+            ;; If two instruments were supplied as a list they would be used alternately
             
             (qball qb (list piano vibes)
               :period (bars 2)

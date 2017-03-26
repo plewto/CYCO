@@ -41,12 +41,9 @@
         <img class="center" src="images/project.png" alt="Project Heriarchy" />
             <p class="section-body">
             
-            There are many ways to define a part. Some are highly 
-            specific, such as a metronome, others are more general.
-            The code samples below illustrate a few basic features using 
-            different types of parts. These illustrations are not 
-            intended as working examples, detailed explanations 
-            are provided elsewhere. </p>
+            There are many types of Part; some more specific then others, such as a metronome.
+            The code samples below illustrate basic features using 
+            different types of parts. They are not intended as working examples.</p>
             
             <pre class="code">
             
@@ -72,12 +69,10 @@
                           (:time (4 2 1) :key c4 :dur q)))
             </pre>
             
-            <pre class="code">
+            <p class="section-body">
+            An <b>EPART</b> is more flexible.</p>
             
-            ;; A more flexible type of part is called an <b>EPART</b>.
-            ;; An EPART looks superficially like a FIXED-PART but is 
-            ;; considerably more powerful.
-            ;;
+            <pre class="code">
             
             (project 'mary :timesig (timesig :beats 2 :unit 'q :tempo 90)
             
@@ -112,21 +107,15 @@
             
             <p class="section-body">
             
-            For both FIXED-PART and EPART it is not necessary to repeat event parameters which 
-            do not change between events.  For example the key dynamic of MF is
-            specified once and remains the same for all subsequent events.</p>
+            Most parameters default to the previous value. The :amp clause above sets the 
+            dynamic for all subsequent events.</p>
             
             <p class="section-body">
             
-            The only obvious difference is that EPART takes a list of instruments
-            and FIXED-PART does not. With EPART there is no need to specify MIDI 
-            channels in the event list and all instruments in an EPART are "layered"
-            </p>
-            
-            <p class="section-body">
-            
-            What is not obvious is that a "single" EPART event can 
-            produce a complex series of MIDI events.</p>
+            The only obvious difference between FIXED-PART and EPART is that the later takes
+            a list of instruments as an argument. What is not illustrated is that EPART events
+            may be compound.  A single EPART event may generate multiple
+            MIDI events.</p>
             
             <pre class="code">
             
@@ -198,6 +187,11 @@
             
             <p class="section-body">
             
+            There is also a <a href="strummer.html">STRUMMER</a> part.  STRUMMER is similar to EPART but has more options
+            for strumming chords.</p>
+            
+            <p class="section-body">
+            
             Parts are not limited to MIDI note events, they may also produce pitch bend,
             channel pressure, controller and program change events. The following EPART 
             generates a sequence of modulation wheel events.</p>
@@ -256,7 +250,7 @@
             
             <p class="section-body">
             
-            More complex patterns are possible.  In the following code the piano is used for 
+            More complex patterns are possible.  The following code has the piano play 
             the first 3 notes, and then the vibes and organ alternate for the remaining 
             notes.</p>
             
@@ -289,6 +283,10 @@
                 :amp '(fff f f ))
             </pre>
             
+            <hr class="section-head" />
+    <a class="navigation" href="install.html">Next(&nbsp;Install&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
         </div>
         </section>
     

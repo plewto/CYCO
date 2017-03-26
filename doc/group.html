@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CYCO Group">
+    <meta name="keywords" content="CYCO MIDI LISP">
+    <meta name="robots" content="index,follow,archive">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" href="images/background.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'/>
+    <title>CYCO Group</title>
+</head>
+<body class="home-page">
+<div id="page_wrapper">
+        <!-- **** SECTION group **** -->
+        <a id="group"></a>
+        <section>
+        <div class="section">
+        <h1 class="banner">CYCO Groups</h1>
+    <a class="navigation" href="section.html">Previous(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+            <p class="section-body">
+            
+            A group is a means for treating collections of related parts with single operations.
+            They are mostly used for muting and soloing groups of parts.  Groups are always
+            used in the context of a Section.</p>
+            
+            <pre class="code">
+            
+            section(a)
+            
+            (metronome a-metronome)
+            (qball a-kick kick ...)
+            (qball a-snare snare ...)
+            (qball a-cymbal cymbal ...)
+            (epart a-bass bass ...)
+            (epart a-organ organ ...)
+            
+            (group a-percussion (list a-kick a-snare a-cymbal))
+            (group a-instruments (list a-bass a-organ))
+            
+            (mute a-metronome   t)   ;; mute individual parts
+            (mute a-kick      nil)
+            (mute a-snare     nil)
+            (mute a-cymbal    nil)
+            (mute a-bass      nil)
+            (mute a-organ     nil)
+            
+            (mute a-percussion   nil) ;; group level 
+            (mute a-instruments  nil)
+            
+            (-&gt;midi a)
+            </pre>
+            
+            <p class="section-body">
+            
+            The group MUTE method takes a group object and a flag.  If the flag is True 
+            all members of the group are muted.  If the flag is nil the mute status 
+            of the individual members remains unchanged.  This allows individual parts
+            to be muted separate from the group to which they belong, without a later 
+            call to (mute &lt;group&gt; nil) clobbering things.</p>
+            
+            <p class="section-body">
+            
+            Use the UNMUTE method to unmute all members of a group.  In practice unmute
+            is rarely needed.</p>
+            
+            <p class="section-body">
+            
+            The other primary use for groups is to solo all member parts while simultaneously 
+            muting all non-member parts.</p>
+            
+            <pre class="code">
+            
+            
+            (group a-percussion (list a-kick a-snare a-cymbal))
+            
+            (solo a-percussion)
+            </pre>
+            
+    <a class="navigation" href="section.html">Previous(&nbsp;Section&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="part.html">Next(&nbsp;Part&nbsp;)</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        </section>
+    
+</div>
+</body>
+</html>

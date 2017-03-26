@@ -19,7 +19,7 @@
         <section>
         <div class="section">
         <h1 class="banner">CYCO Patterns</h1>
-    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    <a class="navigation" href="strummer.html">Previous(&nbsp;Strummer&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="qball.html">Next(&nbsp;QBall&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>
@@ -37,6 +37,7 @@
               <LI>CYCLE</LI>
               <LI>HEAP</LI>
               <LI>BAG</LI>
+              <LI>WRAPPER</li>
             </ul>
             <p class="section-body">
             
@@ -52,7 +53,7 @@
             
             <p class="section-body">
             
-            The CYCO pattern returns it's values in a cycle.</p>
+            The <b>CYCO</b> pattern returns it's values in a cycle.</p>
             
             <pre class="code">
             
@@ -63,7 +64,7 @@
             
             <p class="section-body">
             
-            The LINE pattern returns it's values in order until 
+            The <b>LINE</b> pattern returns it's values in order until 
             it reaches the final value.  Thereafter it continues to 
             return the final value.</p>
             
@@ -81,7 +82,7 @@
             
             <p class="section-body">
             
-            The HEAP pattern returns it's values randomly without 
+            The <b>HEAP</b> pattern returns it's values randomly without 
             replacement.  Once all the values have been returned
             it shuffles the deck and starts over.</p>
             
@@ -98,7 +99,7 @@
             
             <p class="section-body">
             
-            The BAG pattern returns it's values in random order
+            The <b>BAG</b> pattern returns it's values in random order
             with replacement.</p>
             
             <pre class="code">
@@ -109,6 +110,22 @@
             (next-1 b)  -&gt;  D
             (next-1 b)  -&gt;  C
             (next-1 b)  -&gt;  B
+            </pre>
+            
+            <p class="section-body">
+            
+            The <b>WRAPPER</b> pattern returns values by calling a function. The function 
+            should take no arguments and has no defined return type.</p>
+            
+            <pre class="code">
+            
+            (setf w (wrapper :of #'(lambda () (coin))))
+            
+            (next-1 w)    -&gt; t
+            (next-1 w)    -&gt; t
+            (next-1 w)    -&gt; nil
+            (next-1 w)    -&gt; t
+            (next-1 w)    -&gt; nil
             </pre>
             
             <p class="section-body">
@@ -325,7 +342,7 @@
             (elements q)   -&gt; (90 80 10))
             </pre>
             
-    <a class="navigation" href="epart.html">Previous(&nbsp;EPart&nbsp;)</a>
+    <a class="navigation" href="strummer.html">Previous(&nbsp;Strummer&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="qball.html">Next(&nbsp;QBall&nbsp;)</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="index.html">Home</a>
     &nbsp;&nbsp;&nbsp;&nbsp;<a class="navigation" href="TOC.html">Contents</a>

@@ -36,7 +36,7 @@
             <p class="section-body">
             
             Projects are closely linked to specific directories where all the related
-            project files are stored.  It makes little sense to work with a project 
+            files are stored.  It makes little sense to work with a project 
             without first creating a project directory.</p>
             
             <p class="section-body">
@@ -51,20 +51,22 @@
                   Location where CYCO project directories are located.  By default ~/cyco-projects/</li>
             
               <li><b>*DEFAULT-PROJECT-BOOT-FILE*</b><br>
-                  Name of the primary project file within a project, Default "main.lisp".<br>
-                  Within a project the boot file is responsible for creating a Project object<br>
+                  Name of the primary project file, default "main.lisp".<br>
+                  The boot file is responsible for creating a Project object
                   and loading all remaining project files.</li>
             
               <li><b>*DEFAULT-PROJECT-MIDI-DIRECTORY*</b><br>
                   Name of folder <em>within</em> the project folder where MIDI files are stored.<br>
                   Default MIDI</li>
             </ol>
-            <p class="section-body">
             
-            Using these defaults, files for a project named 'foo' are stored in the folder <b>~/cyco-projects/foo</b><br>
-            The primary project file is <b>~/cyco-projects/foo/main.lisp</b><br>
-            And the folder <b>~/cyco-projects/foo/MIDI/</b> is used for generated MIDI files.</p>
-            
+            Using these defaults, the directory structure for project 'foo' is
+            <pre>
+                ~/cyco-projects/foo              # Project directory.
+                      MIDI                       # MIDI file directory.
+                      main.lisp                  # Primary project file.
+                      xxxx.lisp                  # Additional project files are at this level.
+            </pre>
             
             Generally the project main file contains the following sections.
             <ol>
@@ -72,7 +74,7 @@
                <li>Create orchestra, most likely by loading an orchestra file.</li>
                <li>Define or load files for each section.</li>
                <li>Specify order in which sections are played.</li>
-               <li>Save project to a MIDI file.</li>
+               <li>Render events to MIDI file.</li>
             </ol>
             
             The <b>LOAD-PROJECT</b> function is used to load a main project file.
@@ -90,7 +92,7 @@
             </pre>
             
             
-            The <b>LP</b> function is usually more convenient.
+            The <b>LP</b> function is more convenient.
             <pre class="code">
             
             (lp &optional project-name)
@@ -130,7 +132,7 @@
             
             <p class="section-body">
             
-            The project proper is created on line 005. This project is named 'foo and 
+            The project proper is created on line 005. This project is named foo and 
             it becomes the "current" project by setting *PROJECT* to the project object.
             The :title and :catalog-number values are optional and are basically for 
             documentation, these values are not further used by CYCO.</p>
@@ -138,7 +140,7 @@
             <p class="section-body">
             
             The :timesig argument sets the default project time-signature.  The CYCO
-            <a href="timesig.html">timesig</a> class is a bit more general then the 
+            <a href="timesig.html">timesig</a> class is a more general then the 
             traditional notion of a time-signature. In this case the default time 
             signature is 4 bars of 4/4 time with a tempo of 120 BPM. Individual 
             sections may override the default time-signature.</p>
@@ -147,7 +149,7 @@
             
             Individual project files are loaded by calls to <b>LPF</b> (for&nbsp;"Load&nbsp;Project&nbsp;File") 
             starting on line 10.
-            LPF takes an optional argument.  If no argument t is specified then LPF reloads
+            LPF takes an optional argument.  If no argument is specified LPF reloads
             the previous project file.</p>
             
             <pre class="code">
@@ -209,7 +211,8 @@
                                  (midi-filename nil)
                                  (pad-end 2.0))
             
-            Returns a nested list of MIDI events, sorted by time.
+            Returns a nested list of MIDI events sorted by time and optionally
+            write results to standard MIDI file.
             
                  ((time1 . event1)
                   (time2 . envet2)

@@ -29,7 +29,8 @@
             CYCO is implemented in pure Lisp and any standard Common Lisp should work.  
             It has been tested against both Armed Bear 
             <a href="http://abcl.org/">(ABCL)</a> and Steel Banks
-            <a href="http://www.sbcl.org/">(SBCL)</a>.  In the future interaction with 
+            <a href="http://www.sbcl.org/">(SBCL)</a>.  Steel Banks is generally faster,
+            but in the future interaction with 
             Java applications may be added, which would point towards Armed Bear as the 
             preferred Lisp.</p>
             
@@ -52,16 +53,17 @@
             cd ~
             # If ~/.config does not exists, create it
             mkdir .config
-            touch .config/local-settings.lisp
+            mkdir .config/cyco
+            touch .config/cyco/local-settings.lisp
             </pre>
             
             
-            Otherwise there is not that much to do.
+            Otherwise there is not much to do.
             <ol>
               <li>Place CYCO directory wherever you like.</li>
               <li>Navigate to the CYCO folder.</li>
               <li>Fire up your favorite Lisp.</li>
-              <li>At the Lisp prompt, enter (load "src/cyco")</li>
+              <li>At the Lisp prompt enter (load "src/cyco")</li>
               <li>After CYCO loads enter (cyco)</li>
             </ol>
             <p class="section-body">
