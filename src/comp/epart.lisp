@@ -267,7 +267,7 @@
 	 ;;  pattern - instance of cycle
 	 ;;              possible values :up :down :random :permute
 	 ;;              :up      - use notes in reverse order
-	 ;;              :down    - use notes in order
+	 ;;              :down    - use notes in orderg
 	 ;;              :random  - pick up or down at random
 	 ;;              :permute - permute note list
 	 ;; 
@@ -379,7 +379,6 @@
 
 	   ;; :time :to :ctrl :start :end :steps
 	   (cc-handler (prt evn offset)
-		       ;(trace-enter (format nil "CC-HANDLER EVN ~a" evn))
 		       (setf evn (->alist evn))
 		       (let* ((orc (property prt :orchestra))
 			      (steps (parse-step-count evn))
@@ -399,14 +398,12 @@
 			      		     (push ci bcc)))
 			      		 bcc))
 			      (value start))
-			 ;(trace-marker (format nil "ctrl = ~A" ctrl))
 			 (while (< time (+ time2 delta-time))
 			   (let ((v (truncate (limit (* 127 value) 0 127))))
 			     (dolist (ci ci-list)
 			       (push (cons time (midi-control-change ci ctrl v)) acc))
 			     (setf time (+ time delta-time))
 			     (setf value (+ value delta-value))))
-			 ;(trace-exit)
 			 (reverse acc)))
 
 	   (pressure-handler (prt evn offset)
