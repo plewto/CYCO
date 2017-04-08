@@ -15,8 +15,8 @@
 	(format t "    Not too sure about bank select events... needs research.~%")
 	nil)
     (list
-     (cons (- time 0.01)(midi-control-change cindex 0 bank))
-     (cons time (midi-program-change cindex program-number)))))
+     ;; (cons (- time 0.01)(midi-control-change cindex 0 bank))
+     (cons time (midi-program-change cindex (1- program-number))))))
 
 (param MU100R (create-instrument
 	       'MU100R
@@ -25,11 +25,13 @@
 	       :channel :MU100R
 	       :program-change-hook #'--mu100r-program-hook))
 
-(defmacro mu100r (name program bank &key
+(defmacro mu100r (name program &key
+		       bank 
 		       (channel nil)
 		       (keynumber-map nil)
 		       (duration-map nil)
 		       (amplitude-map nil))
+  "NOTE: bank is ignored"
   `(param ,name (create-instrument ',name
 				   :parent mu100r
 				   :transient nil
