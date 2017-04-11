@@ -16,6 +16,7 @@
 ;;;;
 ;;;;     .   - dotted   Q, -> dotted quarter note.
 ;;;;     ..  - double dotted.
+;;;;     ... - triple dotted
 ;;;;     T   - triplet QT -> quarter note triplet.
 ;;;;     5   - 5-tuplet Q5 -> 4/5 time of regular quarter note
 ;;;;     +   - add sixty-forth note   Q+   -> quarter note tied to sixty-fourth
@@ -38,6 +39,7 @@
 	      (extend "~A" 1 0)
 	      (extend "~A." 3/2 0)
 	      (extend "~A.." 7/4 0)
+	      (extend "~A..." 21/8 0)
 	      (extend "~AT" 2/3 0)
 	      (extend "~A5" 4/5 0)
 	      (extend "~A+" 1 1/64)
