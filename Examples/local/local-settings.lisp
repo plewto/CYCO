@@ -23,7 +23,7 @@
 
 ;;; Secondary MIDI channel assignments
 ;;;
-(assign-channel! :SAMPLER    1)		; Korg micro sampler
+(assign-channel! :SAMPLER    4)		; Korg micro sampler
 (assign-channel! :OBX        2)		; Oberheim Matrix 1000
 (assign-channel! :VOP2       3)		; Alternate Voices of Passion
 (assign-channel! :MU100R2    4)		; Alternate  MUR100R
