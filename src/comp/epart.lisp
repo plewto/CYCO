@@ -481,7 +481,8 @@
       
       (defmethod render-once ((prt epart) &key (offset 0))
 	(if (not (mute? prt))
-	    (progn 
+	    (let ((proj (parent (parent prt))))
+	      (setf (current-section proj)(parent prt))
 	      (reset-params)
 	      (let ((acc '()))
 		(dolist (event (events prt))

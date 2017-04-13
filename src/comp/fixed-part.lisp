@@ -226,10 +226,12 @@
 
 (defmethod render-once ((prt fixed-part) &key (offset 0))
   (if (not (mute? prt))
-      (let ((events (sort (clone (events prt))
+      (let ((proj (parent (parent prt)))
+	    (events (sort (clone (events prt))
 			  #'(lambda (a b)
 			      (< (car a)(car b)))))
 	    (acc '()))
+	(setf (current-section proj)(parent prt))
 	(dolist (ev events)
 	  (push (cons (+ (car ev) offset)(cdr ev)) acc))
 	acc)

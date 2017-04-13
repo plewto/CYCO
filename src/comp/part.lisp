@@ -12,6 +12,7 @@
 ;;;;  +-- PROGRAMS
 ;;;;  +-- FIXED-PART
 ;;;;  +-- EPART
+;;;;  +---STRUMMER
 ;;;;  +-- QBALL
 ;;;;  |    |
 ;;;;  |    +-- metronome (not an actual subclass of QBALL)

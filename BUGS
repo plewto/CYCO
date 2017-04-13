@@ -5,7 +5,7 @@ BUG0000 2017.04.09
 qball duration does not recognize metric expressions.
 Closed 2017.04.13  commit 713fffc
 
-**************************************** 0001 OPEN
+**************************************** 0001 CLOSED
 BUG0001 2017.04.13
 Section time signatures are contagious.
 
@@ -45,3 +45,14 @@ times for section A are altered by the creation of section B.
 # [3.00000] ON     cindex 15  data:   0  97  (key C0)
 # [3.50000] ON     cindex 15  data:   0  97  (key C0)
 # [4.00000] ON     cindex 15  data:   0  97  (key C0)
+
+AN UGLY FIX:
+
+It isn't so much that the fix is ugly as it is the underlying structure that
+requires it. 
+
+The problem was traced to the various part render-once methods which
+use the current-section of the global *PROJECT* for timing information.
+The fix involved changing the current-section to the proper value within
+the render-once methods.  I don't like this but short of a general rewrite
+do not see any other way of addressing the problem.

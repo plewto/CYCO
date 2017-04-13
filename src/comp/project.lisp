@@ -229,6 +229,7 @@
 		    (let ((acc '())
 			  (time offset))
 		      (dolist (s (sequence-order project))
+			(setf (current-section project) s)
 			(setf acc (append acc (render-once s :offset time)))
 			(setf time (+ time (duration s))))
 		      (sort acc #'(lambda (a b)(< (car a)(car b)))))
