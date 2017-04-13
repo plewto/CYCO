@@ -110,6 +110,7 @@
 	 "src/comp/section"
 	 "src/comp/group"
 	 "src/comp/part"
+	 "src/comp/programs"
 	 "src/comp/fixed-part"
 	 "src/comp/epart"
 	 "src/comp/qball"
