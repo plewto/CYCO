@@ -110,7 +110,6 @@
   (let* ((mtype (meta-type obj))
 	 (mn (gethash mtype +MNEMONICS+))
 	 (tx (text obj)))
-    (format t "DEBUG mtype = ~A   mn = ~A    tx = ~A~%" mtype mn tx)
     (format nil "META ~9a  '~a'" mn tx)))
 
 (defmethod text! ((obj meta-text-event)(new-text t))
