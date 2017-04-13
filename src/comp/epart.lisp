@@ -357,7 +357,7 @@
 	   		 (let* ((time (+ offset (parse-time prt evn)))
 	   			(kn (parse-keynumber evn))
 	   			(orc (property prt :orchestra))
-	   			(dscale (beat-duration (parent prt)))
+	   			;;(dscale (beat-duration (parent prt)))
 	   			(acc '()))
 	   		   (dolist (inst-name (->list (instruments prt)))
 	   		     (let* ((inst (find-node orc inst-name))
