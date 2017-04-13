@@ -61,17 +61,12 @@
                                   (* 0.5 (amplitude a))  ;; scale amplitude by 50%
                                 a))                      ;; return unrecognized argument without fuss
             
-            :duration-map - Function applied to note duration.  (lambda (d)) -&gt;d'
-                            It takes a single argument and returns a non-negative float.
+            :duration-map - Function of form (lambda (ex)) -&gt;d where ex is a 
+                            <a href="metric.html">metric expression</a>
                             This function is separate, and applied prior to, the instrument 
                             duration maps.  Any argument which can not be converted to 
-                            a duration should be passed as the return value without 
-                            producing an error or warning.  See <a href="metric.html">metric values</a>
-            
-                            (lambda (d)
-                              (if (metric-p d)  
-                                  (* 0.5 (metric d))  ;; scale duration by 50%
-                                d))
+                            should be passed as the return value without 
+                            producing an error or warning.
             
             :project      - Default *PROJECT*
             :section      - Defaults to current section of project.

@@ -93,9 +93,9 @@
                                        (- (keynumber k) 12)
                                      k))
                              
-              :dur-map      - Mapping function applied to note duration. This function
-                              is applied prior to any instrument duration-map.  It should
-                              take a single argument and return a non-negative float.
+              :dur-map      - Mapping function applied to note duration of form 
+                              (lambda (ex)) -&gt; d  where ex is a <a href="metric.html">metric expression</a>
+                              The function is applied prior to any instrument duration-map.  
                               If the argument can not be converted it should be passed
                               as the return value without warning or error.
               :amp-map      - Mapping function applied to note amplitude.  This function
