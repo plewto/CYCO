@@ -31,10 +31,12 @@
              prior to the instruments mapping functions.  All unrecognized
              symbols should be returned as the functions result.
              Default #'IDENTITY
-    :duration-map - Duration mapping function applied to duration values
-             prior to the instruments mapping function  All unrecognized
-             symbols should be returned as the functions result.
-             Default #'IDENTITY
+    :duration-map - Duration mapping function of the form (lambda (mx)) -> d'
+             where mx is a 'metric expression'  (see metric.lisp).
+             The function is applied to duration prior to the instruments 
+             mapping function.  Any unrecognized expression should be 
+             passed as the return value without producing an error.
+             Default #'IDENTITY.
     :project - The CYCO project this part belongs to, Default *PROJECT*.
     :section - The section to which this part belongs.  Defaults to 
              the current section of project.
@@ -287,7 +289,8 @@
 	 		 (let ((dspec (cdr (assoc :dur evn))))
 	 		   (if dspec
 	 		       (let* ((map (property prt :duration-map))
-	 			      (dur (funcall map (parse-metric-expression dspec))))
+				      (d1 (parse-metric-expression dspec))
+	 			      (dur (funcall map d1)))
 	 			 (setf default-duration dur)))
 	 		   default-duration))
 
@@ -360,9 +363,8 @@
 	   		     (let* ((inst (find-node orc inst-name))
 	   			    (cindex (1- (channel inst :resolve t)))
 	   			    (keynum (instrument-keynumber inst kn))
-	   			    (dur (* dscale (instrument-duration
-	   					    inst 
-	   					    (parse-duration prt evn))))
+				    (d1 (parse-duration prt evn))
+				    (dur (instrument-duration inst d1))
 	   			    (amp (instrument-amplitude 
 	   				  inst 
 	   				  (parse-amplitude prt evn)))

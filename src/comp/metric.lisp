@@ -102,18 +102,28 @@
 (defgeneric parse-metric-expression (s))
 
 (defmethod parse-metric-expression ((s string))
-  (let* ((foo (split-string s #\*))
+  (let* ((tokens (split-string s #\*))
 	 (mult 1)
 	 (acc 0))
-    (if (> (length foo) 1)
+    (if (> (length tokens) 1)
     	(progn
-    	  (setf mult (read-from-string (car foo)))
-    	  (setf foo (cdr foo))))
-    (dolist (term1 foo)
+    	  (setf mult (read-from-string (car tokens)))
+    	  (setf tokens (cdr tokens))))
+    (dolist (term1 tokens)
       (dolist (term2 (split-string term1 #\+))
 	(setf acc (+ acc (metric term2)))))
     (* mult acc)))
     
 (defmethod parse-metric-expression ((s symbol))
-  (parse-metric-expression (symbol-name s)))
+  (let ((rs (parse-metric-expression (symbol-name s))))
+    rs))
       
+(defmethod parse-metric-expression ((lst list))
+  (let ((acc '()))
+    (dolist (ex lst)
+      (push (parse-metric-expression ex) acc))
+    (reverse acc)))
+
+(defmethod parse-metric-expression ((n number))
+  n)
+

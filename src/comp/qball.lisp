@@ -105,9 +105,10 @@
                  Default #'IDENTITY 
    :dur-map    - Mapping function applied to note duration.  This function
                  is applied to each duration prior to sending them to the 
-                 instruments.  The function form is (lambda (d)) -> d'
+                 instruments.  The function form is (lambda (mx)) -> d'
+                 where mx is a 'metric-expression' (see metric.lisp).
                  Any unrecognized values should be returned as is without
-                 producing an error.
+                 producing an error.  
    :amp-map    - Mapping function applied to note amplitude.  This function
                  is applied to each amplitude value prior to sending them 
                  to the instruments.   The function form is (lambda (a)) -> a'

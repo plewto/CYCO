@@ -36,6 +36,7 @@
 
 (defun default-duration-map (dur)
   (metric dur))
+  ;;(parse-metric-expression dur))
 
 (defun default-amplitude-map (amp)
   (amplitude amp))
@@ -158,14 +159,28 @@
   (let ((kmap (property inst :keynumber-map)))
     (mapcar #'(lambda (n)(funcall kmap (keynumber n))) lst)))
 
+;; (defmethod instrument-duration ((inst instrument)(n t))
+;;   (let ((dmap (property inst :duration-map)))
+;;     (funcall dmap (metric n))))
+
+;; (defmethod instrument-duration ((inst instrument)(lst list))
+;;   (let ((dmap (property inst :duration-map)))
+;;     (mapcar #'(lambda (n)(funcall dmap (metric n))) lst)))
+
+
 (defmethod instrument-duration ((inst instrument)(n t))
-  (let ((dmap (property inst :duration-map)))
-    (funcall dmap (metric n))))
+  (let* ((dmap (property inst :duration-map))
+	 (d1 (parse-metric-expression n))
+	 (rs (funcall dmap d1)))
+    rs))
 
 (defmethod instrument-duration ((inst instrument)(lst list))
-  (let ((dmap (property inst :duration-map)))
-    (mapcar #'(lambda (n)(funcall dmap (metric n))) lst)))
-	
+  (let* ((dmap (property inst :duration-map))
+	 (rs (mapcar #'(lambda (n)
+			 (funcall dmap
+				  (parse-metric-expression n))) lst)))
+    rs))
+
 (defmethod instrument-amplitude ((inst instrument)(a t))
   (let ((amap (property inst :amplitude-map)))
     (funcall amap (amplitude a))))

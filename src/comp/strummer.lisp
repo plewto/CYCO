@@ -232,7 +232,8 @@
 					       (->list spec)
 					       (list duration
 						     duration-variance)))
-				   (setf duration (metric (car spec)))
+				   ;;(setf duration (metric (car spec)))
+				   (setf duration (parse-metric-expression (car spec)))
 				   (setf duration-variance 
 					 (float (second spec)))))
 			     (list duration duration-variance)))
