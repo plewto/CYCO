@@ -137,7 +137,7 @@
    force - Boolean, if true remove ALL instruments from orchestra
            tree. Default nil"
   (let ((n (cond ((instrument-p node) node)
-		 ((project-p node)(orchestra :project node))
+		 ((project-p node)(orchestra :project node :print nil))
 		 (t nil))))
     (and n (prune-tree! n :force force))))
 
