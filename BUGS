@@ -3,4 +3,45 @@ CYCO BUGS
 **************************************** 0000 CLOSED
 BUG0000 2017.04.09  
 qball duration does not recognize metric expressions.
+Closed 2017.04.13  commit 713fffc
 
+**************************************** 0001 OPEN
+BUG0001 2017.04.13
+Section time signatures are contagious.
+
+The time signature of a section should have zero influence on other
+sections.  The following code illustrates that there is leakage between
+sections.  Section A is defined as 2 bars of 4/4 time and then dumped
+Section B is created with 5/4 time and section A is again dumped. Event
+times for section A are altered by the creation of section B. 
+
+
+000 (project 'test :timesig (timesig :bars 1 :beats 4 :tempo 120))
+001 (free-orchestra!)
+002 
+003 (section a :bars 2 :beats 4)
+004 (metronome a-metronome)
+005 (dump-events a)
+006 (section b :bars 2 :beats 5)
+007 (dump-events a)
+
+# Results first call to (dump-events a)
+#   Meta and OFF events removed for clarity.
+# [.00000]  ON     cindex 15  data:   2 109  (key D0)
+# [.50000]  ON     cindex 15  data:   0  97  (key C0)
+# [1.00000] ON     cindex 15  data:   0  97  (key C0)
+# [1.50000] ON     cindex 15  data:   0  97  (key C0)
+# [2.00000] ON     cindex 15  data:   1 109  (key CS0)
+# [2.50000] ON     cindex 15  data:   0  97  (key C0)
+# [3.00000] ON     cindex 15  data:   0  97  (key C0)
+# [3.50000] ON     cindex 15  data:   0  97  (key C0)
+#
+# Results second call to (dump-events a)
+# [.00000]  ON     cindex 15  data:   2 109  (key D0)
+# [.50000]  ON     cindex 15  data:   0  97  (key C0)
+# [1.00000] ON     cindex 15  data:   0  97  (key C0)
+# [1.50000] ON     cindex 15  data:   0  97  (key C0)
+# [2.50000] ON     cindex 15  data:   1 109  (key CS0)
+# [3.00000] ON     cindex 15  data:   0  97  (key C0)
+# [3.50000] ON     cindex 15  data:   0  97  (key C0)
+# [4.00000] ON     cindex 15  data:   0  97  (key C0)
