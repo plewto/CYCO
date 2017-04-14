@@ -56,3 +56,20 @@ use the current-section of the global *PROJECT* for timing information.
 The fix involved changing the current-section to the proper value within
 the render-once methods.  I don't like this but short of a general rewrite
 do not see any other way of addressing the problem.
+
+
+**************************************** 0002 CLOSED
+BUG0002 qball clone fails  reset-on-repeat not defined.
+
+(project 'test :timesig (timesig :bars 1 :beats 4 :tempo 120))
+(param foo (create-instrument 'foo :parent *root-instrument*))
+(section a)
+(qball a-foo foo
+       :reset-on-repeat nil
+       :cue '((1 1 1))
+       :key '(60))
+(param b-foo (clone a-foo))
+
+Error loading /home/sj/Documents/cyco-projects/test/main.lisp at line 19 (offset 310)
+#<THREAD "interpreter" {FCA1092}>: Debugger invoked on condition of type SIMPLE-ERROR
+  Property key RESET-ON-REPEAT is not defined
