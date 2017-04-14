@@ -58,8 +58,9 @@ the render-once methods.  I don't like this but short of a general rewrite
 do not see any other way of addressing the problem.
 
 
-**************************************** 0002 CLOSED
+**************************************** 0002 OPEN
 BUG0002 qball clone fails  reset-on-repeat not defined.
+2017.04.14
 
 (project 'test :timesig (timesig :bars 1 :beats 4 :tempo 120))
 (param foo (create-instrument 'foo :parent *root-instrument*))
