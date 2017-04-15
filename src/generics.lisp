@@ -191,7 +191,7 @@
 (defmethod cardinality ((seq sequence))
   "The cardinality of a sequence is the length of the sequence."
   (length seq))
-  
+
 (defgeneric channel (obj &key resolve)
   (:documentation
    "Returns the MIDI channel of an object.  
@@ -234,6 +234,10 @@
   (dismiss newname parent)
   (funcall hook obj))
 
+(defgeneric command (evnt)
+  (:documentation
+   "Returns command byte from MIDI-EVENT"))
+
 (defgeneric dump (obj &key depth max-depth)
   (:documentation
    "Produce diagnostic dump of object.
@@ -246,37 +250,6 @@
   (if (< depth max-depth)
       (format t "~A~A ~A~%" (tab depth)(type-of obj)(name obj)))
   nil)
-
-(defgeneric dump-events (obj &key filter time)
-  (:documentation
-   "Produce diagnostic dump of MIDI event list.
-    ARGS:
-      obj    - Defined for list, project, section and part
-      filter - List of MIDI commands to exclude.
-               Default NONE
-      time   - Cons (min . max), events outside time range are excluded.
-               Default (0 . 1e6)"))
-
-(defmethod dump-events ((lst list) &key (filter nil)(time (cons 0 1e6)))
-  "Produce diagnostic dump of MIDI event list.
-    ARGS:
-      lst    - event list must have form
-               ((time1 . event1)
-                (time2 . event2)
-                 ..............
-                (timen . eventn))
-      filter - List of MIDI comands to exclude (see constants.lisp)
-      time   - Cons (min . max), events outside of yime range are excluded."
-  (let ((min (car time))
-	(max (cdr time)))
-    (dolist (evn (sort (clone lst) #'(lambda (a b)(< (car a)(car b)))))
-      (let* ((time (car evn))
-	     (event (cdr evn))
-	     (command (command event)))
-	(if (and (not (member command filter))
-		 (>= time min)
-		 (<= time max))
-	    (format t "[~4,5F] ~A~%" time (->string event)))))))
 
 (defgeneric duration (obj)
   (:documentation
@@ -359,7 +332,7 @@
     (octave 'C5) -> 5
     (octave '(C4 C5 C6)) -> (4 5 6)."))
 
-(defgeneric orchestra (&key project))
+(defgeneric orchestra (&key project print))
 
 (defgeneric period (obj))
 
@@ -500,6 +473,39 @@
   (:documentation
    "Remove all elements of obj for which test is false
     test (lambda (x)) --> bool"))
+
+(defgeneric dump-events (obj &key filter time)
+  (:documentation
+   "Produce diagnostic dump of MIDI event list.
+    ARGS:
+      obj    - Defined for list, project, section and part
+      filter - List of MIDI commands to exclude.
+               Default NONE
+      time   - Cons (min . max), events outside time range are excluded.
+               Default (0 . 1e6)"))
+
+(defmethod dump-events ((lst list) &key (filter nil)(time (cons 0 1e6)))
+  "Produce diagnostic dump of MIDI event list.
+    ARGS:
+      lst    - event list must have form
+               ((time1 . event1)
+                (time2 . event2)
+                 ..............
+                (timen . eventn))
+      filter - List of MIDI comands to exclude (see constants.lisp)
+      time   - Cons (min . max), events outside of yime range are excluded."
+  (let ((min (car time))
+	(max (cdr time)))
+    (dolist (evn (sort (clone lst) #'(lambda (a b)(< (car a)(car b)))))
+      (let* ((time (car evn))
+	     (event (cdr evn))
+	     (command (command event)))
+	(if (and (not (member command filter))
+		 (>= time min)
+		 (<= time max))
+	    (format t "[~4,5F] ~A~%" time (->string event)))))))
+
+
 
 
 ;;; ---------------------------------------------------------------------- 

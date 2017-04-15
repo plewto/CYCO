@@ -22,6 +22,31 @@
     :initform ""
     :initarg :text)))
 
+;; (defmethod render-once ((prt text-part) &key (offset 0))
+;;   (if (not (mute? prt))
+;;       (let ((time (+ offset (apply (property prt :qfn)
+;; 				   (event-time prt))))
+;; 	    (text (text prt))
+;; 	    (mtype (meta-type prt))
+;; 	    (proj (parent (parent prt))))
+;; 	(setf (current-section proj)(parent prt))
+;; 	(cond ((eq mtype :text)
+;; 	       (list (cons time (text-event text))))
+;; 	      ((eq mtype :copyright)
+;; 	       (list (cons time (copyright-event text))))
+;; 	      ((eq mtype :lyric)
+;; 	       (list (cons time (lyric-event text)))
+;; 	      ((eq mtype :marker)
+;; 	       (list (cons time (marker-event text))))
+;; 	      ((eq mtype :cue)
+;; 	       (list (cons time (cue-event text))))
+;; 	      (t
+;; 	       (let ((msg (format nil "~A is not a valid META text type" mtype)))
+;; 		 (cyco-warning msg)
+;; 		 nil)))))
+;; 	nil))
+
+
 (defmethod render-once ((prt text-part) &key (offset 0))
   (if (not (mute? prt))
       (let ((time (+ offset (apply (property prt :qfn)
@@ -35,7 +60,7 @@
 	      ((eq mtype :copyright)
 	       (list (cons time (copyright-event text))))
 	      ((eq mtype :lyric)
-	       (list (cons time (lyric-event text)))
+	       (list (cons time (lyric-event text))))
 	      ((eq mtype :marker)
 	       (list (cons time (marker-event text))))
 	      ((eq mtype :cue)
@@ -43,7 +68,7 @@
 	      (t
 	       (let ((msg (format nil "~A is not a valid META text type" mtype)))
 		 (cyco-warning msg)
-		 nil)))))
+		 nil))))
 	nil))
 
 (flet ((--text-event (text &key
@@ -62,6 +87,7 @@
 					 (t +TEXT-EVENT+)))
 			    (sec (or section (current-section project)))
 			    (prt (make-instance 'text-part
+						:meta-type mtype
 						:time time
 						:name (format nil "META ~A" type)
 						:period (or period (duration sec))
@@ -69,7 +95,6 @@
 		       (add-child! sec prt)
 		       (property! prt :qfn qfn)
 		       prt)))
-
   (defun marker (text &key
 		      (qfn #'bar)
 		      (time '(1 1 1))
@@ -79,8 +104,9 @@
     (--text-event text
 		  :type :marker
 		  :qfn qfn
+		  :time time
 		  :period period
-		  :project *project*
+		  :project project
 		  :section section))
   
   (defun copyright (text &key
@@ -92,10 +118,10 @@
     (--text-event text
 		  :type :copyright
 		  :qfn qfn
+		  :time time
 		  :period period
-		  :project *project*
+		  :project project
 		  :section section))
-  
   (defun lyric (text &key
 		     (qfn #'bar)
 		     (time '(1 1 1))
@@ -105,8 +131,9 @@
     (--text-event text
 		  :type :lyric
 		  :qfn qfn
+		  :time time
 		  :period period
-		  :project *project*
+		  :project project
 		  :section section))
   
   (defun cue (text &key
@@ -118,6 +145,7 @@
     (--text-event text
 		  :type :cue
 		  :qfn qfn
+		  :time time
 		  :period period
-		  :project *project*
+		  :project project
 		  :section section)) )

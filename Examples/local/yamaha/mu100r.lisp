@@ -7,6 +7,7 @@
 
 
 (defun --mu100r-program-hook (time cindex program-number bank)
+  (dismiss bank)
   (if (eq program-number :?)
       (progn 
 	(format t "MU100R programs~%")

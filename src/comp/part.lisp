@@ -165,7 +165,7 @@
 	(setf (events p)(reverse acc))))
   p)
 
-(defgeneric transposable-p ((prt part))
+(defmethod transposable-p ((prt part))
   (slot-value prt 'transposable))
 
 (defmethod dump-events ((p part) &key (filter nil)(time (cons 0 1e6)))
