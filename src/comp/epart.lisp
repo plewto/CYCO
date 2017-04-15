@@ -14,6 +14,7 @@
 		      (duration-map #'identity)
 		      (project *project*)
 		      (section nil)
+		      (transposable t)
 		      (events '()))
   "Creates an instance of EPART class.  The part is bound to the symbol name
   and is automatically linked as a child node of the current section in the 
@@ -158,9 +159,10 @@
 	    (prt (make-instance 'epart
 				:name ',name
 				:instruments (->instrument-list ,instruments ,project)
+				:transposable ,transposable
 				:period (or ,period (duration sec)))))
        (add-child! sec prt)
-       (property! prt :transposable t)
+       ;;(property! prt :transposable t)
        (property! prt :qfn ,qfn)
        (property! prt :amplitude-map ,amp-map)
        (property! prt :duration-map ,duration-map)

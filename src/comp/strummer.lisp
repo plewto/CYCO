@@ -25,6 +25,7 @@
 			 (qfn #'bar)
 			 ;;(amp-map #'identity)
 			 ;;(duration-map #'identity)
+			 (transposable t)
 			 (project *project*)
 			 (section nil)
 			 (events '()))
@@ -154,9 +155,10 @@
 		  'strummer
 		  :name ',name
 		  :instruments (->instrument-list ,instrument ,project)
+		  :transposable ,transposable
 		  :period (or ,period (duration sec)))))
        (add-child! sec prt)
-       (property! prt :transposable t)
+       ;;(property! prt :transposable t)
        (property! prt :qfn ,qfn)
        ;;(property! prt :amplitude-map ,amp-map)
        ;;(property! prt :duration-map ,duration-map)

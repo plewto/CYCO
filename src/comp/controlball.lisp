@@ -58,12 +58,12 @@
 	    (prt (make-instance 'controlball
 				:name ',name
 				:instruments ilist
+				:transposable nil
 				:cue-fn ,qfn
 				:ctrl (controller-assignment ,ctrl :cmap cmap)
 				:period (or ,period (duration sec))
 				:cue (cycle :of ,cue)
 				:values (->pattern ,values))))
-       (property! prt :transposable nil)
        (add-child! sec prt)
        (param ,name prt)
        prt)))

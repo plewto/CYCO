@@ -29,6 +29,7 @@
 	    (prt (make-instance 'programs
 				:name ',name
 				:instruments (->instrument-list ,instruments ,project)
+				:transposable nil
 				:period (duration section)
 				:parent ,section
 				:transient t)))

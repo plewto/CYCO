@@ -47,7 +47,11 @@
     :type list
     :accessor events
     :initform '()
-    :initarg :events)))
+    :initarg :events)
+   (transposable
+    :type t
+    :initform t
+    :initarg :transposable)))
 
 (defmethod part-p ((obj part)) obj)
 
@@ -160,6 +164,9 @@
 	  (push (cons (car e)(invert (cdr e) pivot :range range)) acc))
 	(setf (events p)(reverse acc))))
   p)
+
+(defgeneric transposable-p ((prt part))
+  (slot-value prt 'transposable))
 
 (defmethod dump-events ((p part) &key (filter nil)(time (cons 0 1e6)))
   (dump-events (render-once p) :filter filter :time time))

@@ -31,7 +31,13 @@
     :type pattern
     :accessor amp-pattern
     :initform (cycle :of '(ff))
-    :initarg :amp)))
+    :initarg :amp)
+   (reset-on-repeat
+    :type t
+    :accessor reset-on-repeat
+    :initform t
+    :initarg :reset-on-repeat)))
+   
 
 (defmacro qball (name instruments &key
 		      (cue '())
@@ -134,6 +140,8 @@
 				:instruments ipat
 				:period (or ,period (duration sec))
 				:cue-fn (->pattern ,qfn)
+				:reset-on-repeat ,reset-on-repeat
+				:transposable ,transposable
 				:cue (cycle :of ,cue)
 				:key (->pattern ,key)
 				:dur (->pattern ,dur)
@@ -142,8 +150,8 @@
        (property! prt :keynumber-map ,key-map)
        (property! prt :duration-map ,dur-map)
        (property! prt :amplitude-map ,amp-map)
-       (property! prt :transposable ,transposable)
-       (property! prt :reset-on-repeat ,reset-on-repeat)
+       ;;(property! prt :transposable ,transposable)
+       ;;(property! prt :reset-on-repeat ,reset-on-repeat)
        (param ,name prt)
        (part-banner sec prt)
        prt)))

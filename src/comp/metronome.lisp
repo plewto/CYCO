@@ -35,6 +35,8 @@
      	    (prt (make-instance 'qball
      	    			:name ',name
      	    			:instruments (->list ,instrument)
+				:transposable nil
+				:reset-on-repeat t
      	    			:period (duration sec)
      	    			:cue (cycle :of cue-list)
      	    			:key (cycle :of key-list)

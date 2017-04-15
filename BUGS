@@ -58,7 +58,7 @@ the render-once methods.  I don't like this but short of a general rewrite
 do not see any other way of addressing the problem.
 
 
-**************************************** 0002 OPEN
+**************************************** 0002 CLOSED
 BUG0002 qball clone fails  reset-on-repeat not defined.
 2017.04.14
 
@@ -74,3 +74,16 @@ BUG0002 qball clone fails  reset-on-repeat not defined.
 Error loading /home/sj/Documents/cyco-projects/test/main.lisp at line 19 (offset 310)
 #<THREAD "interpreter" {FCA1092}>: Debugger invoked on condition of type SIMPLE-ERROR
   Property key RESET-ON-REPEAT is not defined
+
+Closed 2017.04.15
+
+The problem was traced to not being able to set a node property value to nil.
+There is currently no way to distinguish a nil property value from the
+property key not being defined.
+
+The solution was to change reset-on-repeat from a node property to a field
+in the class QBALL.  The same bug also effected the PART transposable
+property and it too was changed from a property to a class field.
+
+
+Long term a method for setting a property value to nil should be devised. 
