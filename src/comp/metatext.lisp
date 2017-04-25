@@ -10,7 +10,7 @@
     :type keyword
     :accessor meta-type
     :initform :text  ;; :text :copyright :lyric :marker :cue
-    :initarg :type)
+    :initarg :meta-type)
    (time
     :type t
     :accessor event-time
@@ -53,23 +53,25 @@
 				   (event-time prt))))
 	    (text (text prt))
 	    (mtype (meta-type prt))
-	    (proj (parent (parent prt))))
+	    (proj (parent (parent prt)))
+	    (rs nil))
 	(setf (current-section proj)(parent prt))
-	(cond ((eq mtype :text)
-	       (list (cons time (text-event text))))
-	      ((eq mtype :copyright)
-	       (list (cons time (copyright-event text))))
-	      ((eq mtype :lyric)
-	       (list (cons time (lyric-event text))))
-	      ((eq mtype :marker)
-	       (list (cons time (marker-event text))))
-	      ((eq mtype :cue)
-	       (list (cons time (cue-event text))))
+	(cond ((eq mtype +TEXT-EVENT+)
+	       (setf rs (list (cons time (text-event text)))))
+	      ((eq mtype +COPYRIGHT+)
+	       (setf rs (list (cons time (copyright-event text)))))
+	      ((eq mtype +LYRIC-TEXT+)
+	       (setf rs (list (cons time (lyric-event text)))))
+	      ((eq mtype +MARKER-TEXT+)
+	       (setf rs (list (cons time (marker-event text)))))
+	      ((eq mtype +CUE-POINT+)
+	       (setf rs (list (cons time (cue-event text)))))
 	      (t
 	       (let ((msg (format nil "~A is not a valid META text type" mtype)))
 		 (cyco-warning msg)
-		 nil))))
-	nil))
+		 nil))
+	      rs))
+    nil))
 
 (flet ((--text-event (text &key
 			   (type :text)
@@ -108,7 +110,6 @@
 		  :period period
 		  :project project
 		  :section section))
-  
   (defun copyright (text &key
 			 (qfn #'bar)
 			 (time '(1 1 1))
