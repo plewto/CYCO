@@ -120,7 +120,6 @@
 	 "src/comp/controlball"
 	 "src/comp/gtrchords"
 	 "src/comp/strummer"))
-	 
 
 (format t "Loading cyco...~%")
 
@@ -201,15 +200,14 @@
 	  nil)
       acc)))
 
-(defun create-cyco-core (filename)
-  "Compiles CYCO as an executable. 
-   Startup time is considerably faster.
-   Currently only implemented for SBCL 
 
-   **** CAUTION:  FILENAME IS OVERWRITTEN WITHOUT WARNING *****"
-  
-  (let ((itype (lisp-implementation-type)))
-    (cond ((string= itype "SBCL")
-	   (format t "Creating SBCL CYCO core as '~s'" filename)
-	   (sb-ext::save-lisp-and-die filename :executable t))
-	  (t (error (format nil "CREATE-CYCO-CORE not defined for ~s" itype))))))
+;; Lisp implementation specifics
+
+(let ((lit (lisp-implementation-type)))
+  (cond ((string= lit "SBCL")
+	 (ld "src/sbcl-specific"))
+	((string= lit "Armed Bear Common Lisp")
+	 (ld "src/abcl-specific"))
+	))
+
+
