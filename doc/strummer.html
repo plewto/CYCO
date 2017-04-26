@@ -87,6 +87,17 @@
                             :MIN :MIN7       :MIN9 :MIN11 :DIM
                             :6TH :MIN6 :SUS4 :SUS2
             
+            :slice         - List, selectively remove notes from chord.
+                            
+                            :slice (start end)
+            
+                            Takes sub-sequence of the chord keynumbers .  
+                            Slice is used to thin out or eliminate chord notes.
+                            The end argument may be positive or negative (as in 
+                            a <a href="http://stackoverflow.com/questions/509211/explain-pythons-slice-notation">Python list slice</a>).  
+                            
+                            To restore full chords use :slice (0 nil)
+            
             :strum        - Sets delay between individual chord notes.  The delay time may 
                             be in seconds or a metric symbol (W H Q etc...)
             

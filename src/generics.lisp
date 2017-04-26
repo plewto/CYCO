@@ -106,6 +106,17 @@
     If obj is a list, convert to vector.
     Otherwise return a new vector holding obj."))
 
+(defgeneric slice (obj start &optional end)
+  (:documentation
+   "Emulate Python's slicing. 
+   (setf foo '(A B C D E))
+   (slice foo  1)     --> (B C D E)
+   (slice foo  1 3)   --> (B C)
+   (slice foo  1 -1)  --> (B C D)
+   (slice fo0 nil -1) --> (A B C D)
+
+   Defined for sequences: list, vector and strings.")) 
+
 (defgeneric name (obj)
   (:documentation
    "Return objects name.  If name is not defined for an object the
@@ -504,6 +515,8 @@
 		 (>= time min)
 		 (<= time max))
 	    (format t "[~4,5F] ~A~%" time (->string event)))))))
+
+
 
 
 

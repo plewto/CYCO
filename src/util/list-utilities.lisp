@@ -327,3 +327,13 @@
 	    (push e acc))))
     (->vector (reverse acc))))
 
+(defmethod slice ((seq t)(start t) &optional end)
+  (if start
+      (cond ((not end)
+	     (subseq seq start))
+	    ((plusp end)
+	     (subseq seq start end))
+	    ((or (minusp end)(zerop end))
+	     (subseq seq start (+ (length seq) end)))
+	    nil)
+    (slice seq 0 end)))

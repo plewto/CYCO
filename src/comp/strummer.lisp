@@ -73,6 +73,15 @@
                    :MAJ :MAJ7 :DOM7 :MAJ9 :MAJ11 
                    :MIN :MIN7 :MIN9 :MIN11 :DIM
                    :6TH :MIN6 :SUS4 :SUS2
+   :slice        - List, selectivly thin chord list
+
+                   :slice (start end)
+
+                   Takes sub-sequence of the chord keynumbers .  
+                   Slice is used to thin out or eliminate chord notes.
+                   The end argument may be positive or negative (as in 
+                   a Python list slice).  To restore full chords 
+                   use :slice (0 nil)
    :strum        - Sets delay between individual chord notes.  The delay may 
                    either be in seconds or as a metric symbol.   
                    
@@ -185,6 +194,7 @@
 	 (amplitude 'mf)
 	 (amplitude-scale 1.0)
 	 (amplitude-variance 0.0)
+	 (current-slice '(0 nil))
 	 (msg1 "~A is not valid strummer chord (strummer ~A)")
 	 (msg2 "~A is not valid strummer chord direction.")
 	 (acc '()))
@@ -204,6 +214,11 @@
 				  (setf chord spec)
 				(error (format nil msg1 spec (name prt)))))
 			  chord))
+	   (parse-slice (evn)
+			;; :slice (start end)
+			(let ((spec (cdr (assoc :slice evn))))
+			  (setf current-slice spec)))
+			  
 	   (parse-delay (evn)
 			;; :strum delay
 			;; :strum (delay scale)
@@ -301,7 +316,9 @@
 							    (eq a (car b))))
 				 (member :chord evn :test #'(lambda (a b)
 							      (eq a (car b)))))
-			     (let* ((chord-keylist (gtrchord keynumber chord))
+			     (let* ((start (car current-slice))
+				    (end (second current-slice))
+				    (chord-keylist (slice (gtrchord keynumber chord) start end))
 				    (dir (next-1 direction-pattern))
 				    (keylist (cond ((eq dir :up)
 						    (reverse chord-keylist))
@@ -350,6 +367,7 @@
 	    (let ((alst (->alist evn)))
 	      (parse-time alst)
 	      (parse-keynum alst)
+	      (parse-slice alst)
 	      (parse-chord alst)
 	      (parse-delay alst)
 	      (parse-direction alst)
